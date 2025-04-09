@@ -1,0 +1,176 @@
+
+Enum "patitas_cuidador_servicios_servicio_enum" {
+  "Alojamiento"
+  "Visitas a domicilio"
+  "Paseos"
+  "Guardería de día"
+}
+
+Enum "patitas_cuidador_admite_tipo_mascota_enum" {
+  "perro"
+  "gato"
+}
+
+Enum "patitas_cuidador_admite_tamano_enum" {
+  "pequeño"
+  "mediano"
+  "grande"
+}
+
+Enum "patitas_mascotas_tipo_enum" {
+  "perro"
+  "gato"
+}
+
+Enum "patitas_mascotas_tamaño_enum" {
+  "pequeño"
+  "mediano"
+  "grande"
+}
+
+Enum "patitas_mascotas_propietario_tipo_enum" {
+  "dueno"
+  "cuidador"
+}
+
+Enum "patitas_reservas_servicio_enum" {
+  "Alojamiento"
+  "Visitas a domicilio"
+  "Paseos"
+  "Guardería de día"
+}
+
+Enum "patitas_reservas_estado_enum" {
+  "pendiente"
+  "confirmada"
+  "rechazada"
+  "cancelada"
+  "finalizada"
+}
+
+Enum "patitas_mensajes_remitente_tipo_enum" {
+  "dueno"
+  "cuidador"
+}
+
+Enum "patitas_mensajes_destinatario_tipo_enum" {
+  "dueno"
+  "cuidador"
+}
+
+Table "patitas_duenos" {
+  "id" INT [pk, increment]
+  "nombre" VARCHAR(100)
+  "email" VARCHAR(100) [unique]
+  "contraseña" VARCHAR(255)
+  "telefono" VARCHAR(20)
+  "fecha_registro" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "patitas_cuidadores" {
+  "id" INT [pk, increment]
+  "nombre" VARCHAR(100)
+  "email" VARCHAR(100) [unique]
+  "contraseña" VARCHAR(255)
+  "telefono" VARCHAR(20)
+  "direccion" VARCHAR(255)
+  "ciudad" VARCHAR(100)
+  "pais" VARCHAR(100)
+  "descripcion" TEXT
+  "max_mascotas_dia" INT
+  "fecha_registro" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "patitas_cuidador_servicios" {
+  "id" INT [pk, increment]
+  "cuidador_id" INT
+  "servicio" patitas_cuidador_servicios_servicio_enum
+  "precio" DECIMAL(10,2)
+}
+
+Table "patitas_cuidador_admite" {
+  "id" INT [pk, increment]
+  "cuidador_id" INT
+  "tipo_mascota" patitas_cuidador_admite_tipo_mascota_enum
+  "tamano" patitas_cuidador_admite_tamano_enum
+}
+
+Table "patitas_mascotas" {
+  "id" INT [pk, increment]
+  "nombre" VARCHAR(100)
+  "tipo" patitas_mascotas_tipo_enum
+  "raza" VARCHAR(100)
+  "edad" INT
+  "tamaño" patitas_mascotas_tamaño_enum
+  "observaciones" TEXT
+  "imagen_url" VARCHAR(255)
+  "propietario_tipo" patitas_mascotas_propietario_tipo_enum
+  "propietario_id" INT
+  "fecha_registro" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "patitas_reservas" {
+  "id" INT [pk, increment]
+  "duenio_id" INT
+  "cuidador_id" INT
+  "fecha_inicio" DATE
+  "fecha_fin" DATE
+  "servicio" patitas_reservas_servicio_enum
+  "estado" patitas_reservas_estado_enum [default: 'pendiente']
+  "total" DECIMAL(10,2)
+  "numero_mascotas" INT
+  "fecha_creacion" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "patitas_reserva_mascotas" {
+  "id" INT [pk, increment]
+  "reserva_id" INT
+  "mascota_id" INT
+}
+
+Table "patitas_facturas" {
+  "id" INT [pk, increment]
+  "reserva_id" INT
+  "fecha_emision" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+  "archivo_pdf_url" VARCHAR(255)
+}
+
+Table "patitas_mensajes" {
+  "id" INT [pk, increment]
+  "remitente_tipo" patitas_mensajes_remitente_tipo_enum
+  "remitente_id" INT
+  "destinatario_tipo" patitas_mensajes_destinatario_tipo_enum
+  "destinatario_id" INT
+  "mensaje" TEXT
+  "fecha_envio" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Table "patitas_resenas" {
+  "id" INT [pk, increment]
+  "reserva_id" INT
+  "duenio_id" INT
+  "cuidador_id" INT
+  "calificacion" INT
+  "comentario" TEXT
+  "fecha_resena" TIMESTAMP [default: `CURRENT_TIMESTAMP`]
+}
+
+Ref:"patitas_cuidadores"."id" < "patitas_cuidador_servicios"."cuidador_id" [delete: cascade]
+
+Ref:"patitas_cuidadores"."id" < "patitas_cuidador_admite"."cuidador_id" [delete: cascade]
+
+Ref:"patitas_duenos"."id" < "patitas_reservas"."duenio_id"
+
+Ref:"patitas_cuidadores"."id" < "patitas_reservas"."cuidador_id"
+
+Ref:"patitas_reservas"."id" < "patitas_reserva_mascotas"."reserva_id" [delete: cascade]
+
+Ref:"patitas_mascotas"."id" < "patitas_reserva_mascotas"."mascota_id" [delete: cascade]
+
+Ref:"patitas_reservas"."id" < "patitas_facturas"."reserva_id" [delete: cascade]
+
+Ref:"patitas_reservas"."id" < "patitas_resenas"."reserva_id"
+
+Ref:"patitas_duenos"."id" < "patitas_resenas"."duenio_id"
+
+Ref:"patitas_cuidadores"."id" < "patitas_resenas"."cuidador_id"
