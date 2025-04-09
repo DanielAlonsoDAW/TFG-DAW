@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Convertirse en cuidador | Guardería Patitas</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #fefefe;
+        color: #333;
+      }
+
+      .navbar {
+        background-color: #e2f7f6 !important;
+      }
+
+      .navbar .nav-link {
+        color: #006d77 !important;
+        font-weight: 500;
+        transition: 0.3s;
+      }
+
+      .navbar .nav-link:hover,
+      .navbar .btn:hover {
+        color: #004e54 !important;
+        background-color: #bdebea !important;
+        border-radius: 5px;
+      }
+
+      .logo-img {
+        height: 90px;
+      }
+
+      .section-title {
+        color: #006d77;
+        font-weight: bold;
+        margin-top: 50px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .info-section {
+        background-color: #f0fdfa;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .info-section h4 {
+        color: #005b5c;
+        margin-bottom: 15px;
+      }
+
+      .info-section p {
+        font-size: 1.05rem;
+        color: #444;
+      }
+
+      footer {
+        background-color: #d0f0f0;
+        padding: 20px 0;
+      }
+
+      footer p {
+        color: #006d77;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .form-container {
+        background-color: #f0fdfa;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+        margin: auto;
+      }
+
+      .form-control {
+        border-radius: 6px;
+      }
+
+      .btn-primary {
+        background-color: #00b4ab;
+        border: none;
+      }
+
+      .btn-primary:hover {
+        background-color: #008e86;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div class="container d-flex align-items-center justify-content-between">
+        <a class="navbar-brand" href="index.html">
+          <img src="logo.jpg" alt="Logo Guardería Patitas" class="logo-img" />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse text-center w-100" id="navbarNav">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="buscador.html">Buscador</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link btn btn-outline-primary ms-2"
+                href="como-funciona.html"
+                >Cómo funciona</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link btn btn-outline-primary ms-2"
+                href="servicios.html"
+                >Servicios</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link btn btn-outline-primary ms-2"
+                href="registro-cuidadores.html"
+                >Convertirse en cuidador</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-outline-primary ms-2" href="registro-duenos.html"
+                >Registrarse</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-outline-primary ms-2" href="login.html"
+                >Iniciar sesión</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Formulario de registro -->
+    <div class="container my-5">
+      <h1 class="section-title">¡Únete como cuidador!</h1>
+      <p class="text-center">
+        Completa el formulario para comenzar a ofrecer tus servicios como
+        cuidador de mascotas.
+      </p>
+      <div class="form-container">
+        <form>
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre completo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombre"
+              placeholder="Tu nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input
+              type="email"
+              class="form-control"
+              id="correo"
+              placeholder="tucorreo@ejemplo.com"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="contrasena" class="form-label">Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              id="contrasena"
+              placeholder="Mínimo 6 caracteres"
+              required
+            />
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5">
+              Registrarme
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Explicación -->
+    <div class="container mb-5">
+      <h2 class="section-title">
+        ¿Cómo funciona ser cuidador en Guardería Patitas?
+      </h2>
+
+      <div class="info-section">
+        <h4>🔹 Crea tu perfil</h4>
+        <p>
+          Completa tu perfil con tus experiencias, tipos de mascotas que
+          aceptas, disponibilidad, ubicación, servicios, tarifas y fotos.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h4>🔹 Recibe solicitudes</h4>
+        <p>
+          Los dueños te encontrarán por ubicación y servicios. Puedes aceptar o
+          rechazar solicitudes según tu disponibilidad.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h4>🔹 Brinda el servicio</h4>
+        <p>
+          Recibe a las mascotas, comunícate con los dueños desde la plataforma,
+          y cuida con cariño a cada peludo que confíen en ti.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h4>🔹 Recibe tu pago</h4>
+        <p>
+          Una vez terminado el servicio, recibirás tu pago de forma segura.
+          ¡Solo preocúpate de cuidar!
+        </p>
+      </div>
+
+      <h2 class="section-title mt-5">Servicios que puedes ofrecer</h2>
+
+      <div class="info-section">
+        <h4>🏡 Alojamiento</h4>
+        <p>
+          Alojamiento para los perros en tu casa, incluyendo la noche. No
+          olvides pedir su comida, chuches, cama, cartilla veterinaria y su
+          juguete favorito.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h4>🚶 Paseo de perros</h4>
+        <p>
+          Un máximo de 60 minutos de paseo para los perros. La recogida y
+          entrega será en la casa de sus dueños.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h4>🧸 Guardería de día</h4>
+        <p>
+          Cuida de perros durante el día en tu casa, hasta un máximo de 10
+          horas. Ideal para dueños que trabajan fuera durante el día.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h4>🏠 Visitas a domicilio</h4>
+        <p>
+          Ofrece cuidado de mascotas con visitas de 30-60 minutos en el hogar
+          del animal. Puedes alimentar, jugar, cambiar agua o dar medicación.
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-auto text-center">
+            <p class="mb-0 text-muted">
+              © 2025 Guardería Patitas by Daniel Alonso Palacios
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
