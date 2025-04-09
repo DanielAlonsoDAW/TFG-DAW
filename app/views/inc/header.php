@@ -6,48 +6,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú de Opciones</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo RUTA_URL; ?>\css\bootstrap\bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo RUTA_URL; ?>\css\estilos.css" rel="stylesheet">
 </head>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a class="navbar-brand" href="index.html">
+            <img src="<?php echo RUTA_URL; ?>\img\logo.jpg" alt="Logo Guardería Patitas" class="logo-img" />
+        </a>
+
+        <div class="collapse navbar-collapse text-center w-100" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo RUTA_URL; ?>/home">Home</a>
+                    <a class="nav-link" href="buscador.html">Buscador</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo RUTA_URL; ?>/clientes">Buscar Cuidadores</a>
+                    <a
+                        class="nav-link btn btn-outline-primary ms-2"
+                        href="como-funciona.html">Cómo funciona</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo RUTA_URL; ?>/como_funciona">Cómo Funciona</a>
+                    <a
+                        class="nav-link btn btn-outline-primary ms-2"
+                        href="servicios.html">Servicios</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo RUTA_URL; ?>/servicios">Servicios</a>
+                    <a
+                        class="nav-link btn btn-outline-primary ms-2"
+                        href="registro-cuidadores.html">Convertirse en cuidador</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?php echo RUTA_URL; ?>/ser_cuidador">Convertirse en cuidador</a>
+                    <a
+                        class="nav-link btn btn-outline-primary ms-2"
+                        href="registro-duenos.html">Registrarse</a>
                 </li>
-                <?php
-                if (!isset($_SESSION['usuario'])) {
-                    echo '<li class="nav-item">
-                          <a class="nav-link" href="' . RUTA_URL . '/registro">Registro</a>
-                          </li>';
-                    echo '<li class="nav-item">
-                          <a class="nav-link" href="' . RUTA_URL . '/login">Iniciar Sesión</a>
-                          </li>';
-                } else {
-                    echo '<li class="nav-item">
-                          <a class="nav-link" href="' . RUTA_URL . '/usuario">Usuario</a>
-                          </li>';
-                    echo '<li class="nav-item">
-                          <a class="nav-link" href="' . RUTA_URL . '/login/logout">Cerrar Sesión</a>
-                          </li>';
-                }
-                ?>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-primary ms-2" href="login.html">Iniciar sesión</a>
+                </li>
             </ul>
         </div>
     </div>

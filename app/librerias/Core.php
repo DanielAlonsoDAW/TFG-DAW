@@ -16,7 +16,7 @@ class Core
 
     // Establecemos controlador, metodo y parametros por defecto
     // En caso de que no venga indicado en la URL
-    protected $controladorActual = 'home';
+    protected $controladorActual = 'Home';
     protected $metodoActual = 'index';
     protected $parametros = [];
 
@@ -32,7 +32,7 @@ class Core
             unset($url[0]);
         }
         // cargamos el controlador
-        $file = self::PATH_CONTROLADORES . $this->controladorActual . '.php';
+        $file = self::PATH_CONTROLADORES . $this->controladorActual . '_Controller.php';
         require_once $file;
         $this->controladorActual = new $this->controladorActual(); // Instanciamos el controlador elegido en la url
 
