@@ -13,37 +13,37 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container d-flex align-items-center justify-content-between">
-        <a class="navbar-brand" href="index.html">
+        <a class="navbar-brand" href="<?php echo RUTA_URL; ?>/home">
             <img src="<?php echo RUTA_URL; ?>\img\logo.jpg" alt="Logo Guardería Patitas" class="logo-img" />
         </a>
 
         <div class="collapse navbar-collapse text-center w-100" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="buscador.html">Buscador</a>
+                    <a class="nav-link" href="<?php echo RUTA_URL; ?>\buscador">Buscador</a>
                 </li>
                 <li class="nav-item">
                     <a
                         class="nav-link btn btn-outline-primary ms-2"
-                        href="como-funciona.html">Cómo funciona</a>
+                        href="<?php echo RUTA_URL; ?>/como_funciona">Cómo funciona</a>
                 </li>
                 <li class="nav-item">
                     <a
                         class="nav-link btn btn-outline-primary ms-2"
-                        href="servicios.html">Servicios</a>
+                        href="<?php echo RUTA_URL; ?>\servicios">Servicios</a>
                 </li>
                 <li class="nav-item">
                     <a
                         class="nav-link btn btn-outline-primary ms-2"
-                        href="registro-cuidadores.html">Convertirse en cuidador</a>
+                        href="<?php echo RUTA_URL; ?>\registro_cuidadores">Convertirse en cuidador</a>
                 </li>
                 <li class="nav-item">
                     <a
                         class="nav-link btn btn-outline-primary ms-2"
-                        href="registro-duenos.html">Registrarse</a>
+                        href="<?php echo RUTA_URL; ?>\registro_duenos">Registrarse</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link btn btn-outline-primary ms-2" href="login.html">Iniciar sesión</a>
+                    <a class="nav-link btn btn-outline-primary ms-2" href="<?php echo RUTA_URL; ?>\autenticacion">Iniciar sesión</a>
                 </li>
             </ul>
         </div>

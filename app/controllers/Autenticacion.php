@@ -1,8 +1,8 @@
 <?php
 require RUTA_APP . "/librerias/FuncionesFormulario.php";
-class Login_Privado extends Controlador
+class Autenticacion extends Controlador
 {
-    private $loginModelo;
+    private $autenticacionModelo;
 
     public function __construct()
     {
@@ -11,12 +11,12 @@ class Login_Privado extends Controlador
             redireccionar('/menu');
         }
         //1) Acceso al modelo
-        $this->loginModelo = $this->modelo('Login_Privado_Model');
+        $this->autenticacionModelo = $this->modelo('Autenticacion_Model');
     }
 
     public function index()
     {
-        $this->vista('login_privado/inicio');
+        $this->vista('autenticacion/inicio');
     }
 
     public function login()
@@ -28,10 +28,10 @@ class Login_Privado extends Controlador
             $login = comprobarDatos($_POST['username']) ? test_input($_POST['username']) : $loginErr = "Completa el campo Usuario \n";
             $password = comprobarDatos($_POST['password']) ? test_input($_POST['password']) : $passErr = "Completa el campo Contraseña\n";
             if (formularioErrores($loginErr, $passErr)) {
-                $bbddPass = $this->loginModelo->obtenerPass($login);
+                $bbddPass = $this->autenticacionModelo->obtenerPass($login);
                 if ($bbddPass) {
                     if (password_verify($password, "$bbddPass->password")) {
-                        $bbddGrupo = $this->loginModelo->obtenerGrupo($login);
+                        $bbddGrupo = $this->autenticacionModelo->obtenerGrupo($login);
                         if ($bbddGrupo->grupo == "admin") {
                             $_SESSION['usuario'] = $login;
                             $_SESSION['grupo'] = 'admin';

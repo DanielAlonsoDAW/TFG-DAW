@@ -3,20 +3,20 @@
 require RUTA_APP . '/views/inc/header.php';
 ?>
 
-<?php
-// Mostrar el mensaje de error si está presente
-$error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
-if ($error) {
-    // Borrar el mensaje después de mostrarlo
-    unset($_SESSION['error']);
-}
-?>
-
-<!-- Login -->
+<!-- Registro -->
 <div class="container my-5">
-    <h1 class="section-title">Iniciar sesión</h1>
+    <h1 class="section-title">Registro como Propietario</h1>
     <div class="form-container">
         <form>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre completo</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="nombre"
+                    placeholder="Tu nombre"
+                    required />
+            </div>
             <div class="mb-3">
                 <label for="correo" class="form-label">Correo electrónico</label>
                 <input
@@ -32,11 +32,13 @@ if ($error) {
                     type="password"
                     class="form-control"
                     id="contrasena"
-                    placeholder="Tu contraseña"
+                    placeholder="Mínimo 6 caracteres"
                     required />
             </div>
             <div class="text-center">
-                <button type="submit" class="btn btn-primary px-5">Entrar</button>
+                <button type="submit" class="btn btn-primary px-5">
+                    Registrarme
+                </button>
             </div>
         </form>
     </div>

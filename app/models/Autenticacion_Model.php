@@ -1,6 +1,6 @@
 <?php
 
-class Login_Privado_Model
+class Autenticacion_Model
 {
     private $db;
 

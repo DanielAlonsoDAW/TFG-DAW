@@ -32,7 +32,7 @@ class Core
             unset($url[0]);
         }
         // cargamos el controlador
-        $file = self::PATH_CONTROLADORES . $this->controladorActual . '_Controller.php';
+        $file = self::PATH_CONTROLADORES . $this->controladorActual . '.php';
         require_once $file;
         $this->controladorActual = new $this->controladorActual(); // Instanciamos el controlador elegido en la url
 
