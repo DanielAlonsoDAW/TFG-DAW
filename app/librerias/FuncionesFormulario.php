@@ -50,13 +50,64 @@ function comprobarNumeroNoRequerido($num)
     }
 }
 
-// Validar matrícula con expresión regular
-function validarFormatoMatricula($matricula)
+function formularioErrores(...$error)
 {
-    if (!preg_match("/^[0-9]{4}[A-Z]{3}$/", $matricula)) {
+
+    foreach ($error as $value) {
+        if (strlen($value) > 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// Función para registrar errores en el archivo log/error.log 
+function registrarError($criticidad, $mensaje)
+{
+    $fechaHora = new DateTime("now", new DateTimeZone("Europe/Madrid"));
+    $fechaHoraStr = $fechaHora->format("d-m-Y H:i:s");
+    $logMensaje = $fechaHoraStr . " - " . $criticidad . " - " . $mensaje . "\n";
+    error_log($logMensaje, 3, "log/error.log");
+}
+
+function comprobarEmail($email)
+{
+    // Validar formato de email con expresión regular
+    $pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+    if (!preg_match($pattern, $email)) {
         return false;
     }
+    return true;
+}
 
+function comprobarContrasena($contrasena)
+{
+    // Verificar que la contraseña tenga al menos 8 caracteres
+    if (strlen($contrasena) < 8) {
+        return "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minuscula, un número y un símbolo.";
+    }
+
+    // Verificar que contenga al menos una letra mayúscula
+    if (!preg_match('/[A-Z]/', $contrasena)) {
+        return "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minuscula, un número y un símbolo.";
+    }
+
+    // Verificar que contenga al menos una letra minúscula
+    if (!preg_match('/[a-z]/', $contrasena)) {
+        return "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minuscula, un número y un símbolo.";
+    }
+
+    // Verificar que contenga al menos un número
+    if (!preg_match('/[0-9]/', $contrasena)) {
+        return "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minuscula, un número y un símbolo.";
+    }
+
+    // Verificar que contenga al menos un símbolo
+    if (!preg_match('/[\W_]/', $contrasena)) {
+        return "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minuscula, un número y un símbolo.";
+    }
+
+    // Si pasa todas las validaciones
     return true;
 }
 function validarRutaImagen($ruta)
@@ -79,26 +130,6 @@ function validarRutaImagen($ruta)
     }
 
     return true;
-}
-
-function formularioErrores(...$error)
-{
-
-    foreach ($error as $value) {
-        if (strlen($value) > 0) {
-            return false;
-        }
-    }
-    return true;
-}
-
-// Función para registrar errores en el archivo log/error.log 
-function registrarError($criticidad, $mensaje)
-{
-    $fechaHora = new DateTime("now", new DateTimeZone("Europe/Madrid"));
-    $fechaHoraStr = $fechaHora->format("d-m-Y H:i:s");
-    $logMensaje = $fechaHoraStr . " - " . $criticidad . " - " . $mensaje . "\n";
-    error_log($logMensaje, 3, "log/error.log");
 }
 
 function comprobarDNI($dni)

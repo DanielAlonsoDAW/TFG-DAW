@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú de Opciones</title>
     <link href="<?php echo RUTA_URL; ?>\css\bootstrap\bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo RUTA_URL; ?>\css\bootstrap-icons\font\bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?php echo RUTA_URL; ?>\css\estilos.css" rel="stylesheet">
 </head>
 
