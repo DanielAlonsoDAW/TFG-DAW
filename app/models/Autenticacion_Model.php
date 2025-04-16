@@ -9,17 +9,17 @@ class Autenticacion_Model
         $this->db = new DataBase();
     }
 
-    public function obtenerPass($login)
+    public function obtenerDuenoPorEmail($email)
     {
-        $this->db->query("SELECT password FROM usuarios WHERE login = :login");
-        $this->db->bind(':login', $login);
+        $this->db->query("SELECT * FROM patitas_duenos WHERE email = :email");
+        $this->db->bind(':email', $email);
         return $this->db->registro();
     }
 
-    public function obtenerGrupo($login)
+    public function obtenerCuidadorPorEmail($email)
     {
-        $this->db->query("SELECT grupo from usuarios WHERE login = :login");
-        $this->db->bind(':login', $login);
+        $this->db->query("SELECT * FROM patitas_cuidadores WHERE email = :email");
+        $this->db->bind(':email', $email);
         return $this->db->registro();
     }
 }

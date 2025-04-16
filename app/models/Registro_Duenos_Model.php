@@ -8,7 +8,7 @@ class Registro_Duenos_Model
     {
         $this->db = new DataBase();
     }
-    function compronarEmailBBDD($email)
+    function comprobarEmailBBDD($email)
     {
         $this->db->query("SELECT * from patitas_duenos where email = :email");
         $this->db->bind(':email', $email);
@@ -18,12 +18,12 @@ class Registro_Duenos_Model
 
     public function agregarDueno($datos)
     {
-        $this->db->query("INSERT INTO clientes (nombre, email, contraseña) VALUES (:nombre, :email, :contraseña)");
+        $this->db->query("INSERT INTO patitas_duenos (nombre, email, contrasena) VALUES (:nombre, :email, :contrasena)");
 
         // Vinculamos los valores
         $this->db->bind(":nombre", $datos["nombre"]);
         $this->db->bind(":email", $datos["email"]);
-        $this->db->bind(":contraseña", $datos["contraseña"]);
+        $this->db->bind(":contrasena", $datos["contrasena"]);
 
         // Ejecutar la consulta
         if ($this->db->execute()) {

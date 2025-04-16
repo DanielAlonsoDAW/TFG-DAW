@@ -2,16 +2,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("registroForm");
   const nombre = document.getElementById("nombre");
   const correo = document.getElementById("correo");
-  const contraseña = document.getElementById("contraseña");
+  const contrasena = document.getElementById("contrasena");
 
   const errorNombre = document.getElementById("error-nombre");
   const errorCorreo = document.getElementById("error-correo");
-  const errorContraseña = document.getElementById("error-contraseña");
+  const errorContraseña = document.getElementById("error-contrasena");
 
-  function validarNombre(campo, errorSpan, mensaje) {
+  function validarNombre(campo, errorSpan) {
     if (campo.value.trim() === "") {
       campo.classList.add("is-invalid");
-      errorSpan.textContent = mensaje;
+      errorSpan.textContent = "El nombre es obligatorio.";
       return false;
     } else {
       campo.classList.remove("is-invalid");
@@ -39,14 +39,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function validarContraseña(campo, errorSpan) {
     const contraseñaValida =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{8,}$/; // Expresión regular para validar la contraseña
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{8,}$/;
     if (campo.value.trim() === "") {
       campo.classList.add("is-invalid");
-      errorSpan.textContent = "La contraseña es obligatoria.";
+      errorSpan.textContent = "La contrasena es obligatoria.";
       return false;
     } else if (!contraseñaValida.test(campo.value.trim())) {
       campo.classList.add("is-invalid");
-      errorSpan.textContent = "La contraseña no es valida";
+      errorSpan.textContent = "La contrasena no es valida";
       return false;
     } else {
       campo.classList.remove("is-invalid");
@@ -65,39 +65,33 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Validar al cambiar el foco (blur)
   nombre.addEventListener("blur", function () {
-    validarNombre(nombre, errorNombre, "El nombre es obligatorio.");
+    validarNombre(nombre, errorNombre);
   });
 
   correo.addEventListener("blur", function () {
     validarCorreo(correo, errorCorreo);
   });
 
-  contraseña.addEventListener("blur", function () {
-    validarContraseña(contraseña, errorContraseña);
+  contrasena.addEventListener("blur", function () {
+    validarContraseña(contrasena, errorContraseña);
   });
 
   // Validar dinámicamente al escribir en el campo de correo
   correo.addEventListener("input", function () {
-    validarNombre(nombre, errorNombre, "El nombre es obligatorio.");
+    validarNombre(nombre, errorNombre);
   });
 
-  contraseña.addEventListener("input", function () {
-    const nombreValido = validarNombre(
-      nombre,
-      errorNombre,
-      "El nombre es obligatorio."
-    );
-    const correoValido = validarCorreo(correo, errorCorreo);
+  // Validar dinámicamente al escribir en el campo de contrasena
+  contrasena.addEventListener("input", function () {
+    validarNombre(nombre, errorNombre);
+    validarCorreo(correo, errorCorreo);
   });
 
+  // Validar campos al pulsar en submit
   form.addEventListener("submit", function (e) {
-    const nombreValido = validarNombre(
-      nombre,
-      errorNombre,
-      "El nombre es obligatorio."
-    );
+    const nombreValido = validarNombre(nombre, errorNombre);
     const correoValido = validarCorreo(correo, errorCorreo);
-    const contraseñaValida = validarContraseña(contraseña, errorContraseña);
+    const contraseñaValida = validarContraseña(contrasena, errorContraseña);
 
     if (!nombreValido || !correoValido || !contraseñaValida) {
       e.preventDefault();

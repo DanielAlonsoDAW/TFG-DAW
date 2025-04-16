@@ -10,7 +10,7 @@ class Registro_Duenos extends Controlador
 
     public function index()
     {
-        $nombre = $email = $contraseña = '';
+        $nombre = $email = $contrasena = '';
         $nombreErr = $emailErr = $contraseñaErr = '';
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -32,11 +32,11 @@ class Registro_Duenos extends Controlador
                 $emailErr = "Indica un correo electrónico válido\n";
             }
 
-            // Validar contraseña
-            if (comprobarDatos(trim($_POST['contraseña']))) {
-                $contraseña = password_hash(test_input($_POST['contraseña']), PASSWORD_DEFAULT);
+            // Validar contrasena
+            if (comprobarDatos(trim($_POST['contrasena']))) {
+                $contrasena = password_hash(test_input($_POST['contrasena']), PASSWORD_DEFAULT);
             } else {
-                $contraseñaErr = "Completa el campo Contraseña\n";
+                $contraseñaErr = "Completa el campo Contrasena\n";
             }
 
             // Verificar si hay errores en el formulario
@@ -44,7 +44,7 @@ class Registro_Duenos extends Controlador
                 $datos = [
                     'nombre' => $nombre,
                     'email' => $email,
-                    'contraseña' => $contraseña,
+                    'contrasena' => $contrasena,
                 ];
 
                 if ($this->registroDuenosModelo->agregarDueno($datos)) {
@@ -57,12 +57,12 @@ class Registro_Duenos extends Controlador
                     'correct' => [
                         'nombre' => $nombre,
                         'email' => $email,
-                        'contraseña' => $contraseña,
+                        'contrasena' => $contrasena,
                     ],
                     'errors' => [
                         'nombre' => $nombreErr,
                         'email' => $emailErr,
-                        'contraseña' => $contraseñaErr,
+                        'contrasena' => $contraseñaErr,
                     ]
                 ];
                 $this->vista('/registro_duenos/inicio', $datos);
@@ -71,7 +71,7 @@ class Registro_Duenos extends Controlador
             $datos = [
                 'nombre' => '',
                 'email' => '',
-                'contraseña' => '',
+                'contrasena' => '',
             ];
             $this->vista('/registro_duenos/inicio', $datos);
         }
