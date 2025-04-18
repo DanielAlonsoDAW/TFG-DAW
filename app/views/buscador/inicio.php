@@ -3,6 +3,9 @@
 require RUTA_APP . '/views/inc/header.php';
 ?>
 
+<link rel="stylesheet" href="<?php echo RUTA_URL; ?>\js\leaflet\leaflet.css" />
+<script src="<?php echo RUTA_URL; ?>\js\leaflet\leaflet.js"></script>
+
 <!-- Buscador -->
 <div class="search-section">
     <div class="container">
@@ -127,14 +130,29 @@ require RUTA_APP . '/views/inc/header.php';
         </div>
     </div>
 
-    <!-- SIMULACIÓN DE MAPA CON IMAGEN -->
-    <div
-        class="map-placeholder"
-        style="
-          width: 65%;
-          background: url('mapa.png') no-repeat center center;
-          background-size: cover;
-        "></div>
+    <!-- MAPA USANDO LEAFLET -->
+    <div id="map" style="width: 65%; height: 100%"></div>
+    <script>
+        // Inicializar el mapa
+        var map = L.map('map').setView([40.416775, -3.703790], 6); // Coordenadas iniciales (España)
+
+        // Cargar las capas de mapa desde OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Añadir marcadores de ejemplo
+        var markers = [
+            { coords: [41.3851, 2.1734], popup: "Carlos G. - Barcelona" }, // Barcelona
+            { coords: [40.4168, -3.7038], popup: "Lucía M. - Madrid" },   // Madrid
+            { coords: [39.4699, -0.3763], popup: "Elena R. - Valencia" }, // Valencia
+            { coords: [37.3886, -5.9823], popup: "Javier L. - Sevilla" }  // Sevilla
+        ];
+
+        markers.forEach(function(marker) {
+            L.marker(marker.coords).addTo(map).bindPopup(marker.popup);
+        });
+    </script>
 </div>
 
 <?php
