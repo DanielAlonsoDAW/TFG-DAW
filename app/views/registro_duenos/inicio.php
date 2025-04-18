@@ -36,7 +36,7 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 </div>
 
-<script src="<?php echo RUTA_URL; ?>/public/js/registroDuenos.js"></script>
+<script src="<?php echo RUTA_URL; ?>/public/js/registro.js"></script>
 
 <?php
 // Cargamos el footer al final de la página

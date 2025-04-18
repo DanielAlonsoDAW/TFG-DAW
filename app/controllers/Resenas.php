@@ -1,7 +1,9 @@
 <?php
 class Resenas extends Controlador
 {
-    public function __construct() {}
+    public function __construct() {
+        session_start();
+    }
     public function index()
     {
 

@@ -6,6 +6,8 @@ class Home extends Controlador
 
     public function __construct()
     {
+        session_start();
+
         //1) Acceso al modelo
         $this->homeModelo = $this->modelo('Home_Model');
     }

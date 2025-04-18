@@ -13,7 +13,7 @@
 </footer>
 <!-- Permite el acceso al contenidos de nuestros javascripts -->
 <!-- <script type="text/javascript" src="<?php echo RUTA_URL; ?>/js/main.js"></script> -->
-<script src="<?php echo RUTA_URL; ?>\js\bootsrap\bootstrap.bundle.min.js"></script>
+<script src="<?php echo RUTA_URL; ?>\js\bootstrap\bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -5,6 +5,10 @@ class Registro_Duenos extends Controlador
     private $registroDuenosModelo;
     public function __construct()
     {
+        session_start();
+        if (isset($_SESSION['usuario'])) {
+            redireccionar('/home');
+        }
         $this->registroDuenosModelo = $this->modelo('Registro_Duenos_Model');
     }
 

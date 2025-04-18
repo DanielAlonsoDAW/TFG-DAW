@@ -3,6 +3,7 @@ class Como_Funciona extends Controlador
 {
     public function __construct()
     {
+        session_start();
     }
     public function index()
     {

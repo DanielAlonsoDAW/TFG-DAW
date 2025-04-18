@@ -33,19 +33,38 @@
                         class="nav-link btn btn-outline-primary ms-2"
                         href="<?php echo RUTA_URL; ?>\servicios">Servicios</a>
                 </li>
-                <li class="nav-item">
-                    <a
-                        class="nav-link btn btn-outline-primary ms-2"
-                        href="<?php echo RUTA_URL; ?>\registro_cuidadores">Convertirse en cuidador</a>
-                </li>
-                <li class="nav-item">
-                    <a
-                        class="nav-link btn btn-outline-primary ms-2"
-                        href="<?php echo RUTA_URL; ?>\registro_duenos">Registrarse</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-primary ms-2" href="<?php echo RUTA_URL; ?>\autenticacion">Iniciar sesión</a>
-                </li>
+                <?php
+                if (!isset($_SESSION['usuario'])) {
+                    echo '<li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '\registro_cuidadores">Convertirse en cuidador</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '\registro_duenos">Registrarse</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '\autenticacion">Iniciar sesión</a>
+                          </li>';
+                } elseif (isset($_SESSION['usuario']) && ($_SESSION['grupo']) === "cuidador") {
+                    $nombreUsuario = explode(' ', $_SESSION['usuario'])[0];
+                    echo '<li class="nav-item">
+                            <a class="nav-link" href="#">' . htmlspecialchars($nombreUsuario, ENT_QUOTES, 'UTF-8') . '</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '/autenticacion/logout">Cerrar Sesión</a>
+                          </li>';
+                } else {
+                    $nombreUsuario = explode(' ', $_SESSION['usuario'])[0];
+                    echo '<li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '\registro_cuidadores">Convertirse en cuidador</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="#">' . htmlspecialchars($nombreUsuario, ENT_QUOTES, 'UTF-8') . '</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '/autenticacion/logout">Cerrar Sesión</a>
+                          </li>';
+                }
+                ?>
             </ul>
         </div>
     </div>
