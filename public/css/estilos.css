@@ -6,6 +6,7 @@ body {
 
 .navbar {
   background-color: #e2f7f6 !important;
+  padding: 0;
 }
 
 .navbar .nav-link {
@@ -21,30 +22,40 @@ body {
   border-radius: 5px;
 }
 
-.logo-img {
-  height: 90px;
+.navbar-brand{
+  margin: 0;
+  padding: 0;
 }
 
-.hero-section {
+.logo-img {
+  height: 10vh;
+}
+
+#buscador-home {
   background-color: #f0fdfa;
-  padding: 80px 20px 60px;
+  padding: 1rem;
   text-align: center;
 }
 
-.hero-section h1 {
+#buscador-home h1 {
   color: #005b5c;
   font-weight: bold;
 }
 
-.hero-section p {
+#buscador-home p {
   font-size: 1.2rem;
   color: #444;
 }
 
-.hero-section img {
-  max-width: 300px;
-  margin: 10px;
-  border-radius: 8px;
+#cabecera-buscador {
+  background-color: #f0fdfa;
+  padding: 0.2rem;
+  text-align: center;
+}
+
+#cabecera-buscador h2 {
+  color: #005b5c;
+  font-weight: bold;
 }
 
 .btn-perfil {
@@ -93,7 +104,7 @@ body {
 
 footer {
   background-color: #d0f0f0;
-  padding: 20px 0;
+  padding: 1.25vh 0vh;
 }
 
 footer p {
@@ -258,4 +269,37 @@ h3 {
 
 .form-control {
   border-radius: 6px;
+}
+
+.main-content {
+  height: 60vh;
+}
+
+.sidebar-custom {
+  background-color: #f0fdfa;
+  height: 61vh;
+  overflow-y: auto;
+}
+
+.map-container-custom {
+  height:61vh;
+}
+
+.text-primary-custom {
+  color: #006d77;
+}
+
+.custom-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.custom-card .testimonial {
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.custom-card .rating {
+  color: #f4b400;
 }

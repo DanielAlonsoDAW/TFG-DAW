@@ -7,9 +7,9 @@ require RUTA_APP . '/views/inc/header.php';
 <script src="<?php echo RUTA_URL; ?>\js\leaflet\leaflet.js"></script>
 
 <!-- Buscador -->
-<div class="search-section">
-    <div class="container">
-        <h1>Busca cuidadores cerca de ti</h1>
+<div id="cabecera-buscador">
+    <div class="container my-3" id="buscador">
+        <h2 class="text-center mb-4">Busca cuidadores cerca de ti</h2>
         <form class="row g-4 justify-content-center">
             <div class="col-md-3">
                 <input type="text" class="form-control" placeholder="Ubicación" />
@@ -48,112 +48,63 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 </div>
 
-<!-- Mapa simulado + Lista -->
-<div class="main-content" style="display: flex; height: 600px">
-    <!-- LISTA DE CUIDADORES -->
-    <div
-        class="sidebar"
-        style="
-          width: 35%;
-          background-color: #f0fdfa;
-          padding: 20px;
-          overflow-y: auto;
-        ">
-        <h5 style="color: #006d77">Cuidadores disponibles</h5>
+<!-- CUIDADORES + MAPA -->
+<div class="container-fluid">
+    <div class="row no-gutters">
+        <!-- Sidebar 30% -->
+        <div class="col-md-4 col-lg-3 sidebar-custom p-4">
+            <h5 class="text-primary-custom mb-4">Cuidadores disponibles</h5>
 
-        <div
-            class="result-card"
-            style="
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-          ">
-            <h6>Carlos G.</h6>
-            <p>Barcelona | Perros pequeños</p>
-            <p style="font-size: 0.9rem">
-                <em>“Muy atento y cariñoso con mi perro. ¡Repetiré sin duda!”</em>
-            </p>
-            <p style="color: #f4b400">★★★★★</p>
+            <div class="card custom-card mb-3">
+                <div class="card-body">
+                    <h6 class="card-title">Carlos G.</h6>
+                    <p class="card-text">Barcelona | Perros pequeños</p>
+                    <p class="testimonial">“Muy atento y cariñoso con mi perro. ¡Repetiré sin duda!”</p>
+                    <p class="rating">★★★★★</p>
+                </div>
+            </div>
+
+            <!-- Repite estructura para los demás cuidadores -->
         </div>
 
-        <div
-            class="result-card"
-            style="
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-          ">
-            <h6>Lucía M.</h6>
-            <p>Madrid | Gatos y perros medianos</p>
-            <p style="font-size: 0.9rem">
-                <em>“Mi gato estuvo genial, muy tranquila y profesional.”</em>
-            </p>
-            <p style="color: #f4b400">★★★★☆</p>
-        </div>
-
-        <div
-            class="result-card"
-            style="
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-          ">
-            <h6>Elena R.</h6>
-            <p>Valencia | Perros grandes</p>
-            <p style="font-size: 0.9rem">
-                <em>“Muy espaciosa su casa y gran energía con los animales.”</em>
-            </p>
-            <p style="color: #f4b400">★★★★★</p>
-        </div>
-
-        <div
-            class="result-card"
-            style="
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-          ">
-            <h6>Javier L.</h6>
-            <p>Sevilla | Gatos adultos</p>
-            <p style="font-size: 0.9rem">
-                <em>“Muy puntual en las visitas y cuidadoso con mi gata mayor.”</em>
-            </p>
-            <p style="color: #f4b400">★★★★☆</p>
+        <!-- Mapa 70% -->
+        <div class="col-md-8 col-lg-9 map-container-custom p-0">
+            <div id="map" class="w-100 h-100"></div>
         </div>
     </div>
-
-    <!-- MAPA USANDO LEAFLET -->
-    <div id="map" style="width: 65%; height: 100%"></div>
-    <script>
-        // Inicializar el mapa
-        var map = L.map('map').setView([40.416775, -3.703790], 6); // Coordenadas iniciales (España)
-
-        // Cargar las capas de mapa desde OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Añadir marcadores de ejemplo
-        var markers = [
-            { coords: [41.3851, 2.1734], popup: "Carlos G. - Barcelona" }, // Barcelona
-            { coords: [40.4168, -3.7038], popup: "Lucía M. - Madrid" },   // Madrid
-            { coords: [39.4699, -0.3763], popup: "Elena R. - Valencia" }, // Valencia
-            { coords: [37.3886, -5.9823], popup: "Javier L. - Sevilla" }  // Sevilla
-        ];
-
-        markers.forEach(function(marker) {
-            L.marker(marker.coords).addTo(map).bindPopup(marker.popup);
-        });
-    </script>
 </div>
+
+
+<!-- LEAFLET SCRIPT -->
+<script>
+    var map = L.map('map').setView([40.416775, -3.703790], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var markers = [{
+            coords: [41.3851, 2.1734],
+            popup: "Carlos G. - Barcelona"
+        },
+        {
+            coords: [40.4168, -3.7038],
+            popup: "Lucía M. - Madrid"
+        },
+        {
+            coords: [39.4699, -0.3763],
+            popup: "Elena R. - Valencia"
+        },
+        {
+            coords: [37.3886, -5.9823],
+            popup: "Javier L. - Sevilla"
+        }
+    ];
+
+    markers.forEach(function(marker) {
+        L.marker(marker.coords).addTo(map).bindPopup(marker.popup);
+    });
+</script>
+
 
 <?php
 // Cargamos el footer al final de la página

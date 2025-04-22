@@ -4,14 +4,14 @@ require RUTA_APP . '/views/inc/header.php';
 ?>
 
 <!-- HERO / INFORMACIÓN -->
-<div class="hero-section">
+<div id="buscador-home">
     <h1>¡Bienvenido a Guardería Patitas!</h1>
     <p>
         Conecta con los mejores cuidadores para tus perros y gatos. ¡Seguros,
         atentos y cerca de ti!
     </p>
     <!-- BUSCADOR (Sección anclada) -->
-    <div class="container my-5" id="buscador">
+    <div class="container my-4" id="buscador">
         <h3 class="text-center mb-4">Busca un cuidador cerca de ti</h3>
         <form class="row g-4 justify-content-center">
             <div class="col-md-3">
