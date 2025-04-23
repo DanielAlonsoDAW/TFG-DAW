@@ -22,11 +22,11 @@ require RUTA_APP . '/views/inc/header.php';
             </div>
             <div class="mb-3">
                 <label for="contrasena" class="form-label">
-                    Contrasena
+                    Contraseña
                     <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
-                        data-bs-title="La contrasena debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo."></i>
+                        data-bs-title="La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo."></i>
                 </label>
-                <input type="password" name="contrasena" class="form-control" id="contrasena" placeholder="Contrasena" required />
+                <input type="password" name="contrasena" class="form-control" id="contrasena" placeholder="Contraseña" required />
                 <span class="text-danger" id="error-contrasena"><?php if (isset($datos['errors']['contrasena'])) echo $datos['errors']['contrasena']; ?></span>
             </div>
             <div class="form group text-center">

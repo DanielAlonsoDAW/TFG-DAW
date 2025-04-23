@@ -3,6 +3,8 @@
 require RUTA_APP . '/views/inc/header.php';
 ?>
 
+
+
 <link rel="stylesheet" href="<?php echo RUTA_URL; ?>\js\leaflet\leaflet.css" />
 <script src="<?php echo RUTA_URL; ?>\js\leaflet\leaflet.js"></script>
 
@@ -10,9 +12,9 @@ require RUTA_APP . '/views/inc/header.php';
 <div id="cabecera-buscador">
     <div class="container my-3" id="buscador">
         <h2 class="text-center mb-4">Busca cuidadores cerca de ti</h2>
-        <form class="row g-4 justify-content-center">
+        <form id="form-filtros" class="row g-4 justify-content-center">
             <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Ubicación" />
+                <input id="input-ciudad" type="text" class="form-control" placeholder="Ubicación" />
             </div>
             <div class="col-md-2">
                 <select class="form-select">
@@ -48,63 +50,27 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 </div>
 
-<!-- CUIDADORES + MAPA -->
+<!-- CUIDADORES Y MAPA -->
 <div class="container-fluid">
-    <div class="row no-gutters">
-        <!-- Sidebar 30% -->
+    <div class="row">
+        <!-- Sidebar con lista de cuidadores -->
         <div class="col-md-4 col-lg-3 sidebar-custom p-4">
             <h5 class="text-primary-custom mb-4">Cuidadores disponibles</h5>
-
-            <div class="card custom-card mb-3">
-                <div class="card-body">
-                    <h6 class="card-title">Carlos G.</h6>
-                    <p class="card-text">Barcelona | Perros pequeños</p>
-                    <p class="testimonial">“Muy atento y cariñoso con mi perro. ¡Repetiré sin duda!”</p>
-                    <p class="rating">★★★★★</p>
-                </div>
-            </div>
-
-            <!-- Repite estructura para los demás cuidadores -->
+            <!-- Aquí se insertarán las tarjetas dinámicamente desde JS -->
         </div>
 
-        <!-- Mapa 70% -->
+        <!-- Mapa -->
         <div class="col-md-8 col-lg-9 map-container-custom p-0">
             <div id="map" class="w-100 h-100"></div>
         </div>
     </div>
 </div>
 
-
-<!-- LEAFLET SCRIPT -->
 <script>
-    var map = L.map('map').setView([40.416775, -3.703790], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    var markers = [{
-            coords: [41.3851, 2.1734],
-            popup: "Carlos G. - Barcelona"
-        },
-        {
-            coords: [40.4168, -3.7038],
-            popup: "Lucía M. - Madrid"
-        },
-        {
-            coords: [39.4699, -0.3763],
-            popup: "Elena R. - Valencia"
-        },
-        {
-            coords: [37.3886, -5.9823],
-            popup: "Javier L. - Sevilla"
-        }
-    ];
-
-    markers.forEach(function(marker) {
-        L.marker(marker.coords).addTo(map).bindPopup(marker.popup);
-    });
+    const RUTA_API = "<?= RUTA_URL ?>/buscador/api_filtrar";
 </script>
 
+<script src="<?php echo RUTA_URL; ?>\js\buscador.js"></script>
 
 <?php
 // Cargamos el footer al final de la página

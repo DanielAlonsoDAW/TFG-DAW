@@ -263,7 +263,7 @@ h3 {
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  max-width: 600px;
+  max-width: 60dvw;
   margin: auto;
 }
 
@@ -279,10 +279,12 @@ h3 {
   background-color: #f0fdfa;
   height: 61vh;
   overflow-y: auto;
+  width: 30vw;
 }
 
 .map-container-custom {
   height:61vh;
+  width: 70vw;
 }
 
 .text-primary-custom {
