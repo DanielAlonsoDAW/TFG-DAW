@@ -53,38 +53,30 @@ require RUTA_APP . '/views/inc/header.php';
 
 <!-- Scroll mascotas -->
 <div class="carousel-wrapper container-fluid">
-    <button class="scroll-button scroll-left" onclick="scrollCarousel(-1)">
+    <button class="scroll-button scroll-left" onclick="desplazarCarrusel(-1)">
         &#10094;
     </button>
 
-    <div class="scroll-carousel" id="scrollCarousel">
-        <img src="https://placecats.com/300/200" alt="Gato feliz" />
-        <img src="https://placedog.net/360/200" alt="Perro feliz" />
-        <img src="https://placecats.com/301/200" alt="Gato feliz" />
-        <img src="https://placedog.net/361/200" alt="Perro feliz" />
-        <img src="https://placecats.com/302/200" alt="Gato feliz" />
-        <img src="https://placedog.net/362/200" alt="Perro feliz" />
-        <img src="https://placecats.com/303/200" alt="Gato feliz" />
-        <img src="https://placedog.net/363/200" alt="Perro feliz" />
-        <img src="https://placecats.com/304/200" alt="Gato feliz" />
-    </div>
+    <div class="scroll-carousel" id="scrollCarrusel"></div>
 
-    <button class="scroll-button scroll-right" onclick="scrollCarousel(1)">
+    <button class="scroll-button scroll-right" onclick="desplazarCarrusel(1)">
         &#10095;
     </button>
 </div>
-
 <script>
-    function scrollCarousel(direction) {
-        const container = document.getElementById("scrollCarousel");
-        const scrollAmount = 320; // Aproximadamente el ancho de una imagen + margen
-        container.scrollBy({
-            left: direction * scrollAmount,
-            behavior: "smooth",
-        });
-    }
+    const URL_BASE = "<?php echo RUTA_URL; ?>";
 </script>
+<script src="<?php echo RUTA_URL; ?>\js\carousel.js"></script>
 
+<div id="visorImagen" class="visor-overlay">
+    <span class="visor-cerrar" onclick="cerrarVisor()">×</span>
+    <button class="visor-nav visor-prev" onclick="imagenAnterior()">&#10094;</button>
+    <img id="imagenAmpliada" class="visor-img" src="" alt="Imagen ampliada" />
+    <button class="visor-nav visor-next" onclick="imagenSiguiente()">&#10095;</button>
+</div>
+
+
+<!-- Scroll Cuidadores Destacados -->
 <div class="container-fluid carousel-bg">
     <div class="container carousel-container">
         <h3 class="mb-4 text-center">Cuidadores Destacados</h3>
