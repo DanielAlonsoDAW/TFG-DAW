@@ -28,7 +28,7 @@ if ($error) {
                     <input type="email" name="email" class="form-control" id="correo" placeholder="tucorreo@ejemplo.com" required />
                     <span class="text-danger" id="error-correo"></span>
                 </div>
-                <div class="mb-3">
+                <div class="mb-5">
                     <label for="contrasena" class="form-label">Contraseña</label>
                     <input type="password" name="contrasena" class="form-control" id="contrasena" placeholder="Tu contraseña" required />
                     <span class="text-danger" id="error-contrasena"></span>
@@ -39,10 +39,11 @@ if ($error) {
             </form>
         </div>
     </div>
+</div>
 
-    <script src="<?php echo RUTA_URL; ?>/public/js/inicioSesion.js"></script>
+<script src="<?php echo RUTA_URL; ?>/public/js/inicioSesion.js"></script>
 
-    <?php
-    // Cargamos el footer al final de la página
-    require RUTA_APP . '/views/inc/footer.php';
-    ?>
+<?php
+// Cargamos el footer al final de la página
+require RUTA_APP . '/views/inc/footer.php';
+?>

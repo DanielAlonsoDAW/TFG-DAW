@@ -1,6 +1,6 @@
 <!-- pie de las páginas del site -->
 <!-- Footer -->
-<footer>
+<footer class="footer text-center mt-auto">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-auto text-center">
@@ -11,8 +11,9 @@
         </div>
     </div>
 </footer>
-<!-- Permite el acceso al contenidos de nuestros javascripts -->
-<!-- <script type="text/javascript" src="<?php echo RUTA_URL; ?>/js/main.js"></script> -->
+
+</div>
+<!-- Scripts -->
 <script src="<?php echo RUTA_URL; ?>\js\bootstrap\bootstrap.bundle.min.js"></script>
 </body>
 

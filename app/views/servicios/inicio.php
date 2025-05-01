@@ -4,7 +4,7 @@ require RUTA_APP . '/views/inc/header.php';
 ?>
 
 <!-- Título -->
-<div class="container">
+<div class="container my-5">
     <h1 class="section-title">Nuestros Servicios</h1>
     <p class="text-center mb-5">
         Encuentra el cuidado perfecto para tu mascota, adaptado a tus
@@ -60,9 +60,9 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 
     <!-- CTA -->
-    <div class="text-center my-5">
+    <div class="text-center mt-5">
         <h5>¿Listo para encontrar el mejor cuidador?</h5>
-        <a href="buscador.html" class="btn btn-primary mt-2">Buscar ahora</a>
+        <a href="buscador.html" class="btn btn-primary mt-4">Buscar ahora</a>
     </div>
 </div>
 

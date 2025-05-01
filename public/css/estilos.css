@@ -1,7 +1,30 @@
-body {
+html, body {
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   background-color: #fefefe;
   color: #333;
+  height: 100%;
+  margin: 0;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer {
+  background-color: #d0f0f0;
+  padding: 1.25vh 0;
+  text-align: center;
+  color: #006d77;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+footer p {
+  color: #006d77;
+  font-weight: 500;
+  font-size: 0.95rem;
 }
 
 .navbar {
@@ -100,17 +123,6 @@ body {
 
 .carousel-bg::before {
   background: rgba(255, 255, 255, 0.85);
-}
-
-footer {
-  background-color: #d0f0f0;
-  padding: 1.25vh 0vh;
-}
-
-footer p {
-  color: #006d77;
-  font-weight: 500;
-  font-size: 0.95rem;
 }
 
 h3 {
@@ -243,14 +255,13 @@ h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); /* opcional: para dar relieve */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   transition: background 0.2s ease;
 }
 
 .visor-nav:hover {
   background: rgba(255, 255, 255, 1);
 }
-
 
 .visor-prev {
   left: 5vh;
@@ -260,12 +271,10 @@ h3 {
   right: 5vh;
 }
 
-
 .section-title {
   color: #006d77;
   font-weight: bold;
-  margin-top: 50px;
-  margin-bottom: 30px;
+  margin-bottom: 5vh;
   text-align: center;
 }
 
@@ -324,19 +333,16 @@ h3 {
 
 .form-container {
   background-color: #f0fdfa;
-  padding: 40px;
+  padding: 5vh;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  max-width: 60dvw;
+  max-width: 45vw;
   margin: auto;
+  margin-bottom: 5vh;
 }
 
 .form-control {
   border-radius: 6px;
-}
-
-.main-content {
-  height: 60vh;
 }
 
 .sidebar-custom {

@@ -4,7 +4,7 @@ require RUTA_APP . '/views/inc/header.php';
 ?>
 
 <!-- Título principal -->
-<div class="container">
+<div class="container my-5">
     <h1 class="section-title">¿Cómo funciona Guardería Patitas?</h1>
 
     <!-- Paso 1 -->
@@ -55,10 +55,10 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 
     <!-- Extra: mensaje final -->
-    <div class="text-center my-5">
+    <div class="text-center mt-5">
         <h5>¿Eres amante de los animales?</h5>
         <p>
-            <a href="#convertirse-cuidador" class="btn btn-primary mt-2">¡Conviértete en cuidador!</a>
+            <a href="#convertirse-cuidador" class="btn btn-primary mt-4">¡Conviértete en cuidador!</a>
         </p>
     </div>
 </div>

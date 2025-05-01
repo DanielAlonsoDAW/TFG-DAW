@@ -21,7 +21,7 @@ require RUTA_APP . '/views/inc/header.php';
                     value="<?php if (isset($datos['correct']['email'])) echo $datos['correct']['email']; ?>" required />
                 <span class="text-danger" id="error-correo"><?php if (isset($datos['errors']['email'])) echo $datos['errors']['email']; ?></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-5">
                 <label for="contrasena" class="form-label">
                     Contraseña
                     <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -89,10 +89,11 @@ require RUTA_APP . '/views/inc/header.php';
             <p>
         </div>
     </div>
+</div>
 
-    <script src="<?php echo RUTA_URL; ?>/public/js/registro.js"></script>
+<script src="<?php echo RUTA_URL; ?>/public/js/registro.js"></script>
 
-    <?php
-    // Cargamos el footer al final de la página
-    require RUTA_APP . '/views/inc/footer.php';
-    ?>
+<?php
+// Cargamos el footer al final de la página
+require RUTA_APP . '/views/inc/footer.php';
+?>
