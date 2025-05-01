@@ -1,0 +1,173 @@
+id,nombre,tamano
+1,Affenpinscher,pequeño
+2,Afghan Hound,grande
+3,African Hunting Dog,grande
+4,Airedale Terrier,grande
+5,Akbash Dog,grande
+6,Akita,grande
+7,Alapaha Blue Blood Bulldog,mediano
+8,Alaskan Husky,grande
+9,Alaskan Malamute,grande
+10,American Bulldog,grande
+11,American Bully,mediano
+12,American Eskimo Dog,mediano
+13,American Eskimo Dog (Miniature),pequeño
+14,American Foxhound,grande
+15,American Pit Bull Terrier,mediano
+16,American Staffordshire Terrier,mediano
+17,American Water Spaniel,mediano
+18,Anatolian Shepherd Dog,grande
+19,Appenzeller Sennenhund,grande
+21,Australian Cattle Dog,mediano
+22,Australian Kelpie,mediano
+23,Australian Shepherd,mediano
+24,Australian Terrier,pequeño
+25,Azawakh,grande
+26,Barbet,grande
+28,Basenji,mediano
+29,Basset Bleu de Gascogne,pequeño
+30,Basset Hound,mediano
+31,Beagle,pequeño
+32,Bearded Collie,grande
+33,Beauceron,grande
+34,Bedlington Terrier,mediano
+36,Belgian Malinois,grande
+38,Belgian Tervuren,grande
+41,Bernese Mountain Dog,grande
+42,Bichon Frise,pequeño
+43,Black and Tan Coonhound,grande
+45,Bloodhound,grande
+47,Bluetick Coonhound,grande
+48,Boerboel,grande
+50,Border Collie,mediano
+51,Border Terrier,pequeño
+53,Boston Terrier,mediano
+54,Bouvier des Flandres,grande
+55,Boxer,grande
+56,Boykin Spaniel,mediano
+57,Bracco Italiano,grande
+58,Briard,grande
+59,Brittany,mediano
+61,Bull Terrier,grande
+62,Bull Terrier (Miniature),pequeño
+64,Bullmastiff,grande
+65,Cairn Terrier,pequeño
+67,Cane Corso,grande
+68,Cardigan Welsh Corgi,pequeño
+69,Catahoula Leopard Dog,grande
+70,Caucasian Shepherd (Ovcharka),grande
+71,Cavalier King Charles Spaniel,pequeño
+76,Chesapeake Bay Retriever,grande
+78,Chinese Crested,pequeño
+79,Chinese Shar-Pei,mediano
+80,Chinook,grande
+81,Chow Chow,mediano
+84,Clumber Spaniel,mediano
+86,Cocker Spaniel,mediano
+87,Cocker Spaniel (American),mediano
+89,Coton de Tulear,pequeño
+92,Dalmatian,mediano
+94,Doberman Pinscher,grande
+95,Dogo Argentino,grande
+98,Dutch Shepherd,grande
+101,English Setter,grande
+102,English Shepherd,mediano
+103,English Springer Spaniel,mediano
+104,English Toy Spaniel,pequeño
+105,English Toy Terrier,pequeño
+107,Eurasier,grande
+108,Field Spaniel,mediano
+110,Finnish Lapphund,mediano
+111,Finnish Spitz,mediano
+113,French Bulldog,pequeño
+114,German Pinscher,mediano
+115,German Shepherd Dog,grande
+116,German Shorthaired Pointer,grande
+119,Giant Schnauzer,grande
+120,Glen of Imaal Terrier,pequeño
+121,Golden Retriever,grande
+123,Gordon Setter,grande
+124,Great Dane,grande
+125,Great Pyrenees,grande
+127,Greyhound,grande
+128,Griffon Bruxellois,pequeño
+129,Harrier,mediano
+130,Havanese,pequeño
+134,Irish Setter,grande
+135,Irish Terrier,mediano
+137,Irish Wolfhound,grande
+138,Italian Greyhound,pequeño
+140,Japanese Chin,pequeño
+141,Japanese Spitz,pequeño
+142,Keeshond,mediano
+144,Komondor,grande
+145,Kooikerhondje,mediano
+147,Kuvasz,grande
+149,Labrador Retriever,grande
+151,Lagotto Romagnolo,mediano
+153,Lancashire Heeler,pequeño
+155,Leonberger,grande
+156,Lhasa Apso,pequeño
+161,Maltese,pequeño
+165,Miniature American Shepherd,pequeño
+167,Miniature Pinscher,pequeño
+168,Miniature Schnauzer,pequeño
+171,Newfoundland,grande
+172,Norfolk Terrier,pequeño
+176,Norwich Terrier,pequeño
+177,Nova Scotia Duck Tolling Retriever,mediano
+178,Old English Sheepdog,grande
+179,Olde English Bulldogge,mediano
+181,Papillon,pequeño
+183,Pekingese,pequeño
+184,Pembroke Welsh Corgi,pequeño
+185,Perro de Presa Canario,grande
+188,Pharaoh Hound,grande
+189,Plott,grande
+193,Pomeranian,pequeño
+196,Poodle (Miniature),pequeño
+197,Poodle (Toy),pequeño
+201,Pug,pequeño
+204,Puli,mediano
+205,Pumi,mediano
+207,Rat Terrier,pequeño
+208,Redbone Coonhound,grande
+209,Rhodesian Ridgeback,grande
+210,Rottweiler,grande
+211,Russian Toy,pequeño
+212,Saint Bernard,grande
+213,Saluki,grande
+214,Samoyed,mediano
+216,Schipperke,pequeño
+218,Scottish Deerhound,grande
+219,Scottish Terrier,pequeño
+221,Shetland Sheepdog,pequeño
+222,Shiba Inu,pequeño
+223,Shih Tzu,pequeño
+225,Shiloh Shepherd,grande
+226,Siberian Husky,grande
+228,Silky Terrier,pequeño
+232,Smooth Fox Terrier,mediano
+233,Soft Coated Wheaten Terrier,mediano
+235,Spanish Water Dog,mediano
+236,Spinone Italiano,grande
+238,Staffordshire Bull Terrier,mediano
+239,Standard Schnauzer,mediano
+242,Swedish Vallhund,pequeño
+243,Thai Ridgeback,grande
+244,Tibetan Mastiff,grande
+245,Tibetan Spaniel,pequeño
+246,Tibetan Terrier,mediano
+248,Toy Fox Terrier,pequeño
+250,Treeing Walker Coonhound,grande
+251,Vizsla,grande
+253,Weimaraner,grande
+254,Welsh Springer Spaniel,mediano
+256,West Highland White Terrier,pequeño
+257,Whippet,mediano
+258,White Shepherd,grande
+259,Wire Fox Terrier,pequeño
+260,Wirehaired Pointing Griffon,grande
+261,Wirehaired Vizsla,grande
+262,Xoloitzcuintli,pequeño
+264,Yorkshire Terrier,pequeño
