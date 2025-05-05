@@ -24,7 +24,7 @@ class Buscador extends Controlador
         $modelo = $this->buscadorModelo;
 
         // Obtener cuidadores con su media de calificaciones
-        $todos = $modelo->obtenerCuidadoresConMedia();
+        $todos = $modelo->obtenerCuidadoresTOP();
 
         // Si no se indica ciudad, ordena todos por valoración
         if (empty($ciudadInput)) {
@@ -36,7 +36,7 @@ class Buscador extends Controlador
         // Filtrar por ciudad indicada
         $filtrados = array_filter($todos, function ($cuidador) use ($ciudadInput) {
             return stripos($cuidador->ciudad, $ciudadInput) !== false;
-        });        
+        });
 
         // Ordenar por valoración
         usort($filtrados, fn($a, $b) => $b->media_valoracion <=> $a->media_valoracion);

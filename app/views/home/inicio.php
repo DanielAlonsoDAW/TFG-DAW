@@ -1,6 +1,34 @@
 <?php
 // Cargamos el header previamente
 require RUTA_APP . '/views/inc/header.php';
+
+function estrellasBootstrap($valoracion)
+{
+    $html = '';
+    $estrellas = floor($valoracion);
+    $decimal = $valoracion - $estrellas;
+    $media = 0;
+
+    // Media estrella si el decimal es entre 0.25 y 0.75
+    if ($decimal >= 0.25 && $decimal <= 0.75) {
+        $media = 1;
+    } elseif ($decimal > 0.75) {
+        // Si es mayor que 0.75, redondeamos hacia arriba
+        $estrellas += 1;
+    }
+
+    $vacias = 5 - $estrellas - $media;
+
+    $html .= str_repeat('<i class="bi bi-star-fill text-warning"></i>', $estrellas);
+    if ($media) {
+        $html .= '<i class="bi bi-star-half text-warning"></i>';
+    }
+    $html .= str_repeat('<i class="bi bi-star text-warning"></i>', $vacias);
+
+    return $html;
+}
+
+
 ?>
 
 <!-- HERO / INFORMACIÓN -->
@@ -77,143 +105,40 @@ require RUTA_APP . '/views/inc/header.php';
 
 
 <!-- Scroll Cuidadores Destacados -->
-<div class="container-fluid carousel-bg">
-    <div class="container carousel-container">
-        <h3 class="mb-4 text-center">Cuidadores Destacados</h3>
 
-        <div
-            id="carouselCuidadores"
-            class="carousel slide"
-            data-bs-ride="carousel"
-            data-bs-interval="4000">
-            <div class="carousel-inner">
-                <!-- Slide 1 -->
-                <div class="carousel-item active">
-                    <div class="d-flex justify-content-center gap-4 flex-wrap">
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 1" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Carlos G.</h5>
-                                <p class="card-text">Barcelona | Cuida perros</p>
-                                <p>⭐⭐⭐⭐⭐ (5.0)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
-                            </div>
-                        </div>
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 2" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Lucía M.</h5>
-                                <p class="card-text">Madrid | Gatos y perros</p>
-                                <p>⭐⭐⭐⭐☆ (4.6)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
-                            </div>
-                        </div>
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 3" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Elena R.</h5>
-                                <p class="card-text">Valencia | Perros pequeños</p>
-                                <p>⭐⭐⭐⭐⭐ (4.9)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div id="carouselCuidadores" class="carousel slide mt-5" data-bs-ride="carousel" data-bs-interval="3000">
+    <h3 class="text-center mb-4">Cuidadores destacados</h3>
+    <div class="carousel-inner">
 
-                <!-- Slide 2 -->
-                <div class="carousel-item">
-                    <div class="d-flex justify-content-center gap-4 flex-wrap">
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 4" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Javier L.</h5>
-                                <p class="card-text">Sevilla | Gatos</p>
-                                <p>⭐⭐⭐⭐ (4.2)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
-                            </div>
-                        </div>
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 5" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Marta F.</h5>
-                                <p class="card-text">Bilbao | Perros medianos</p>
-                                <p>⭐⭐⭐⭐⭐ (5.0)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
-                            </div>
-                        </div>
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 6" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Diego A.</h5>
-                                <p class="card-text">Málaga | Gatos y perros</p>
-                                <p>⭐⭐⭐⭐☆ (4.7)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <?php
+        $cuidadores = $datos['cuidadores'];
+        $chunks = array_chunk($cuidadores, 3);
+        $active = 'active';
 
-                <!-- Slide 3 -->
-                <div class="carousel-item">
-                    <div class="d-flex justify-content-center gap-4 flex-wrap">
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 7" />
+        foreach ($chunks as $grupo):
+        ?>
+            <div class="carousel-item <?= $active ?>">
+                <div class="d-flex justify-content-center gap-4 flex-wrap">
+                    <?php foreach ($grupo as $c): ?>
+                        <div class="card card-carrusel">
+                            <img src="<?= htmlspecialchars($c->imagen) ?>" class="card-img-top" alt="Imagen de <?= htmlspecialchars($c->nombre) ?>">
                             <div class="card-body text-center">
-                                <h5 class="card-title">Andrea T.</h5>
-                                <p class="card-text">Zaragoza | Gatos</p>
-                                <p>⭐⭐⭐⭐⭐ (5.0)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
+                                <h5 class="card-title"><?= htmlspecialchars($c->nombre) ?></h5>
+                                <p class="card-text" text><?= htmlspecialchars($c->ciudad) ?> | <?= htmlspecialchars($c->descripcion) ?></p>
+                                <p>
+                                    <?= estrellasBootstrap(round($c->promedio_calificacion, 1)) ?>
+                                    (<?= number_format($c->promedio_calificacion, 1) ?>)
+                                </p>
+                                <a href="<?php echo RUTA_URL; ?>/cuidadores/perfil/<?= $c->id ?>" class="btn btn-primary btn-perfil">Ver perfil</a>
                             </div>
                         </div>
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 8" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Sergio P.</h5>
-                                <p class="card-text">Granada | Perros grandes</p>
-                                <p>⭐⭐⭐⭐☆ (4.5)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
-                            </div>
-                        </div>
-                        <div class="card" style="width: 18rem">
-                            <img
-                                src="https://placehold.co/300x200"
-                                class="card-img-top"
-                                alt="Cuidador 9" />
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Laura V.</h5>
-                                <p class="card-text">A Coruña | Gatos y perros</p>
-                                <p>⭐⭐⭐⭐⭐ (4.9)</p>
-                                <a href="#" class="btn btn-primary btn-perfil">Ver perfil</a>
-                            </div>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
-        </div>
+        <?php
+            $active = '';
+        endforeach;
+        ?>
     </div>
 </div>
 

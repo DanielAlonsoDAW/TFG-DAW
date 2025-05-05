@@ -375,3 +375,17 @@ h3 {
 .custom-card .rating {
   color: #f4b400;
 }
+
+.card-carrusel{
+  width: 15vw;
+}
+
+.card-img-top{
+  height: 30vh;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.card-text{
+  height: 10vh;
+}
