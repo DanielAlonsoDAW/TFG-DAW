@@ -80,6 +80,7 @@ function estrellasBootstrap($valoracion)
 </div>
 
 <!-- Scroll mascotas -->
+<h3 class="text-center mt-5 mb-5">Nuestros queridos peludos</h3>
 <div class="carousel-wrapper container-fluid">
     <button class="scroll-button scroll-left" onclick="desplazarCarrusel(-1)">
         &#10094;

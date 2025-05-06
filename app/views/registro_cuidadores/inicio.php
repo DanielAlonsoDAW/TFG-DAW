@@ -67,27 +67,52 @@ require RUTA_APP . '/views/inc/header.php';
 
         <div class="info-section">
             <h4>🏡 Alojamiento</h4>
-            <p>Alojamiento para los perros en tu casa, incluyendo la noche. No olvides pedir su comida, chuches, cama, cartilla veterinaria y su juguete favorito.
             <p>
+                Aloja perros en tu casa durante la noche y proporciónales un espacio cómodo y seguro.
+                Recuerda solicitar a los dueños que traigan comida, chuches, cama, cartilla veterinaria y su juguete favorito.
+            </p>
         </div>
 
         <div class="info-section">
-            <h4>🚶 Paseo de perros</h4>
-            <p>Un máximo de 60 minutos de paseo para los perros. La recogida y entrega será en la casa de sus dueños.
+            <h4>🏡 Cuidado a domicilio</h4>
             <p>
+                Quédate en casa del dueño y cuida tanto de sus mascotas como del hogar.
+                Los animales permanecen tranquilos en su entorno, y tú aseguras su bienestar y la seguridad del domicilio durante su ausencia.
+            </p>
         </div>
 
         <div class="info-section">
             <h4>🧸 Guardería de día</h4>
-            <p>Cuida de perros durante el día en tu casa, hasta un máximo de 10 horas. Ideal para dueños que trabajan fuera durante el día.
             <p>
+                Cuida perros durante el día en tu casa, por un máximo de 10 horas. Bríndales atención, juego y compañía mientras sus dueños están fuera.
+                Ideal para jornadas laborales largas.
+            </p>
+        </div>
+
+        <div class="info-section">
+            <h4>🚶 Paseo de perros</h4>
+            <p>
+                Ofrece paseos personalizados de hasta 60 minutos. Recoge y entrega al perro directamente en el domicilio del dueño,
+                garantizando un paseo seguro, activo y adaptado a sus necesidades.
+            </p>
         </div>
 
         <div class="info-section">
             <h4>🏠 Visitas a domicilio</h4>
-            <p>Ofrece cuidado de mascotas con visitas de 30-60 minutos en el hogar del animal. Puedes alimentar, jugar, cambiar agua o dar medicación.
             <p>
+                Visita el hogar del animal para ofrecer cuidados personalizados durante 30 a 60 minutos.
+                Puedes alimentar, jugar, cambiar el agua, limpiar y administrar medicación si es necesario, siempre adaptándote a las rutinas del animal.
+            </p>
         </div>
+
+        <div class="info-section">
+            <h4>🚕 Taxi para mascotas</h4>
+            <p>
+                Ofrece transporte especializado para mascotas. Conduce a los animales a citas veterinarias, peluquería u otros destinos,
+                asegurando un trayecto cómodo, seguro y libre de estrés para ellos.
+            </p>
+        </div>
+
     </div>
 </div>
 

@@ -39,7 +39,8 @@ footer p {
 }
 
 .navbar .nav-link:hover,
-.navbar .btn:hover {
+.navbar .btn:hover,
+.nav-right a:hover {
   color: #004e54 !important;
   background-color: #bdebea !important;
   border-radius: 5px;
@@ -52,6 +53,44 @@ footer p {
 
 .logo-img {
   height: 10vh;
+}
+
+/* Estilo del botón desplegable del usuario */
+#dropdownUsuario {
+  background-color: transparent;
+  color: #006d77;
+  border: 1px solid #006d77;
+  font-weight: 500;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+#dropdownUsuario:hover,
+#dropdownUsuario:focus {
+  background-color: #bdebea;
+  color: #004e54;
+}
+
+/* Estilo del menú desplegable */
+.dropdown-menu {
+  background-color: #f0fdfa;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+}
+
+.dropdown-menu .dropdown-item {
+  color: #006d77;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: #bdebea;
+  color: #004e54;
+  border-radius: 5px;
 }
 
 #buscador-home {

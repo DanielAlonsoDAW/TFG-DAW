@@ -58,7 +58,7 @@ require RUTA_APP . '/views/inc/header.php';
     <div class="text-center mt-5">
         <h5>¿Eres amante de los animales?</h5>
         <p>
-            <a href="#convertirse-cuidador" class="btn btn-primary mt-4">¡Conviértete en cuidador!</a>
+            <a href="<?php echo RUTA_URL; ?>/registro_cuidadores" class="btn btn-primary mt-4">¡Conviértete en cuidador!</a>
         </p>
     </div>
 </div>
