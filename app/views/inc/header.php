@@ -63,16 +63,17 @@
 
               // Menú desplegable para el nombre de usuario
               echo '
-          <div class="dropdown me-2">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownUsuario" data-bs-toggle="dropdown" aria-expanded="false">
-              ' . htmlspecialchars($nombreUsuario, ENT_QUOTES, 'UTF-8') . '
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUsuario">
-              <li><a class="dropdown-item" href="#">Mi perfil</a></li>
-              <li><a class="dropdown-item" href="#">Mis reservas</a></li>
-              <!-- Puedes añadir más opciones aquí -->
-            </ul>
-          </div>';
+                    <div class="dropdown me-2">
+                      <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2" type="button" id="dropdownUsuario" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="' . $_SESSION['imagen_usuario'] . '" alt="Foto de perfil" class="rounded-circle user-avatar">
+                          <span>' . htmlspecialchars($nombreUsuario, ENT_QUOTES, 'UTF-8') . '</span>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUsuario">
+                        <li><a class="dropdown-item" href="#">Mi perfil</a></li>
+                        <li><a class="dropdown-item" href="#">Mis reservas</a></li>
+                        <!-- Más opciones aquí -->
+                      </ul>
+                    </div>';
               // Botón cerrar sesión
               echo '<a class="nav-link btn btn-outline-danger ms-2" href="' . RUTA_URL . '/autenticacion/logout">Cerrar Sesión</a>';
             }

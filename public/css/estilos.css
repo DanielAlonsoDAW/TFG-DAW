@@ -72,6 +72,14 @@ footer p {
   color: #004e54;
 }
 
+.user-avatar {
+  width: 5vh;
+  height: 5vh;
+  object-fit: cover;
+  border-radius: 50%;
+
+}
+
 /* Estilo del menú desplegable */
 .dropdown-menu {
   background-color: #f0fdfa;
@@ -427,4 +435,11 @@ h3 {
 
 .card-text{
   height: 10vh;
+}
+
+.cuidador-img-responsive {
+  width: 100%;
+  max-height: 35vh;       
+  object-fit: cover;
+  border-radius: 1em; 
 }

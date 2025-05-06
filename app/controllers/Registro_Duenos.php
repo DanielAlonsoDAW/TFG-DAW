@@ -2,14 +2,14 @@
 require RUTA_APP . "/librerias/FuncionesFormulario.php";
 class Registro_Duenos extends Controlador
 {
-    private $registroDuenosModelo;
+    private $registroModelo;
     public function __construct()
     {
         session_start();
         if (isset($_SESSION['usuario'])) {
             redireccionar('/home');
         }
-        $this->registroDuenosModelo = $this->modelo('Registro_Duenos_Model');
+        $this->registroModelo = $this->modelo('Registro_Model');
     }
 
     public function index()
@@ -27,7 +27,7 @@ class Registro_Duenos extends Controlador
 
             // Validar email
             if (comprobarEmail(trim($_POST['email']))) {
-                if (!$this->registroDuenosModelo->comprobarEmailBBDD($_POST['email'])) {
+                if (!$this->registroModelo->comprobarEmailBBDD($_POST['email'], 'patitas_duenos')) {
                     $email = test_input($_POST['email']);
                 } else {
                     $emailErr = "El correo electrónico indicado ya está registrado\n";
@@ -51,7 +51,7 @@ class Registro_Duenos extends Controlador
                     'contrasena' => $contrasena,
                 ];
 
-                if ($this->registroDuenosModelo->agregarDueno($datos)) {
+                if ($this->registroModelo->agregarDueno($datos, 'patitas_duenos')) {
                     redireccionar('/home');
                 } else {
                     die("No se pudo realizar el alta");

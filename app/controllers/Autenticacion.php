@@ -47,6 +47,7 @@ class Autenticacion extends Controlador
                 if (password_verify($contrasena, $usuario->contrasena)) {
                     $_SESSION['usuario'] = $usuario->nombre;
                     $_SESSION['grupo'] = $grupo;
+                    $_SESSION['imagen_usuario'] = $usuario->imagen;
 
                     redireccionar('/home');
                 } else {

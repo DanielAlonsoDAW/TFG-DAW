@@ -14,6 +14,18 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    public function obtenerCuidadoresConMedia()
+    {
+        $sql = "SELECT c.id, c.nombre, c.ciudad,
+                       COALESCE(AVG(r.calificacion), 0) AS media_valoracion
+                FROM patitas_cuidadores c
+                LEFT JOIN patitas_resenas r ON c.id = r.cuidador_id
+                GROUP BY c.id, c.nombre, c.ciudad";
+
+        $this->db->query($sql);
+        return $this->db->registros();
+    }
+
     public function obtenerCuidadoresTOP()
     {
         $sql = "SELECT  c.id, c.nombre, c.ciudad, c.pais,c.descripcion, c.imagen,

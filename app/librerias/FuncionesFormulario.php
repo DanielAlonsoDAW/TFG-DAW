@@ -233,3 +233,29 @@ function comprobarIdioma($idioma)
             return false;
     }
 }
+
+function estrellasBootstrap($valoracion)
+{
+    $html = '';
+    $estrellas = floor($valoracion);
+    $decimal = $valoracion - $estrellas;
+    $media = 0;
+
+    // Media estrella si el decimal es entre 0.25 y 0.75
+    if ($decimal >= 0.25 && $decimal <= 0.75) {
+        $media = 1;
+    } elseif ($decimal > 0.75) {
+        // Si es mayor que 0.75, redondeamos hacia arriba
+        $estrellas += 1;
+    }
+
+    $vacias = 5 - $estrellas - $media;
+
+    $html .= str_repeat('<i class="bi bi-star-fill text-warning"></i>', $estrellas);
+    if ($media) {
+        $html .= '<i class="bi bi-star-half text-warning"></i>';
+    }
+    $html .= str_repeat('<i class="bi bi-star text-warning"></i>', $vacias);
+
+    return $html;
+}

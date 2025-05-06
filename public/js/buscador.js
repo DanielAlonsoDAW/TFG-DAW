@@ -67,8 +67,19 @@ function mostrarCuidadores(cuidadores) {
 }
 
 // Función para cargar cuidadores desde API (con o sin filtros)
-function cargarCuidadores(ciudad = "") {
-  const url = `${RUTA_API}&ciudad=${encodeURIComponent(ciudad)}`;
+function cargarCuidadores(
+  ciudad = "",
+  tipoMascota = "",
+  servicio = "",
+  tamano = ""
+) {
+  const url = `${RUTA_API}?ciudad=${encodeURIComponent(
+    ciudad
+  )}&tipo_mascota=${encodeURIComponent(
+    tipoMascota
+  )}&servicio=${encodeURIComponent(servicio)}&tamano=${encodeURIComponent(
+    tamano
+  )}`;
 
   fetch(url)
     .then((response) => response.json())
@@ -87,15 +98,31 @@ function cargarCuidadores(ciudad = "") {
     });
 }
 
-// Evento DOM Ready
+// Manejar el envío del formulario
 document.addEventListener("DOMContentLoaded", () => {
-  cargarCuidadores(); // carga inicial
+  cargarCuidadores();
 
-  // Manejar el envío del formulario
   const form = document.querySelector("#form-filtros");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
     const ciudad = document.querySelector("#input-ciudad").value.trim();
-    cargarCuidadores(ciudad);
+    const tipoMascota = document.querySelector(
+      "select.form-select:nth-of-type(1)"
+    ).value;
+    const servicio = document.querySelector(
+      "select.form-select:nth-of-type(2)"
+    ).value;
+    const tamano = document.querySelector(
+      "select.form-select:nth-of-type(3)"
+    ).value;
+
+    // Si el valor está en "seleccionado" por defecto, enviar vacío
+    cargarCuidadores(
+      ciudad,
+      tipoMascota.includes("Tipo") ? "" : tipoMascota,
+      servicio.includes("Servicio") ? "" : servicio,
+      tamano.includes("Tamaño") ? "" : tamano
+    );
   });
 });

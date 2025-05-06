@@ -1,5 +1,4 @@
 <?php
-require RUTA_APP . "/librerias/FuncionesFormulario.php";
 class Home extends Controlador
 {
     private $homeModelo;
