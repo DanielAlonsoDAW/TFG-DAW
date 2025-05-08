@@ -7,6 +7,15 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
+// Función para limpiar todos los marcadores
+function limpiarMarcadores() {
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Marker) {
+      map.removeLayer(layer);
+    }
+  });
+}
+
 // Coordenadas de ciudades
 const ciudadesCoords = {
   Madrid: [40.4168, -3.7038],
@@ -28,81 +37,68 @@ const ciudadesCoords = {
   Murcia: [37.9922, -1.1307],
 };
 
-// Limpia marcadores anteriores del mapa
-function limpiarMarcadores() {
-  map.eachLayer((layer) => {
-    if (layer instanceof L.Marker) {
-      map.removeLayer(layer);
-    }
-  });
-}
-
-// Muestra los cuidadores en mapa y sidebar
+// Función para mostrar cuidadores en mapa y sidebar
 function mostrarCuidadores(cuidadores) {
   const sidebar = document.querySelector(".sidebar-custom");
   sidebar.innerHTML =
     '<h5 class="text-primary-custom mb-4">Cuidadores disponibles</h5>';
 
-  if (!cuidadores || cuidadores.length === 0) {
-    const mensaje = document.createElement("p");
-    mensaje.className = "text-muted";
-    mensaje.textContent =
-      "No se encontraron cuidadores que cumplan los requisitos indicados.";
-    sidebar.appendChild(mensaje);
-    return;
-  }
-
   cuidadores.forEach((c) => {
     const coords = ciudadesCoords[c.ciudad];
     if (!coords) return;
 
+    // Añadir marcador al mapa
     L.marker(coords).addTo(map).bindPopup(`${c.nombre} - ${c.ciudad}`);
 
+    // Crear tarjeta en el sidebar
     const card = document.createElement("div");
     card.className = "card custom-card mb-3";
     card.style.cursor = "pointer";
-    card.onclick = () => (window.location.href = `${RUTA_URL}/perfil/${c.id}`);
+    card.onclick = () =>
+      (window.location.href = `${RUTA_URL}/cuidadores/perfil/${c.id}`);
     card.innerHTML = `
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h6 class="card-title">${c.nombre}</h6>
-            <p class="mb-1">${c.ciudad}</p>
-            ${
-              c.mejor_resena
-                ? `<p class="testimonial">“${c.mejor_resena}”</p>`
-                : ""
-            }
-            <p class="rating">Valoración: ${parseFloat(
-              c.media_valoracion
-            ).toFixed(1)} ★ ${
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h6 class="card-title">${c.nombre}</h6>
+          <p class="mb-1">${c.ciudad}</p>
+          ${
+            c.mejor_resena
+              ? `<p class="testimonial">“${c.mejor_resena}”</p>`
+              : ""
+          }
+          <p class="rating">Valoración: ${parseFloat(
+            c.media_valoracion
+          ).toFixed(1)} ★ ${
       c.total_resenas
         ? `<span class="text-muted">(${c.total_resenas}) Reseñas</span>`
         : ""
-    }</p>
-          </div>
-          ${
-            c.precio_servicio
-              ? `<div class="text-end"><span class="badge bg-light text-dark">${c.precio_servicio}</span></div>`
-              : ""
-          }
+    } </p>
         </div>
+        ${
+          c.precio_servicio
+            ? `<div class="text-end"><span class="badge bg-light text-dark">${c.precio_servicio}</span></div>`
+            : ""
+        }
       </div>
-    `;
+    </div>
+  `;
+
     sidebar.appendChild(card);
   });
 
+  // Forzar que el mapa recalibre su tamaño al renderizar
   map.invalidateSize();
 }
 
-// Carga cuidadores desde la API
+// Función para cargar cuidadores desde API (con o sin filtros)
 function cargarCuidadores(
   ciudad = "",
   tipoMascota = "",
   servicio = "",
   tamano = ""
 ) {
-  const url = `${RUTA_API}?ciudad=${encodeURIComponent(
+  const url = `${RUTA_URL}/buscador/api_filtrar?ciudad=${encodeURIComponent(
     ciudad
   )}&tipo_mascota=${encodeURIComponent(
     tipoMascota
@@ -127,7 +123,6 @@ function cargarCuidadores(
     });
 }
 
-// Extrae parámetros desde la URL
 function obtenerParametrosURL() {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -135,14 +130,13 @@ function obtenerParametrosURL() {
     tipoMascota: params.get("tipo_mascota") || "",
     servicio: params.get("servicio") || "",
     tamano: params.get("tamano") || "",
-    fecha: params.get("fecha") || "",
   };
 }
 
-// Evento principal al cargar DOM
+// Manejar el envío del formulario
 document.addEventListener("DOMContentLoaded", () => {
-  actualizarFormulario();
   const { ciudad, tipoMascota, servicio, tamano } = obtenerParametrosURL();
+
   cargarCuidadores(ciudad, tipoMascota, servicio, tamano);
 
   const form = document.querySelector("#form-filtros");
@@ -151,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
 
     const ciudad = document.querySelector("#input-ciudad").value.trim();
-    const fecha = document.querySelector("input[name='fecha']").value;
 
     const tipoMascota = Array.from(
       document.querySelectorAll('input[name="tipo_mascota[]"]:checked')
@@ -169,19 +162,15 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll('input[name="tamano_gato[]"]:checked')
     ).map((val) => ({ tipo: "gato", tamano: val.value }));
 
+    // Juntamos los tamaños
     const tamanos = [...tamanoPerro, ...tamanoGato];
+
+    // Pasamos el array como json
     const tamano = encodeURIComponent(JSON.stringify(tamanos));
 
-    const url = `${window.location.pathname}?ciudad=${encodeURIComponent(
-      ciudad
-    )}&fecha=${encodeURIComponent(fecha)}&tipo_mascota=${encodeURIComponent(
-      tipoMascota
-    )}&servicio=${encodeURIComponent(servicio)}&tamano=${tamano}`;
-
-    window.location.href = url;
+    cargarCuidadores(ciudad, tipoMascota, servicio, tamano);
   });
 
-  // Servicio dinámico según tipo de mascota
   const opcionesServicio = {
     todos: [
       "Alojamiento",
@@ -203,10 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const selectServicio = document.querySelector("select[name='servicio']");
-  const chkPerro = document.getElementById("mascota-perro");
-  const chkGato = document.getElementById("mascota-gato");
-  const bloquePerro = document.getElementById("bloque-tamano-perro");
-  const bloqueGato = document.getElementById("bloque-tamano-gato");
 
   function actualizarOpcionesServicio() {
     const perro = chkPerro.checked;
@@ -224,7 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
       serviciosPermitidos = opcionesServicio.todos;
     }
 
+    // Guardamos el valor actual seleccionado si sigue siendo válido
     const valorSeleccionado = selectServicio.value;
+
+    // Limpiamos y reconstruimos el select
     selectServicio.innerHTML =
       '<option selected disabled value="">Servicio</option>';
 
@@ -235,10 +223,16 @@ document.addEventListener("DOMContentLoaded", () => {
       selectServicio.appendChild(option);
     });
 
+    // Restauramos el valor si aún está disponible
     if (serviciosPermitidos.includes(valorSeleccionado)) {
       selectServicio.value = valorSeleccionado;
     }
   }
+
+  const chkPerro = document.getElementById("mascota-perro");
+  const chkGato = document.getElementById("mascota-gato");
+  const bloquePerro = document.getElementById("bloque-tamano-perro");
+  const bloqueGato = document.getElementById("bloque-tamano-gato");
 
   function actualizarFormulario() {
     bloquePerro.classList.toggle("d-none", !chkPerro.checked);
@@ -248,4 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   chkPerro.addEventListener("change", actualizarFormulario);
   chkGato.addEventListener("change", actualizarFormulario);
+
+  actualizarFormulario();
 });

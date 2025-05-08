@@ -130,7 +130,7 @@ if (!empty($_GET['tamano'])) {
 </div>
 
 <script>
-    const RUTA_API = "<?= RUTA_URL ?>/buscador/api_filtrar";
+    const RUTA_URL = "<?= RUTA_URL ?>";
 </script>
 
 <script src="<?php echo RUTA_URL; ?>\js\buscador.js"></script>
