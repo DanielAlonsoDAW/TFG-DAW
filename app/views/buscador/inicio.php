@@ -1,6 +1,14 @@
 <?php
 // Cargamos el header previamente
 require RUTA_APP . '/views/inc/header.php';
+
+$tamanoArray = [];
+if (!empty($_GET['tamano'])) {
+    $decoded = json_decode($_GET['tamano'], true);
+    if (is_array($decoded)) {
+        $tamanoArray = $decoded;
+    }
+}
 ?>
 
 
@@ -18,21 +26,29 @@ require RUTA_APP . '/views/inc/header.php';
     <div class="container my-4">
         <h2 class="text-center mb-4">Busca cuidadores cerca de ti</h2>
         <div class="form-container">
-            <form action="<?php echo RUTA_URL; ?>/buscador/api_filtrar" method="POST" id="form-filtros" class="row gy-4 gx-3 justify-content-center">
+            <form action="<?php echo RUTA_URL; ?>/buscador/api_filtrar" method="GET" id="form-filtros" class="row gy-4 gx-3 justify-content-center">
                 <!-- Ciudad -->
                 <div class="col-12 col-md-6">
-                    <input id="input-ciudad" name="ciudad" type="text" class="form-control" placeholder="Ubicación" />
+                    <input id="input-ciudad" name="ciudad" type="text" class="form-control" placeholder="Ubicación"
+                        value="<?php echo $_GET['ciudad'] ?? ''; ?>" />
+                </div>
+                <!-- Fecha -->
+                <div class="col-12 col-md-6">
+                    <input type="date" name="fecha" class="form-control"
+                        value="<?php echo $_GET['fecha'] ?? ''; ?>" />
                 </div>
                 <!-- Tipo de mascota -->
                 <div class="col-12 col-md-6 text-center">
                     <label class="form-label mb-3">Tipo de mascota</label>
                     <div class="d-flex justify-content-center flex-wrap gap-4">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Perro" id="mascota-perro">
+                            <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Perro" id="mascota-perro"
+                                <?php if (!empty($_GET['tipo_mascota']) && in_array('Perro', explode(',', $_GET['tipo_mascota']))) echo 'checked'; ?>>
                             <label class="form-check-label" for="mascota-perro">Perro</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Gato" id="mascota-gato">
+                            <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Gato" id="mascota-gato"
+                                <?php if (!empty($_GET['tipo_mascota']) && in_array('Gato', explode(',', $_GET['tipo_mascota']))) echo 'checked'; ?>>
                             <label class="form-check-label" for="mascota-gato">Gato</label>
                         </div>
                     </div>
@@ -40,56 +56,54 @@ require RUTA_APP . '/views/inc/header.php';
                 <!-- Servicio -->
                 <div class="col-12 col-md-6">
                     <select name="servicio" class="form-select">
-                        <option selected disabled value="">Servicio</option>
-                        <option value="Alojamiento">Alojamiento</option>
-                        <option value="Paseos">Paseo de perros</option>
-                        <option value="Guardería de día">Guardería de día</option>
-                        <option value="Visitas a domicilio">Visitas a domicilio</option>
-                        <option value="Cuidado a domicilio">Cuidado a domicilio</option>
-                        <option value="Taxi">Taxi</option>
+                        <option disabled value="">Servicio</option>
+                        <?php
+                        $servicios = ["Alojamiento", "Paseos", "Guardería de día", "Visitas a domicilio", "Cuidado a domicilio", "Taxi"];
+                        foreach ($servicios as $s) {
+                            $selected = (isset($_GET['servicio']) && $_GET['servicio'] === $s) ? 'selected' : '';
+                            echo "<option value=\"$s\" $selected>$s</option>";
+                        }
+                        ?>
                     </select>
+
                 </div>
                 <!-- Tamaño del animal para Perro -->
-                <div class="col-12 col-md-6 d-none" id="bloque-tamano-perro">
+                <div class="col-12 col-md-6 <?php echo empty(array_filter($tamanoArray, fn($t) => $t['tipo'] === 'perro')) ? 'd-none' : ''; ?>" id="bloque-tamano-perro">
                     <label class="form-label d-block mb-2">Tamaño del perro</label>
                     <div class="d-flex justify-content-center flex-wrap gap-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Pequeño" id="perro-pequeno">
-                            <label class="form-check-label" for="perro-pequeno">Pequeño</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Mediano" id="perro-mediano">
-                            <label class="form-check-label" for="perro-mediano">Mediano</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Grande" id="perro-grande">
-                            <label class="form-check-label" for="perro-grande">Grande</label>
-                        </div>
+                        <?php
+                        $tamanosPerro = ['Pequeño', 'Mediano', 'Grande'];
+                        foreach ($tamanosPerro as $tam) {
+                            $isChecked = in_array(['tipo' => 'perro', 'tamano' => $tam], $tamanoArray);
+                            echo '
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="' . $tam . '" id="perro-' . strtolower($tam) . '"' . ($isChecked ? ' checked' : '') . '>
+                    <label class="form-check-label" for="perro-' . strtolower($tam) . '">' . $tam . '</label>
+                </div>
+            ';
+                        }
+                        ?>
                     </div>
                 </div>
                 <!-- Tamaño del animal para Gato -->
-                <div class="col-12 col-md-6 d-none" id="bloque-tamano-gato">
+                <div class="col-12 col-md-6 <?php echo empty(array_filter($tamanoArray, fn($t) => $t['tipo'] === 'gato')) ? 'd-none' : ''; ?>" id="bloque-tamano-gato">
                     <label class="form-label d-block mb-2">Tamaño del gato</label>
                     <div class="d-flex justify-content-center flex-wrap gap-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Pequeño" id="gato-pequeno">
-                            <label class="form-check-label" for="gato-pequeno">Pequeño</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Mediano" id="gato-mediano">
-                            <label class="form-check-label" for="gato-mediano">Mediano</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Grande" id="gato-grande">
-                            <label class="form-check-label" for="gato-grande">Grande</label>
-                        </div>
+                        <?php
+                        $tamanosGato = ['Pequeño', 'Mediano', 'Grande'];
+                        foreach ($tamanosGato as $tam) {
+                            $isChecked = in_array(['tipo' => 'gato', 'tamano' => $tam], $tamanoArray);
+                            echo '
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="' . $tam . '" id="gato-' . strtolower($tam) . '"' . ($isChecked ? ' checked' : '') . '>
+                    <label class="form-check-label" for="gato-' . strtolower($tam) . '">' . $tam . '</label>
+                </div>
+            ';
+                        }
+                        ?>
                     </div>
                 </div>
 
-                <!-- Fecha -->
-                <div class="col-12 col-md-6">
-                    <input type="date" name="fecha" class="form-control" />
-                </div>
                 <!-- Botón -->
                 <div class="col-12 col-md-6 text-center text-start">
                     <input type="submit" class="btn btn-primary px-4 py-2" value="Buscar" />

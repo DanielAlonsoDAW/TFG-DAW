@@ -12,84 +12,87 @@ require RUTA_APP . "/librerias/FuncionesFormulario.php";
         atentos y cerca de ti!
     </p>
     <!-- BUSCADOR (Sección anclada) -->
-    <div class="container y-4" id="buscador">
-        <h3 class="text-center mb-4">Busca un cuidador cerca de ti</h3>
-        <div class="formulario-buscador">
-            <form action="<?php echo RUTA_URL; ?>/buscador/api_filtrar" method="POST" id="form-filtros" class="row gy-4 gx-3 justify-content-center">
-                <!-- Ciudad -->
-                <div class="d-flex justify-content-center">
-                    <input id="input-ciudad" name="ciudad" type="text" class="form-control w-50" placeholder="Ubicación" />
-                </div>
-                <!-- Tipo de mascota -->
-                <div class="d-flex justify-content-center text-center">
-                    <label class="form-label mb-3 me-2">Tipo de mascota</label>
-                    <div class="d-flex justify-content-center flex-wrap gap-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Perro" id="mascota-perro">
-                            <label class="form-check-label" for="mascota-perro">Perro</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Gato" id="mascota-gato">
-                            <label class="form-check-label" for="mascota-gato">Gato</label>
+    <div id="cabecera-buscador">
+        <div class="container my-4">
+            <h2 class="text-center mb-4">Busca cuidadores cerca de ti</h2>
+            <div class="form-container">
+                <form id="form-filtros" class="row gy-4 gx-3 justify-content-center">
+                    <!-- Ciudad -->
+                    <div class="col-12 col-md-6">
+                        <input id="input-ciudad" name="ciudad" type="text" class="form-control" placeholder="Ubicación" />
+                    </div>
+                    <!-- Fecha -->
+                    <div class="col-12 col-md-6">
+                        <input type="date" name="fecha" class="form-control" />
+                    </div>
+                    <!-- Tipo de mascota -->
+                    <div class="col-12 col-md-6 text-center">
+                        <label class="form-label mb-3">Tipo de mascota</label>
+                        <div class="d-flex justify-content-center flex-wrap gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Perro" id="mascota-perro">
+                                <label class="form-check-label" for="mascota-perro">Perro</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Gato" id="mascota-gato">
+                                <label class="form-check-label" for="mascota-gato">Gato</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Servicio -->
-                <div class="d-flex justify-content-center">
-                    <select name="servicio" class="form-select w-50">
-                        <option selected disabled value="">Servicio</option>
-                        <option value="Alojamiento">Alojamiento</option>
-                        <option value="Paseos">Paseo de perros</option>
-                        <option value="Guardería de día">Guardería de día</option>
-                        <option value="Visitas a domicilio">Visitas a domicilio</option>
-                        <option value="Cuidado a domicilio">Cuidado a domicilio</option>
-                        <option value="Taxi">Taxi</option>
-                    </select>
-                </div>
-                <!-- Tamaño del animal para Perro -->
-                <div class="d-flex justify-content-center d-none" id="bloque-tamano-perro">
-                    <label class="form-label d-block mb-2 me-2">Tamaño del perro</label>
-                    <div class="d-flex justify-content-center flex-wrap gap-4">
-                        <div class="form-check me-2">
-                            <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Pequeño" id="perro-pequeno">
-                            <label class="form-check-label" for="perro-pequeno">Pequeño</label>
-                        </div>
-                        <div class="form-check me-2">
-                            <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Mediano" id="perro-mediano">
-                            <label class="form-check-label" for="perro-mediano">Mediano</label>
-                        </div>
-                        <div class="form-check me-2">
-                            <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Grande" id="perro-grande">
-                            <label class="form-check-label" for="perro-grande">Grande</label>
+                    <!-- Servicio -->
+                    <div class="col-12 col-md-6">
+                        <select name="servicio" class="form-select">
+                            <option selected disabled value="">Servicio</option>
+                            <option value="Alojamiento">Alojamiento</option>
+                            <option value="Paseos">Paseo de perros</option>
+                            <option value="Guardería de día">Guardería de día</option>
+                            <option value="Visitas a domicilio">Visitas a domicilio</option>
+                            <option value="Cuidado a domicilio">Cuidado a domicilio</option>
+                            <option value="Taxi">Taxi</option>
+                        </select>
+                    </div>
+                    <!-- Tamaño del animal para Perro -->
+                    <div class="col-12 col-md-6 d-none" id="bloque-tamano-perro">
+                        <label class="form-label d-block mb-2">Tamaño del perro</label>
+                        <div class="d-flex justify-content-center flex-wrap gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Pequeño" id="perro-pequeno">
+                                <label class="form-check-label" for="perro-pequeno">Pequeño</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Mediano" id="perro-mediano">
+                                <label class="form-check-label" for="perro-mediano">Mediano</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="Grande" id="perro-grande">
+                                <label class="form-check-label" for="perro-grande">Grande</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Tamaño del animal para Gato -->
-                <div class="d-flex justify-content-center d-none" id="bloque-tamano-gato">
-                    <label class="form-label d-block mb-2 me-2">Tamaño del gato</label>
-                    <div class="d-flex justify-content-center flex-wrap gap-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Pequeño" id="gato-pequeno">
-                            <label class="form-check-label" for="gato-pequeno">Pequeño</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Mediano" id="gato-mediano">
-                            <label class="form-check-label" for="gato-mediano">Mediano</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Grande" id="gato-grande">
-                            <label class="form-check-label" for="gato-grande">Grande</label>
+                    <!-- Tamaño del animal para Gato -->
+                    <div class="col-12 col-md-6 d-none" id="bloque-tamano-gato">
+                        <label class="form-label d-block mb-2">Tamaño del gato</label>
+                        <div class="d-flex justify-content-center flex-wrap gap-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Pequeño" id="gato-pequeno">
+                                <label class="form-check-label" for="gato-pequeno">Pequeño</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Mediano" id="gato-mediano">
+                                <label class="form-check-label" for="gato-mediano">Mediano</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="Grande" id="gato-grande">
+                                <label class="form-check-label" for="gato-grande">Grande</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Fecha -->
-                <div class="d-flex justify-content-center">
-                    <input type="date" name="fecha" class="form-control w-50" />
-                </div>
-                <!-- Botón -->
-                <div class="d-flex justify-content-center text-center text-start">
-                    <input type="submit" class="btn btn-primary px-4 py-2" value="Buscar" />
-                </div>
+                    <!-- Botón -->
+                    <div class="col-12 col-md-6 text-center text-start">
+                        <input type="submit" class="btn btn-primary px-4 py-2" value="Buscar" />
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

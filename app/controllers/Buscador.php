@@ -20,40 +20,60 @@ class Buscador extends Controlador
     {
         header('Content-Type: application/json');
 
+        // Obtener parámetros desde GET
         $ciudadInput = $_GET['ciudad'] ?? '';
-        $tipoMascotaInput = $_GET['tipo_mascota'] ?? '';
+        $tipoMascotaInput = $_GET['tipo_mascota'] ?? ''; // Coma-separado: "Perro,Gato"
         $servicioInput = $_GET['servicio'] ?? '';
         $tamanoInput = $_GET['tamano'] ?? '[]';
         $tamanoArray = json_decode(urldecode($tamanoInput), true);
+        if (!is_array($tamanoArray)) $tamanoArray = [];
 
-        // $fechaInput = $_GET['fecha'] ?? ''; // para implementar disponibilidad por fecha)
+        $tiposSeleccionados = array_map('strtolower', array_filter(explode(',', $tipoMascotaInput)));
+
         $modelo = $this->buscadorModelo;
-        $todos =  $this->buscadorModelo->obtenerCuidadoresConMedia();
+        $todos = $modelo->obtenerCuidadoresConMedia();
 
         $filtrados = array_filter($todos, function ($cuidador) use (
             $ciudadInput,
-            $tipoMascotaInput,
+            $tiposSeleccionados,
             $servicioInput,
-            $tamanoInput,
+            $tamanoArray,
             $modelo
         ) {
-            // Filtro ciudad
+            // Filtro ciudad (coincidencia parcial, sin acento/sensible a mayúsculas)
             if (!empty($ciudadInput) && stripos($cuidador->ciudad, $ciudadInput) === false) {
                 return false;
             }
 
-            // Filtro tipo mascota y tamaño
+            // Filtro por tipo de mascota
+            if (!empty($tiposSeleccionados)) {
+                $tiposCuidador = array_map(
+                    fn($t) => strtolower($t->tipo_mascota),
+                    $modelo->obtenerTiposMascotas($cuidador->id)
+                );
+
+                $coincideTipo = false;
+                foreach ($tiposSeleccionados as $tipo) {
+                    if (in_array($tipo, $tiposCuidador)) {
+                        $coincideTipo = true;
+                        break;
+                    }
+                }
+
+                if (!$coincideTipo) return false;
+            }
+
+            // Filtro por combinación tipo + tamaño
             if (!empty($tamanoArray)) {
-                $tipos = $modelo->obtenerTiposMascotas($cuidador->id);
                 $cuidadorCombinaciones = array_map(fn($t) => [
                     'tipo' => strtolower($t->tipo_mascota),
                     'tamano' => strtolower($t->tamano)
-                ], $tipos);
+                ], $modelo->obtenerTiposMascotas($cuidador->id));
 
                 $match = false;
                 foreach ($tamanoArray as $entrada) {
-                    $entradaTipo = strtolower($entrada['tipo']);
-                    $entradaTamano = strtolower($entrada['tamano']);
+                    $entradaTipo = strtolower($entrada['tipo'] ?? '');
+                    $entradaTamano = strtolower($entrada['tamano'] ?? '');
 
                     foreach ($cuidadorCombinaciones as $c) {
                         if ($c['tipo'] === $entradaTipo && $c['tamano'] === $entradaTamano) {
@@ -62,6 +82,7 @@ class Buscador extends Controlador
                         }
                     }
                 }
+
                 if (!$match) return false;
             }
 
@@ -69,23 +90,23 @@ class Buscador extends Controlador
             if (!empty($servicioInput)) {
                 $servicios = $modelo->obtenerServicios($cuidador->id);
                 $coincide = false;
+
                 foreach ($servicios as $s) {
                     if (strtolower($s->servicio) === strtolower($servicioInput)) {
                         $coincide = true;
                         break;
                     }
                 }
+
                 if (!$coincide) return false;
             }
 
             return true;
         });
 
+        // Enriquecer resultados con reseñas y precios
         foreach ($filtrados as $cuidador) {
-            // Servicios del cuidador
             $cuidador->servicios = $modelo->obtenerServicios($cuidador->id);
-
-            // Reseñas del cuidador
             $cuidador->resenas = $modelo->obtenerResenas($cuidador->id);
             $cuidador->total_resenas = count($cuidador->resenas);
 
@@ -122,15 +143,15 @@ class Buscador extends Controlador
                                 $cuidador->precio_servicio = "{$precio}€/visita";
                                 break;
                         }
-                        break; 
+                        break;
                     }
                 }
-            }        }
+            }
+        }
 
-        // Ordenar por media de valoración
-
+        // Ordenar por media de valoración descendente
         usort($filtrados, fn($a, $b) => $b->media_valoracion <=> $a->media_valoracion);
 
-        echo json_encode(array_slice($filtrados, 0, 10));
+        echo json_encode(array_slice($filtrados, 0, 10)); // Limita a los 10 mejores
     }
 }

@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("#form-filtros");
 
   form.addEventListener("submit", (e) => {
-    e.preventDefault();
+    e.preventDefault(); // evitar el envío por POST
 
     const ciudad = document.querySelector("#input-ciudad").value.trim();
 
@@ -23,13 +23,17 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll('input[name="tamano_gato[]"]:checked')
     ).map((val) => ({ tipo: "gato", tamano: val.value }));
 
-    // Juntamos los tamaños
     const tamanos = [...tamanoPerro, ...tamanoGato];
-
-    // Pasamos el array como json
     const tamano = encodeURIComponent(JSON.stringify(tamanos));
 
-    cargarCuidadores(ciudad, tipoMascota, servicio, tamano);
+    // Redirigir con parámetros GET a la vista del mapa
+    const url = `${URL_BASE}/buscador?ciudad=${encodeURIComponent(
+      ciudad
+    )}&tipo_mascota=${encodeURIComponent(
+      tipoMascota
+    )}&servicio=${encodeURIComponent(servicio)}&tamano=${tamano}`;
+
+    window.location.href = url;
   });
 
   const opcionesServicio = {
