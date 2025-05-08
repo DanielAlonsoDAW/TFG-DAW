@@ -140,7 +140,9 @@ footer p {
 .card {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   border: none;
+  border-radius: 2vh;
   transition: transform 0.2s ease;
+  background-color: #f0fdfa;
 }
 
 .card:hover {
@@ -180,8 +182,9 @@ h3 {
 
 .form-control,
 .form-select {
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #ccc;
+  font-size: 1rem;
 }
 
 .carousel-wrapper {
@@ -232,29 +235,7 @@ h3 {
 .scroll-right {
   right: 2vh;
 }
-.carousel-bg {
-  background-image: url("https://upload.wikimedia.org/wikipedia/commons/8/89/Spain_location_map.svg");
-  background-size: cover;
-  background-position: center;
-  padding: 60px 0;
-  position: relative;
-}
 
-.carousel-bg::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.75);
-  z-index: 1;
-}
-
-.carousel-container {
-  position: relative;
-  z-index: 2;
-}
 
 .visor-overlay {
   position: fixed;
@@ -388,20 +369,26 @@ h3 {
   margin-bottom: 5vh;
 }
 
-.form-control {
-  border-radius: 6px;
+.container-fluid .row {
+  display: flex;
+  height: 60vh;
+  overflow: hidden;
 }
 
 .sidebar-custom {
-  background-color: #f0fdfa;
-  height: 61vh;
+  height: 100%;
   overflow-y: auto;
-  width: 30vw;
+  background-color: #f0fdfa;
 }
 
 .map-container-custom {
-  height:61vh;
-  width: 70vw;
+  height: 100%;
+  overflow: hidden;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
 }
 
 .text-primary-custom {
@@ -442,4 +429,56 @@ h3 {
   max-height: 35vh;       
   object-fit: cover;
   border-radius: 1em; 
+}
+
+.formulario-buscador .form-label {
+  color: #006d77;
+  font-weight: 600;
+}
+
+.form-check-input:checked {
+  background-color: #00b4ab;
+  border-color: #00b4ab;
+}
+
+.formulario-buscador {
+  background-color: #f0fdfa;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+  margin: auto;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.formulario-buscador .form-check-label {
+  font-size: 1rem;
+  color: #333;
+}
+
+.formulario-buscador .form-check {
+  min-width: 100px;
+}
+
+.formulario-buscador .btn-primary {
+  background-color: #00b4ab;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.formulario-buscador .btn-primary:hover {
+  background-color: #008e86;
+  transform: scale(1.02);
+}
+
+.formulario-buscador ::placeholder {
+  color: #666;
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
