@@ -16,11 +16,11 @@ class Buscador_Model
 
     public function obtenerCuidadoresConMedia()
     {
-        $sql = "SELECT c.id, c.nombre, c.ciudad, c.direccion,
+        $sql = "SELECT c.id, c.nombre, c.ciudad, c.direccion,c.imagen,c.lat,c.lng,
                        COALESCE(AVG(r.calificacion), 0) AS media_valoracion
                 FROM patitas_cuidadores c
                 LEFT JOIN patitas_resenas r ON c.id = r.cuidador_id
-                GROUP BY c.id, c.nombre, c.ciudad, c.direccion";
+                GROUP BY c.id, c.nombre, c.ciudad,c.direccion,c.imagen,c.lat,c.lng";
 
         $this->db->query($sql);
         return $this->db->registros();

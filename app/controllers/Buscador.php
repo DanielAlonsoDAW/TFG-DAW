@@ -6,7 +6,7 @@ class Buscador extends Controlador
     public function __construct()
     {
         session_start();
-        $this->buscadorModelo = $this->modelo('Cuidadores_Model');
+        $this->buscadorModelo = $this->modelo('Buscador_Model');
     }
 
     // Vista principal
@@ -22,7 +22,7 @@ class Buscador extends Controlador
 
         // Obtener parámetros desde GET
         $ciudadInput = $_GET['ciudad'] ?? '';
-        $tipoMascotaInput = $_GET['tipo_mascota'] ?? ''; // Coma-separado: "Perro,Gato"
+        $tipoMascotaInput = $_GET['tipo_mascota'] ?? '';
         $servicioInput = $_GET['servicio'] ?? '';
         $tamanoInput = $_GET['tamano'] ?? '[]';
         $tamanoArray = json_decode(urldecode($tamanoInput), true);
@@ -148,7 +148,6 @@ class Buscador extends Controlador
                 }
             }
         }
-
         // Ordenar por media de valoración descendente
         usort($filtrados, fn($a, $b) => $b->media_valoracion <=> $a->media_valoracion);
 

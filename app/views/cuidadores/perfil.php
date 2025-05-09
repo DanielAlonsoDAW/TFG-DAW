@@ -8,7 +8,7 @@ require RUTA_APP . "/librerias/FuncionesFormulario.php";
         <!-- Columna izquierda: Imagen y datos básicos -->
         <div class="col-md-4">
             <div class="card shadow-sm">
-                <img src="<?= $datos['cuidador']->imagen ?>" class="img-fluid rounded shadow-sm cuidador-img-responsive mb-3" alt="Imagen cuidador">
+                <img src="<?= RUTA_URL . '/' . $datos['cuidador']->imagen ?>" class="img-fluid rounded shadow-sm cuidador-img-responsive mb-3" alt="Imagen cuidador">
                 <div class="card-body">
                     <h4 class="text-primary-custom"><?= $datos['cuidador']->nombre ?></h4>
                     <p><strong>📍 Ciudad:</strong> <?= $datos['cuidador']->ciudad ?> (<?= $datos['cuidador']->pais ?>)</p>

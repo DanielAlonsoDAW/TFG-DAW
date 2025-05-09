@@ -12,14 +12,13 @@ if (!empty($_GET['tamano'])) {
 ?>
 
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="<?php echo RUTA_URL; ?>\js\leaflet\leaflet.css" />
-<!-- Leaflet Control Geocoder CSS -->
-<link rel="stylesheet" href="<?php echo RUTA_URL; ?>js\leaflet\leaflet-control-geocoder\Control.Geocoder.css" />
-<!-- Leaflet JS -->
+<!-- Librería Leaflet-->
+<link rel="stylesheet" href="js/leaflet/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 <script src="js/leaflet/leaflet.js"></script>
-<!-- Leaflet Control Geocoder JS -->
-<script src="<?php echo RUTA_URL; ?>js\leaflet\leaflet-control-geocoder\Control.Geocoder.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+
 
 <!-- Buscador -->
 <div id="cabecera-buscador">
@@ -133,7 +132,7 @@ if (!empty($_GET['tamano'])) {
     const RUTA_URL = "<?= RUTA_URL ?>";
 </script>
 
-<script src="<?php echo RUTA_URL; ?>\js\buscador.js"></script>
+<script src="<?php echo RUTA_URL; ?>/js\buscador.js"></script>
 
 <?php
 // Cargamos el footer al final de la página
