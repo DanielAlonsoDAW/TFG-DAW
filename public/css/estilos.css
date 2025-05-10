@@ -1,3 +1,4 @@
+/* General Styles */
 html, body {
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   background-color: #fefefe;
@@ -6,12 +7,27 @@ html, body {
   margin: 0;
 }
 
+h3 {
+  color: #006d77;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  color: #006d77;
+  font-weight: bold;
+  margin-bottom: 5vh;
+  text-align: center;
+}
+
+/* Page Wrapper */
 .page-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
+/* Footer */
 .footer {
   background-color: #d0f0f0;
   padding: 1.25vh 0;
@@ -27,6 +43,7 @@ footer p {
   font-size: 0.95rem;
 }
 
+/* Navbar */
 .navbar {
   background-color: #e2f7f6 !important;
   padding: 0;
@@ -43,10 +60,10 @@ footer p {
 .nav-right a:hover {
   color: #004e54 !important;
   background-color: #bdebea !important;
-  border-radius: 5px;
+  border-radius: 1em;
 }
 
-.navbar-brand{
+.navbar-brand {
   margin: 0;
   padding: 0;
 }
@@ -55,14 +72,14 @@ footer p {
   height: 10vh;
 }
 
-/* Estilo del botón desplegable del usuario */
+/* Dropdown Button */
 #dropdownUsuario {
   background-color: transparent;
   color: #006d77;
   border: 1px solid #006d77;
   font-weight: 500;
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
-  border-radius: 6px;
+  border-radius: 1em;
   transition: all 0.3s ease;
 }
 
@@ -72,15 +89,15 @@ footer p {
   color: #004e54;
 }
 
+/* User Avatar */
 .user-avatar {
   width: 5vh;
   height: 5vh;
   object-fit: cover;
   border-radius: 50%;
-
 }
 
-/* Estilo del menú desplegable */
+/* Dropdown Menu */
 .dropdown-menu {
   background-color: #f0fdfa;
   border: 1px solid #ccc;
@@ -101,6 +118,7 @@ footer p {
   border-radius: 5px;
 }
 
+/* Search Section */
 #buscador-home {
   background-color: #f0fdfa;
   padding: 1rem;
@@ -128,6 +146,7 @@ footer p {
   font-weight: bold;
 }
 
+/* Buttons */
 .btn-perfil {
   background-color: #00b4ab;
   border: none;
@@ -137,6 +156,7 @@ footer p {
   background-color: #008e86;
 }
 
+/* Cards */
 .card {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   border: none;
@@ -158,6 +178,7 @@ footer p {
   background-color: #008e86;
 }
 
+/* Scroll Button */
 .scroll-button {
   background-color: rgba(255, 255, 255, 0.9);
   color: #006d77;
@@ -170,21 +191,9 @@ footer p {
   background-color: #bdebea;
 }
 
+/* Carousel */
 .carousel-bg::before {
   background: rgba(255, 255, 255, 0.85);
-}
-
-h3 {
-  color: #006d77;
-  font-weight: bold;
-  margin-bottom: 30px;
-}
-
-.form-control,
-.form-select {
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
 }
 
 .carousel-wrapper {
@@ -236,7 +245,7 @@ h3 {
   right: 2vh;
 }
 
-
+/* Image Viewer */
 .visor-overlay {
   position: fixed;
   top: 0;
@@ -299,13 +308,7 @@ h3 {
   right: 5vh;
 }
 
-.section-title {
-  color: #006d77;
-  font-weight: bold;
-  margin-bottom: 5vh;
-  text-align: center;
-}
-
+/* Steps Section */
 .step {
   background-color: #f0fdfa;
   padding: 30px;
@@ -318,6 +321,7 @@ h3 {
   color: #005b5c;
 }
 
+/* Service Cards */
 .service-card {
   background-color: #f0fdfa;
   border-radius: 12px;
@@ -341,6 +345,7 @@ h3 {
   color: #444;
 }
 
+/* Info Section */
 .info-section {
   background-color: #f0fdfa;
   border-radius: 12px;
@@ -359,6 +364,7 @@ h3 {
   color: #444;
 }
 
+/* Form Container */
 .form-container {
   background-color: #f0fdfa;
   padding: 5vh;
@@ -369,6 +375,7 @@ h3 {
   margin-bottom: 5vh;
 }
 
+/* Sidebar and Map */
 .container-fluid .row {
   display: flex;
   height: 60vh;
@@ -391,6 +398,7 @@ h3 {
   width: 100%;
 }
 
+/* Custom Text and Cards */
 .text-primary-custom {
   color: #006d77;
 }
@@ -410,37 +418,30 @@ h3 {
   color: #f4b400;
 }
 
-.card-carrusel{
+/* Carousel Cards */
+.card-carrusel {
   width: 15vw;
 }
 
-.card-img-top{
+.card-img-top {
   height: 30vh;
   object-fit: cover;
   border-radius: 8px;
 }
 
-.card-text{
+.card-text {
   height: 10vh;
 }
 
+/* Responsive Images */
 .cuidador-img-responsive {
   width: 100%;
-  max-height: 35vh;       
+  max-height: 35vh;
   object-fit: cover;
-  border-radius: 1em; 
+  border-radius: 1em;
 }
 
-.formulario-buscador .form-label {
-  color: #006d77;
-  font-weight: 600;
-}
-
-.form-check-input:checked {
-  background-color: #00b4ab;
-  border-color: #00b4ab;
-}
-
+/* Form Styles */
 .formulario-buscador {
   background-color: #f0fdfa;
   padding: 3rem;
@@ -449,6 +450,11 @@ h3 {
   max-width: 100%;
   margin: auto;
   animation: fadeIn 0.6s ease-in-out;
+}
+
+.formulario-buscador .form-label {
+  color: #006d77;
+  font-weight: 600;
 }
 
 .formulario-buscador .form-check-label {
@@ -478,40 +484,50 @@ h3 {
   opacity: 1;
 }
 
-@keyframes fadeIn {
-  0% { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-.rounded-circle{
-  width:5vh;
-  height:5vh;
-  object-fit:cover;
-}
-.fa-solid{
-  font-size: 1em;
-}
-
-.fa-mobile-screen{
-  color: blue;
-}
-
-.fa-location-dot{
-  color: red;
-}
-
-.fa-envelope{
- color: #333;
-}
-
-.fa-star{
-  color: #fbbf24;
-}
-
-.list-inline-item{
+/* Form Inputs */
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 1px solid #ccc;
   font-size: 1rem;
 }
 
+.form-check-input:checked {
+  background-color: #00b4ab;
+  border-color: #00b4ab;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icons */
+.fa-solid {
+  font-size: 1em;
+}
+
+.fa-dog {
+  color: #ab846e;
+}
+
+.fa-cat {
+  color: #a3a8b7;
+}
+
+/* Inline List Items */
+.list-inline-item {
+  font-size: 1rem;
+}
+
+/* Badges */
 .badge-acepta {
   background-color: #d1f4f1;
   color: #075e54;
@@ -525,10 +541,9 @@ h3 {
   font-size: 1rem;
 }
 
-.fa-dog {
-  color: #006d77;
-}
-
-.fa-cat {
-  color: #005b5c;
+/* Rounded Circle */
+.rounded-circle {
+  width: 5vh;
+  height: 5vh;
+  object-fit: cover;
 }

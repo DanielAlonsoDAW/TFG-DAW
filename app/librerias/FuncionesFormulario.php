@@ -294,13 +294,13 @@ function getIcono($tipo)
         case 'gato':
             return '<i class="fa-solid fa-cat"></i> ';
         case 'phone':
-            return '<i class="fa-solid fa-mobile-screen"></i>';
+            return '<i class="bi bi-telephone-fill text-info"></i>';
         case 'location':
-            return '<i class="fa-solid fa-location-dot"></i>';
+            return '<i class="bi bi-geo-alt-fill text-primary"></i>';
         case 'email':
-            return '<i class="fa-solid fa-envelope"></i>';
+            return '<i class="bi bi-envelope-fill text-secondary"></i>';
         case 'star':
-            return '<i class="fa-solid fa-star"></i>';
+            return '<i class="bi bi-star-fill text-warning"></i>';
         default:
             return '';
     }

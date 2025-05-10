@@ -87,14 +87,28 @@ class Cuidadores_Model
     }
 
     public function obtenerMascotasCuidador($id)
-{
-    $sql = "SELECT m.id, m.nombre, m.tipo, m.raza, m.edad, m.tamano, m.observaciones,
+    {
+        $sql = "SELECT m.id, m.nombre, m.tipo, m.raza, m.edad, m.tamano, m.observaciones,
                    (SELECT imagen FROM patitas_mascotas_imagenes WHERE mascota_id = m.id LIMIT 1) AS imagen
             FROM patitas_mascotas m
             WHERE m.propietario_tipo = 'cuidador' AND m.propietario_id = :id";
-    $this->db->query($sql);
-    $this->db->bind(':id', $id);
-    return $this->db->registros();
-}
+        $this->db->query($sql);
+        $this->db->bind(':id', $id);
+        return $this->db->registros();
+    }
 
+    public function actualizarDatos($datos)
+    {
+        $this->db->query("UPDATE patitas_cuidadores 
+                      SET nombre = :nombre, email = :email, telefono = :telefono,
+                          direccion = :direccion, ciudad = :ciudad, pais = :pais,
+                          descripcion = :descripcion, max_mascotas_dia = :max_mascotas_dia
+                      WHERE id = :id");
+
+        foreach ($datos as $campo => $valor) {
+            $this->db->bind(":$campo", $valor);
+        }
+
+        return $this->db->execute();
+    }
 }
