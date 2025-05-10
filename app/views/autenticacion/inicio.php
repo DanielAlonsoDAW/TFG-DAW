@@ -15,7 +15,7 @@ if ($error) {
 <!-- Login -->
 <div class="container my-5">
     <h1 class="section-title">Iniciar sesión</h1>
-    <div class="form-container">
+    <div class="formulario-container d-flex flex-wrap justify-content-center">
         <div class="card-body">
             <?php if (isset($error) && $error) : ?>
                 <div class="alert alert-danger">

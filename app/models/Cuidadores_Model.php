@@ -14,6 +14,13 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    public function obtenerContrasenaPorId($id)
+    {
+        $this->db->query("SELECT contrasena FROM patitas_cuidadores WHERE id = :id");
+        $this->db->bind(':id', $id);
+        return $this->db->registro();
+    }
+
     public function obtenerCuidadoresConMedia()
     {
         $sql = "SELECT c.id, c.nombre, c.ciudad,
@@ -97,13 +104,12 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
-    public function actualizarDatos($datos)
+    public function actualizarDatosCuidador($datos)
     {
         $this->db->query("UPDATE patitas_cuidadores 
-                      SET nombre = :nombre, email = :email, telefono = :telefono,
-                          direccion = :direccion, ciudad = :ciudad, pais = :pais,
-                          descripcion = :descripcion, max_mascotas_dia = :max_mascotas_dia
-                      WHERE id = :id");
+        SET telefono = :telefono, direccion = :direccion, ciudad = :ciudad, 
+            pais = :pais, imagen = :imagen, lat = :lat, lng = :lng
+        WHERE id = :id");
 
         foreach ($datos as $campo => $valor) {
             $this->db->bind(":$campo", $valor);
@@ -111,4 +117,39 @@ class Cuidadores_Model
 
         return $this->db->execute();
     }
+
+    public function eliminarAdmiteMascotas($id)
+    {
+        $this->db->query("DELETE FROM patitas_cuidador_admite WHERE cuidador_id = :id");
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
+
+    public function insertarTipoMascota($id, $tipo, $tamano)
+    {
+        $this->db->query("INSERT INTO patitas_cuidador_admite (cuidador_id, tipo_mascota, tamano)
+                      VALUES (:id, :tipo, :tamano)");
+        $this->db->bind(':id', $id);
+        $this->db->bind(':tipo', $tipo);
+        $this->db->bind(':tamano', $tamano);
+        return $this->db->execute();
+    }
+
+    public function eliminarServicios($id)
+{
+    $this->db->query("DELETE FROM patitas_cuidador_servicios WHERE cuidador_id = :id");
+    $this->db->bind(':id', $id);
+    return $this->db->execute();
+}
+
+public function insertarServicio($id, $servicio, $precio)
+{
+    $this->db->query("INSERT INTO patitas_cuidador_servicios (cuidador_id, servicio, precio)
+                      VALUES (:id, :servicio, :precio)");
+    $this->db->bind(':id', $id);
+    $this->db->bind(':servicio', $servicio);
+    $this->db->bind(':precio', $precio);
+    return $this->db->execute();
+}
+
 }

@@ -15,7 +15,7 @@ require RUTA_APP . "/librerias/FuncionesFormulario.php";
     <div id="cabecera-buscador">
         <div class="container my-4">
             <h2 class="text-center mb-4">Busca cuidadores cerca de ti</h2>
-            <div class="form-container">
+            <div class="formulario-container d-flex flex-wrap justify-content-center">
                 <form id="form-filtros" class="row gy-4 gx-3 justify-content-center">
                     <!-- Ciudad -->
                     <div class="col-12 col-md-6">

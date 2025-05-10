@@ -1,6 +1,5 @@
 <?php
 require RUTA_APP . '/views/inc/header.php';
-require RUTA_APP . "/librerias/FuncionesFormulario.php";
 ?>
 
 <div class="container my-5">

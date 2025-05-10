@@ -23,7 +23,7 @@ class Autenticacion extends Controlador
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = comprobarDatos($_POST['email']) ? test_input($_POST['email']) : $emailErr = "Completa el campo Email \n";
-            $contrasena = comprobarDatos($_POST['contrasena']) ? test_input($_POST['contrasena']) : $contrasenaErr = "Completa el campo Contraseña\n";
+            $contrasena = comprobarContrasena($_POST['contrasena']) ? test_input($_POST['contrasena']) : $contrasenaErr = "Completa el campo Contraseña\n";
 
             if (formularioErrores($emailErr, $contrasenaErr)) {
                 // Buscar primero en dueños

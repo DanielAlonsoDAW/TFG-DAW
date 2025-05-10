@@ -442,31 +442,33 @@ footer p {
 }
 
 /* Form Styles */
-.formulario-buscador {
+
+.formulario-container {
   background-color: #f0fdfa;
   padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  max-width: 100%;
+  max-width: 75vh;
+  width: 100%;
   margin: auto;
   animation: fadeIn 0.6s ease-in-out;
 }
 
-.formulario-buscador .form-label {
+.formulario-container .form-label {
   color: #006d77;
   font-weight: 600;
 }
 
-.formulario-buscador .form-check-label {
+.formulario-container .form-check-label {
   font-size: 1rem;
   color: #333;
 }
 
-.formulario-buscador .form-check {
+.formulario-container .form-check {
   min-width: 100px;
 }
 
-.formulario-buscador .btn-primary {
+.formulario-container .btn-primary {
   background-color: #00b4ab;
   border: none;
   padding: 0.6rem 1.5rem;
@@ -474,14 +476,32 @@ footer p {
   transition: 0.2s;
 }
 
-.formulario-buscador .btn-primary:hover {
+.formulario-container .btn-primary:hover {
   background-color: #008e86;
   transform: scale(1.02);
 }
 
-.formulario-buscador ::placeholder {
+.formulario-container ::placeholder {
   color: #666;
   opacity: 1;
+}
+
+.btn-perro,
+.btn-gato {
+  color: #006d77;
+  background-color: transparent;
+  border: 2px solid #00b4ab;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-perro:hover,
+.btn-check:checked + .btn-perro,
+.btn-gato:hover,
+.btn-check:checked + .btn-gato {
+  background-color: #cdeae8 !important;
+  color: #005b5c !important;
+  border-color: #008e86!important;
 }
 
 /* Form Inputs */
@@ -490,6 +510,7 @@ footer p {
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
+  max-width: 50vh;
 }
 
 .form-check-input:checked {
@@ -546,4 +567,70 @@ footer p {
   width: 5vh;
   height: 5vh;
   object-fit: cover;
+}
+
+/* Vista Perfil Cuidador */
+.perfil-cuidador-contenedor {
+  background-color: #f0fdfa;
+  padding: 3rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+}
+
+.perfil-cuidador-imagen {
+  width: 30vh;
+  height: 30vh;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1em solid #bdebea;
+  margin-bottom: 1rem;
+}
+
+.perfil-cuidador-info ul li {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.perfil-cuidador-info strong {
+  color: #006d77;
+}
+
+.perfil-cuidador-botones .btn {
+  border-color: #00b4ab;
+  color: #006d77;
+  transition: 0.3s;
+}
+
+.perfil-cuidador-botones .btn:hover {
+  background-color: #bdebea;
+  color: #004e54;
+}
+
+.servicio-precio {
+  background-color: #d1f4f1;
+  color: #075e54;
+  font-weight: 600;
+  border-radius: 1em;
+  padding: 0.35em 0.8em;
+}
+
+.seccion-subtitulo {
+  color: #005b5c;
+  font-weight: 600;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.perfil-cuidador-botones .btn {
+  background-color: transparent;
+  color: #006d77;
+  border: 1px solid #006d77;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.perfil-cuidador-botones .btn:hover {
+  background-color: #bdebea;
+  color: #004e54;
 }

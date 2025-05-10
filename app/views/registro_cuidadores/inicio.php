@@ -7,7 +7,7 @@ require RUTA_APP . '/views/inc/header.php';
 <div class="container my-5">
     <h1 class="section-title">¡Únete como cuidador!</h1>
     <p class="text-center">Completa el formulario para comenzar a ofrecer tus servicios como cuidador de mascotas.</p>
-    <div class="form-container">
+    <div class="formulario-container d-flex flex-wrap justify-content-center">
         <form action="<?php echo RUTA_URL; ?>/registro_cuidadores" method="POST" id="registroForm">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre completo</label>

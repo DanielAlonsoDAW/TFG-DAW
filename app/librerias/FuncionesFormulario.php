@@ -301,6 +301,8 @@ function getIcono($tipo)
             return '<i class="bi bi-envelope-fill text-secondary"></i>';
         case 'star':
             return '<i class="bi bi-star-fill text-warning"></i>';
+        case 'calendar':
+            return '<i class="bi bi-calendar-check text-muted"></i>';
         default:
             return '';
     }

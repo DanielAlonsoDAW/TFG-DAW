@@ -37,7 +37,7 @@ class Registro_Cuidadores extends Controlador
             }
 
             // Validar contrasena
-            if (comprobarDatos(trim($_POST['contrasena']))) {
+            if (comprobarContrasena(trim($_POST['contrasena']))) {
                 $contrasena = password_hash(test_input($_POST['contrasena']), PASSWORD_DEFAULT);
             } else {
                 $contraseñaErr = "Completa el campo Contrasena\n";

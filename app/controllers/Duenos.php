@@ -8,7 +8,7 @@ class Duenos extends Controlador
         $this->duenoModelo = $this->modelo('Duenos_Model');
     }
 
-    public function perfilPriv($id = null)
+    public function editar($id = null)
     {
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'dueno') {
             redireccionar('/autenticacion');

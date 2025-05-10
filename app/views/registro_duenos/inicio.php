@@ -6,7 +6,7 @@ require RUTA_APP . '/views/inc/header.php';
 <!-- Registro -->
 <div class="container my-5">
     <h1 class="section-title">Registro como Propietario</h1>
-    <div class="form-container">
+    <div class="formulario-container d-flex flex-wrap justify-content-center">
         <form action="<?php echo RUTA_URL; ?>/registro_duenos" method="POST" id="registroForm">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre completo</label>
