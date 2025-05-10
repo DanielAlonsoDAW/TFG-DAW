@@ -11,10 +11,10 @@ require RUTA_APP . "/librerias/FuncionesFormulario.php";
                 <img src="<?= RUTA_URL . '/' . $datos['cuidador']->imagen ?>" class="img-fluid rounded shadow-sm cuidador-img-responsive mb-3" alt="Imagen cuidador">
                 <div class="card-body">
                     <h4 class="text-primary-custom"><?= $datos['cuidador']->nombre ?></h4>
-                    <p><strong>📍 Ciudad:</strong> <?= $datos['cuidador']->ciudad ?> (<?= $datos['cuidador']->pais ?>)</p>
-                    <p><strong>📞 Teléfono:</strong> <?= $datos['cuidador']->telefono ?></p>
-                    <p><strong>✉️ Email:</strong> <?= $datos['cuidador']->email ?></p>
-                    <p><strong>⭐ Valoración:</strong> <?= estrellasBootstrap($datos['cuidador']->promedio_calificacion) ?> (<?= number_format($datos['cuidador']->promedio_calificacion, 1) ?>/5)</p>
+                    <p><strong><?= getIcono("location") ?> Ciudad:</strong> <?= $datos['cuidador']->ciudad ?> (<?= $datos['cuidador']->pais ?>)</p>
+                    <p><strong><?= getIcono("phone") ?> Teléfono:</strong> <?= $datos['cuidador']->telefono ?></p>
+                    <p><strong><?= getIcono("email") ?> Email:</strong> <?= $datos['cuidador']->email ?></p>
+                    <p><strong><?= getIcono("star") ?> Valoración:</strong> <?= estrellasBootstrap($datos['cuidador']->promedio_calificacion) ?> (<?= number_format($datos['cuidador']->promedio_calificacion, 1) ?>/5)</p>
                 </div>
             </div>
         </div>
@@ -24,6 +24,31 @@ require RUTA_APP . "/librerias/FuncionesFormulario.php";
             <div class="info-section mb-4">
                 <h4>Sobre mí</h4>
                 <p><?= nl2br($datos['cuidador']->descripcion) ?></p>
+                <?php if (!empty($datos['mascotas'])): ?>
+                    <h4>Mis Mascotas</h4>
+                    <div class="row">
+                        <?php foreach ($datos['mascotas'] as $mascota): ?>
+                            <div class="col-md-6 mb-3">
+                                <div class="card custom-card shadow-sm h-100">
+                                    <?php if ($mascota->imagen): ?>
+                                        <img src="<?= $mascota->imagen ?>" class="card-img-top img-fluid" alt="Imagen de mascota">
+                                    <?php endif; ?>
+                                    <div class="card-body">
+                                        <h5 class="card-title"><?= ucfirst($mascota->nombre) ?></h5>
+                                        <p class="card-text card-mascota mb-2">
+                                            <strong>Raza:</strong> <?= $mascota->raza ?><br>
+                                            <strong>Edad:</strong> <?= $mascota->edad ?> años<br>
+                                            <strong>Tamaño:</strong> <?= ucfirst($mascota->tamano) ?> <?= getClasificacionTamano($mascota->tipo, $mascota->tamano) ?><br>
+                                            <?php if ($mascota->observaciones): ?>
+                                                <strong>Obs:</strong> <?= nl2br($mascota->observaciones) ?>
+                                            <?php endif; ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="info-section mb-4">
@@ -43,7 +68,11 @@ require RUTA_APP . "/librerias/FuncionesFormulario.php";
                 <h4>Acepta</h4>
                 <ul class="list-inline">
                     <?php foreach ($datos['admite'] as $a): ?>
-                        <li class="list-inline-item badge bg-info text-dark m-1"><?= ucfirst($a->tipo_mascota) ?> (<?= $a->tamano ?>)</li>
+                        <li class="list-inline-item badge badge-acepta m-1">
+                            <?= getIcono($a->tipo_mascota) ?>
+                            <?= ucfirst($a->tipo_mascota) ?>
+                            <?= $a->tamano ?> <?= getClasificacionTamano($a->tipo_mascota, $a->tamano) ?>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
             </div>

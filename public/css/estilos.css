@@ -488,3 +488,47 @@ h3 {
   height:5vh;
   object-fit:cover;
 }
+.fa-solid{
+  font-size: 1em;
+}
+
+.fa-mobile-screen{
+  color: blue;
+}
+
+.fa-location-dot{
+  color: red;
+}
+
+.fa-envelope{
+ color: #333;
+}
+
+.fa-star{
+  color: #fbbf24;
+}
+
+.list-inline-item{
+  font-size: 1rem;
+}
+
+.badge-acepta {
+  background-color: #d1f4f1;
+  color: #075e54;
+  border: 1px solid #b2e0dd;
+  font-weight: 500;
+  border-radius: 0.75em;
+  padding: 0.4em 0.8em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 1rem;
+}
+
+.fa-dog {
+  color: #006d77;
+}
+
+.fa-cat {
+  color: #005b5c;
+}

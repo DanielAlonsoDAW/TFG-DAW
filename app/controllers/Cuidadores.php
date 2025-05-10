@@ -13,12 +13,15 @@ class Cuidadores extends Controlador
         $servicios = $this->cuidadorModelo->obtenerServicios($id);
         $admite = $this->cuidadorModelo->obtenerTiposMascotas($id);
         $resenas = $this->cuidadorModelo->obtenerResenas($id);
+        $mascotas = $this->cuidadorModelo->obtenerMascotasCuidador($id);
+
 
         $this->vista('cuidadores/perfil', [
             'cuidador' => $datosCuidador,
             'servicios' => $servicios,
             'admite' => $admite,
-            'resenas' => $resenas
+            'resenas' => $resenas,
+            'mascotas' => $mascotas
         ]);
     }
 }

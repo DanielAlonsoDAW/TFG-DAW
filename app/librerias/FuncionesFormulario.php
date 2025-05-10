@@ -259,3 +259,49 @@ function estrellasBootstrap($valoracion)
 
     return $html;
 }
+
+function getClasificacionTamano($tipo, $tamano)
+{
+    $tamano = strtolower($tamano);
+    $tipo = strtolower($tipo);
+
+    if ($tipo === 'perro') {
+        return match ($tamano) {
+            'pequeño' => '(< 35 cm)',
+            'mediano' => '(35–49 cm)',
+            'grande'  => '≥ 50 cm',
+            default   => ''
+        };
+    }
+
+    if ($tipo === 'gato') {
+        return match ($tamano) {
+            'pequeño' => '(< 3 kg)',
+            'mediano' => '(3–5 kg)',
+            'grande'  => '> 5 kg',
+            default   => ''
+        };
+    }
+
+    return '';
+}
+
+function getIcono($tipo)
+{
+    switch ($tipo) {
+        case 'perro':
+            return '<i class="fa-solid fa-dog"></i> ';
+        case 'gato':
+            return '<i class="fa-solid fa-cat"></i> ';
+        case 'phone':
+            return '<i class="fa-solid fa-mobile-screen"></i>';
+        case 'location':
+            return '<i class="fa-solid fa-location-dot"></i>';
+        case 'email':
+            return '<i class="fa-solid fa-envelope"></i>';
+        case 'star':
+            return '<i class="fa-solid fa-star"></i>';
+        default:
+            return '';
+    }
+}

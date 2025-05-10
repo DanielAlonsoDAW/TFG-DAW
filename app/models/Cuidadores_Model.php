@@ -85,4 +85,16 @@ class Cuidadores_Model
         $this->db->bind(':id', $id);
         return $this->db->registros();
     }
+
+    public function obtenerMascotasCuidador($id)
+{
+    $sql = "SELECT m.id, m.nombre, m.tipo, m.raza, m.edad, m.tamano, m.observaciones,
+                   (SELECT imagen FROM patitas_mascotas_imagenes WHERE mascota_id = m.id LIMIT 1) AS imagen
+            FROM patitas_mascotas m
+            WHERE m.propietario_tipo = 'cuidador' AND m.propietario_id = :id";
+    $this->db->query($sql);
+    $this->db->bind(':id', $id);
+    return $this->db->registros();
+}
+
 }

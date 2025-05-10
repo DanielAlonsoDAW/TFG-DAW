@@ -9,6 +9,7 @@
   <link href="<?php echo RUTA_URL; ?>\css\bootstrap\bootstrap.min.css" rel="stylesheet">
   <link href="<?php echo RUTA_URL; ?>\css\bootstrap-icons\font\bootstrap-icons.min.css" rel="stylesheet">
   <link href="<?php echo RUTA_URL; ?>\css\estilos.css" rel="stylesheet">
+  <link rel="stylesheet" href="<?= RUTA_URL ?>/public/fontawesome/css/all.min.css">
 </head>
 
 <body>
