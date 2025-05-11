@@ -9,16 +9,17 @@ $tamanosGato = array_column($gatoActivo, 'tamano');
 
 <div class="container mt-5 mb-5">
   <h2 class="section-title">Editar Servicios Ofrecidos</h2>
-  <div class="formulario-container d-flex flex-wrap justify-content-center">
+  <div class="formulario-container col-12 col-md-8 col-lg-6">
     <form method="POST">
       <div class="mb-4">
         <label for="max_mascotas_dia" class="form-label">Máx. Mascotas al día:</label>
         <input type="number" id="max_mascotas_dia" name="max_mascotas_dia" class="form-control" value="<?= $entrada['max_mascotas_dia'] ?? $datos['datos']->max_mascotas_dia ?>">
-        <div class="invalid-feedback" id="error-max_mascotas_dia"><?= $errores['max_mascotas_dia'] ?? '' ?></div>
+        <span class="text-danger" id="error-max_mascotas_dia"><?= $datos['errores']['max_mascotas_dia'] ?? '' ?></span>
       </div>
 
       <div class="mb-4">
         <label class="form-label">Acepta:</label>
+        <span id="error-tipo" class="text-danger"></span>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="checkbox" name="acepta_perro" id="acepta_perro" <?= isset($entrada['acepta_perro']) || !empty($perroActivo) ? 'checked' : '' ?>>
           <label class="form-check-label" for="acepta_perro">Perro</label>
@@ -31,6 +32,7 @@ $tamanosGato = array_column($gatoActivo, 'tamano');
 
       <div class="mb-4" id="grupo-perro" style="<?= !empty($perroActivo) ? '' : 'display: none;' ?>">
         <label class="form-label">Tamaños de perro admitidos:</label>
+        <span id="error-tamano-perro" class="text-danger"></span>
         <div class="d-flex flex-wrap gap-2">
           <input type="checkbox" class="btn-check" id="perro-pequeno" name="tamanos_perro[]" value="pequeño" <?= in_array('pequeño', $tamanosPerro) ? 'checked' : '' ?>>
           <label class="btn btn-perro mt-2 me-2" for="perro-pequeno"><?= getIcono('perro') ?> Pequeño (&lt; 35 cm)</label>
@@ -45,6 +47,7 @@ $tamanosGato = array_column($gatoActivo, 'tamano');
 
       <div class="mb-4" id="grupo-gato" style="<?= !empty($gatoActivo) ? '' : 'display: none;' ?>">
         <label class="form-label">Tamaños de gato admitidos:</label>
+        <span id="error-tamano-gato" class="text-danger"></span>
         <div class="d-flex flex-wrap gap-2">
           <input type="checkbox" class="btn-check" id="gato-pequeno" name="tamanos_gato[]" value="pequeño" <?= in_array('pequeño', $tamanosGato) ? 'checked' : '' ?>>
           <label class="btn btn-gato mt-2 me-2" for="gato-pequeno"><?= getIcono('gato') ?> Pequeño (&lt; 3 kg)</label>
@@ -59,48 +62,83 @@ $tamanosGato = array_column($gatoActivo, 'tamano');
 
       <div class="mb-4">
         <label class="form-label">Servicios ofrecidos:</label>
-        <?php
-        $serviciosDisponibles = [
-          'Alojamiento',
-          'Cuidado a domicilio',
-          'Visitas a domicilio',
-          'Paseos',
-          'Guardería de día',
-          'Taxi'
-        ];
-
-        $serviciosActuales = [];
-        foreach ($datos['servicios'] as $s) {
-          $serviciosActuales[$s->servicio] = $s->precio;
-        }
-        ?>
-
-        <?php foreach ($serviciosDisponibles as $serv): ?>
-          <div class="row align-items-center mb-3">
-            <div class="col-auto">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="servicios[]" id="servicio_<?= $serv ?>" value="<?= $serv ?>"
-                  <?= isset($serviciosActuales[$serv]) ? 'checked' : '' ?>>
-                <label class="form-check-label" for="servicio_<?= $serv ?>"><?= $serv ?></label>
+        <span id="error-servicios" class="text-danger mb-2"></span>
+        <div id="grupo-servicios">
+          <?php
+          $serviciosDisponibles = [
+            'Alojamiento',
+            'Cuidado a domicilio',
+            'Visitas a domicilio',
+            'Paseos',
+            'Guardería de día',
+            'Taxi'
+          ];
+          $serviciosActuales = [];
+          foreach ($datos['servicios'] as $s) {
+            $serviciosActuales[$s->servicio] = $s->precio;
+          }
+          ?>
+          <?php foreach ($serviciosDisponibles as $serv): ?>
+            <div
+              class="row align-items-center mb-3 servicio-row"
+              data-servicio="<?= htmlspecialchars($serv, ENT_QUOTES) ?>">
+              <div class="col-auto">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="servicios[]"
+                    id="servicio_<?= $serv ?>"
+                    value="<?= $serv ?>"
+                    <?= isset($serviciosActuales[$serv]) ? 'checked' : '' ?>>
+                  <label class="form-check-label" for="servicio_<?= $serv ?>">
+                    <?= $serv ?>
+                  </label>
+                </div>
+              </div>
+              <div class="col">
+                <?php if ($serv === 'Taxi'): ?>
+                  <div class="input-group">
+                    <span class="input-group-text">10 € +</span>
+                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="€/km"
+                      value="<?= $serviciosActuales[$serv] ?? '' ?>">
+                    <span class="input-group-text">€/km</span>
+                  </div>
+                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
+                <?php elseif ($serv === 'Alojamiento' || $serv === 'Cuidado a domicilio'): ?>
+                  <div class="input-group">
+                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio"
+                      value="<?= $serviciosActuales[$serv] ?? '' ?>">
+                    <span class="input-group-text">€/noche</span>
+                  </div>
+                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
+                <?php elseif ($serv === 'Guardería de día'): ?>
+                  <div class="input-group">
+                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio"
+                      value="<?= $serviciosActuales[$serv] ?? '' ?>">
+                    <span class="input-group-text">€/día</span>
+                  </div>
+                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
+                <?php elseif ($serv === 'Paseos'): ?>
+                  <div class="input-group">
+                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio"
+                      value="<?= $serviciosActuales[$serv] ?? '' ?>">
+                    <span class="input-group-text">€/paseo</span>
+                  </div>
+                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
+                <?php elseif ($serv === 'Visitas a domicilio'): ?>
+                  <div class="input-group">
+                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio"
+                      value="<?= $serviciosActuales[$serv] ?? '' ?>">
+                    <span class="input-group-text">€/visita</span>
+                  </div>
+                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
+                <?php endif; ?>
               </div>
             </div>
-            <div class="col">
-              <?php if ($serv === 'Taxi'): ?>
-                <div class="input-group">
-                  <span class="input-group-text">10 € +</span>
-                  <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="€/km"
-                    value="<?= $serviciosActuales[$serv] ?? '' ?>">
-                  <span class="input-group-text">€/km</span>
-                </div>
-              <?php else: ?>
-                <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio en €"
-                  value="<?= $serviciosActuales[$serv] ?? '' ?>">
-              <?php endif; ?>
-            </div>
-          </div>
-        <?php endforeach; ?>
+          <?php endforeach; ?>
+        </div>
       </div>
-
       <div class="text-center mt-5">
         <input type="submit" class="btn btn-primary" value="Guardar cambios">
       </div>

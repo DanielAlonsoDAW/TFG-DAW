@@ -7,7 +7,7 @@ require RUTA_APP . '/views/inc/header.php';
 <div class="container my-5">
     <h1 class="section-title">¡Únete como cuidador!</h1>
     <p class="text-center">Completa el formulario para comenzar a ofrecer tus servicios como cuidador de mascotas.</p>
-    <div class="formulario-container d-flex flex-wrap justify-content-center">
+    <div class="formulario-container col-12 col-md-8 col-lg-6">
         <form action="<?php echo RUTA_URL; ?>/registro_cuidadores" method="POST" id="registroForm">
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre completo</label>
@@ -37,7 +37,7 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 
     <!-- Explicación -->
-    <div class="container mb-5">
+    <div class="container mt-5 mb-5">
         <h2 class="section-title">¿Cómo funciona ser cuidador en Guardería Patitas?</h2>
 
         <div class="info-section">

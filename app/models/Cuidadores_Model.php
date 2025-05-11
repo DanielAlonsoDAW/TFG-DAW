@@ -135,21 +135,32 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 
+    public function actualizarMaxMascotas($id, $max_mascotas_dia)
+    {
+        $this->db->query("UPDATE patitas_cuidadores 
+        SET max_mascotas_dia = :max_mascotas_dia
+        WHERE id = :id");
+
+        $this->db->bind(':id', $id);
+        $this->db->bind(':max_mascotas_dia', $max_mascotas_dia);
+
+        return $this->db->execute();
+    }
+
     public function eliminarServicios($id)
-{
-    $this->db->query("DELETE FROM patitas_cuidador_servicios WHERE cuidador_id = :id");
-    $this->db->bind(':id', $id);
-    return $this->db->execute();
-}
+    {
+        $this->db->query("DELETE FROM patitas_cuidador_servicios WHERE cuidador_id = :id");
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
 
-public function insertarServicio($id, $servicio, $precio)
-{
-    $this->db->query("INSERT INTO patitas_cuidador_servicios (cuidador_id, servicio, precio)
+    public function insertarServicio($id, $servicio, $precio)
+    {
+        $this->db->query("INSERT INTO patitas_cuidador_servicios (cuidador_id, servicio, precio)
                       VALUES (:id, :servicio, :precio)");
-    $this->db->bind(':id', $id);
-    $this->db->bind(':servicio', $servicio);
-    $this->db->bind(':precio', $precio);
-    return $this->db->execute();
-}
-
+        $this->db->bind(':id', $id);
+        $this->db->bind(':servicio', $servicio);
+        $this->db->bind(':precio', $precio);
+        return $this->db->execute();
+    }
 }

@@ -364,17 +364,6 @@ footer p {
   color: #444;
 }
 
-/* Form Container */
-.form-container {
-  background-color: #f0fdfa;
-  padding: 5vh;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  max-width: 45vw;
-  margin: auto;
-  margin-bottom: 5vh;
-}
-
 /* Sidebar and Map */
 .container-fluid .row {
   display: flex;
@@ -448,8 +437,6 @@ footer p {
   padding: 3rem;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  max-width: 75vh;
-  width: 100%;
   margin: auto;
   animation: fadeIn 0.6s ease-in-out;
 }
@@ -510,7 +497,6 @@ footer p {
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
-  max-width: 50vh;
 }
 
 .form-check-input:checked {

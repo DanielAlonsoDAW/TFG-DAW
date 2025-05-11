@@ -225,16 +225,16 @@ class Cuidadores extends Controlador
                 'max_mascotas_dia' => ''
             ];
 
-            if (!comprobarNumero($_POST['max_mascotas_dia'])) {
+            if (!comprobarNumero($_POST['max_mascotas_dia']) || $_POST['max_mascotas_dia'] < 1) {
                 $errores['max_mascotas_dia'] = "Número inválido.";
+            } else {
+                $maxMascotas = test_input((int)$_POST['max_mascotas_dia']);
             }
 
             if (formularioErrores(...array_values($errores))) {
+
                 // Guardar máximo de mascotas
-                $this->cuidadorModelo->actualizarServicios([
-                    'id' => $id,
-                    'max_mascotas_dia' => (int)$_POST['max_mascotas_dia']
-                ]);
+                $this->cuidadorModelo->actualizarMaxMascotas($id, $maxMascotas);
 
                 // Reemplazar admisiones
                 $this->cuidadorModelo->eliminarAdmiteMascotas($id);

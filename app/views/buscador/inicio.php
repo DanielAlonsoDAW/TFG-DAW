@@ -24,7 +24,7 @@ if (!empty($_GET['tamano'])) {
 <div id="cabecera-buscador">
     <div class="container my-4">
         <h2 class="text-center mb-4">Busca cuidadores cerca de ti</h2>
-        <div class="formulario-container d-flex flex-wrap justify-content-center">
+        <div class="formulario-container col-12 col-md-10 col-lg-8">
             <form action="<?php echo RUTA_URL; ?>/buscador/api_filtrar" method="GET" id="form-filtros" class="row gy-4 gx-3 justify-content-center">
                 <!-- Ciudad -->
                 <div class="col-12 col-md-6">
