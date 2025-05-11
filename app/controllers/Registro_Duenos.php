@@ -1,5 +1,5 @@
 <?php
-require RUTA_APP . "/librerias/FuncionesFormulario.php";
+require RUTA_APP . "/librerias/Funciones.php";
 class Registro_Duenos extends Controlador
 {
     private $registroModelo;

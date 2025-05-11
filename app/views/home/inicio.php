@@ -1,7 +1,7 @@
 <?php
 // Cargamos el header previamente
 require RUTA_APP . '/views/inc/header.php';
-require RUTA_APP . "/librerias/FuncionesFormulario.php";
+require RUTA_APP . "/librerias/Funciones.php";
 ?>
 
 <!-- HERO / INFORMACIÓN -->

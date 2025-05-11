@@ -78,7 +78,7 @@ $tamanosGato = array_column($gatoActivo, 'tamano');
             $serviciosActuales[$s->servicio] = $s->precio;
           }
           ?>
-          <?php foreach ($serviciosDisponibles as $serv): ?>
+          <?php foreach ($serviciosDisponibles as $serv): $clave = str_replace(' ', '_', $serv); ?>
             <div
               class="row align-items-center mb-3 servicio-row"
               data-servicio="<?= htmlspecialchars($serv, ENT_QUOTES) ?>">
@@ -100,40 +100,34 @@ $tamanosGato = array_column($gatoActivo, 'tamano');
                 <?php if ($serv === 'Taxi'): ?>
                   <div class="input-group">
                     <span class="input-group-text">10 € +</span>
-                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="€/km"
+                    <!-- nota el name="precio[<?= $clave ?>]" -->
+                    <input type="number" step="0.01" min="0" class="form-control"
+                      name="precio[<?= $clave ?>]" placeholder="€/km"
                       value="<?= $serviciosActuales[$serv] ?? '' ?>">
                     <span class="input-group-text">€/km</span>
                   </div>
-                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
-                <?php elseif ($serv === 'Alojamiento' || $serv === 'Cuidado a domicilio'): ?>
+                <?php else: ?>
                   <div class="input-group">
-                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio"
+                    <input type="number" step="0.01" min="0" class="form-control"
+                      name="precio[<?= $clave ?>]" placeholder="Precio"
                       value="<?= $serviciosActuales[$serv] ?? '' ?>">
-                    <span class="input-group-text">€/noche</span>
+                    <span class="input-group-text">
+                      <?php
+                      // unit
+                      echo match ($serv) {
+                        'Alojamiento', 'Cuidado a domicilio' => '€/noche',
+                        'Guardería de día'                    => '€/día',
+                        'Paseos'                              => '€/paseo',
+                        'Visitas a domicilio'                => '€/visita',
+                        default                               => '',
+                      };
+                      ?>
+                    </span>
                   </div>
-                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
-                <?php elseif ($serv === 'Guardería de día'): ?>
-                  <div class="input-group">
-                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio"
-                      value="<?= $serviciosActuales[$serv] ?? '' ?>">
-                    <span class="input-group-text">€/día</span>
-                  </div>
-                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
-                <?php elseif ($serv === 'Paseos'): ?>
-                  <div class="input-group">
-                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio"
-                      value="<?= $serviciosActuales[$serv] ?? '' ?>">
-                    <span class="input-group-text">€/paseo</span>
-                  </div>
-                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
-                <?php elseif ($serv === 'Visitas a domicilio'): ?>
-                  <div class="input-group">
-                    <input type="number" step="0.01" min="0" class="form-control" name="precio_<?= $serv ?>" placeholder="Precio"
-                      value="<?= $serviciosActuales[$serv] ?? '' ?>">
-                    <span class="input-group-text">€/visita</span>
-                  </div>
-                  <span id="error-precio_<?= str_replace(' ', '_', $serv) ?>" class="text-danger mb-2 precio-error"></span>
                 <?php endif; ?>
+
+                <span id="error-precio_<?= $clave ?>"
+                  class="text-danger mb-2 precio-error"></span>
               </div>
             </div>
           <?php endforeach; ?>

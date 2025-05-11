@@ -1,7 +1,7 @@
 <?php
 // Cargamos el header previamente
 require RUTA_APP . '/views/inc/header.php';
-require RUTA_APP . "/librerias/FuncionesFormulario.php";
+require RUTA_APP . "/librerias/Funciones.php";
 ?>
 <form method="POST" class="container mt-5 mb-5">
     <h3>Mi Perfil</h3>

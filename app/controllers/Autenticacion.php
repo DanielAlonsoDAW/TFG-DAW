@@ -1,5 +1,5 @@
 <?php
-require RUTA_APP . "/librerias/FuncionesFormulario.php";
+require RUTA_APP . "/librerias/Funciones.php";
 class Autenticacion extends Controlador
 {
     private $autenticacionModelo;

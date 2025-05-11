@@ -19,7 +19,7 @@ require RUTA_APP . '/views/inc/header.php';
         </div>
 
         <!-- Columna derecha: info completa -->
-        <div class="col-md-8">
+        <div class="col-12 col-lg-8">
             <div class="info-section mb-4">
                 <h4>Sobre mí</h4>
                 <p><?= nl2br($datos['cuidador']->descripcion) ?></p>
@@ -34,7 +34,7 @@ require RUTA_APP . '/views/inc/header.php';
                                     <?php endif; ?>
                                     <div class="card-body">
                                         <h5 class="card-title"><?= ucfirst($mascota->nombre) ?></h5>
-                                        <p class="card-text card-mascota mb-2">
+                                        <p class="card-text overflow-auto mb-2">
                                             <strong>Raza:</strong> <?= $mascota->raza ?><br>
                                             <strong>Edad:</strong> <?= $mascota->edad ?> años<br>
                                             <strong>Tamaño:</strong> <?= ucfirst($mascota->tamano) ?> <?= getClasificacionTamano($mascota->tipo, $mascota->tamano) ?><br>
@@ -53,12 +53,11 @@ require RUTA_APP . '/views/inc/header.php';
             <div class="info-section mb-4">
                 <h4>Servicios ofrecidos</h4>
                 <ul class="list-group list-group-flush">
-                    <?php foreach ($datos['servicios'] as $serv): ?>
-                        <?php if (strtolower($serv->servicio) === 'taxi'): ?>
-                            <li class="list-group-item"><?= $serv->servicio ?> – 10€ + <?= number_format($serv->precio, 2) ?>€/km</li>
-                        <?php else: ?>
-                            <li class="list-group-item"><?= $serv->servicio ?> – <?= number_format($serv->precio, 2) ?>€</li>
-                        <?php endif; ?>
+                    <?php foreach ($datos['servicios'] as $s): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <?= htmlspecialchars($s->servicio) ?>
+                            <span class="servicio-precio"><?= $s->precio ?></span>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
             </div>

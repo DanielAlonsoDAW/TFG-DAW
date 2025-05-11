@@ -41,7 +41,7 @@
             <?php foreach ($datos['servicios'] as $s): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <?= htmlspecialchars($s->servicio) ?>
-                    <span class="servicio-precio"><?= number_format($s->precio, 2) ?> €</span>
+                    <span class="servicio-precio"><?= $s->precio ?></span>
                 </li>
             <?php endforeach; ?>
         </ul>

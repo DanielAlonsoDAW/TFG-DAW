@@ -104,6 +104,19 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    public function actualizarAccesos($datos)
+    {
+        $this->db->query("UPDATE patitas_cuidadores 
+        SET nombre = :nombre, email = :email, contrasena = :contrasena
+        WHERE id = :id");
+
+        foreach ($datos as $campo => $valor) {
+            $this->db->bind(":$campo", $valor);
+        }
+
+        return $this->db->execute();
+    }
+
     public function actualizarDatosCuidador($datos)
     {
         $this->db->query("UPDATE patitas_cuidadores 

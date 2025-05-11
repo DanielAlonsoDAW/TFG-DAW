@@ -70,7 +70,8 @@
                           <span>' . htmlspecialchars($nombreUsuario, ENT_QUOTES, 'UTF-8') . '</span>
                       </button>
                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUsuario">
-                        <li><a class="dropdown-item" href=" ' . RUTA_URL . '/duenos/perfilPriv/' . $_SESSION['usuario_id'] . '">Mi perfil</a></li>
+                        <li><a class="dropdown-item" href=" ' . RUTA_URL . '/duenos/perfilPriv/">Mi perfil</a></li>
+                        <li><a class="dropdown-item" href="' . RUTA_URL . '/mascotas/">Mis mascotas</a></li>
                         <li><a class="dropdown-item" href="#">Mis reservas</a></li>
                         <!-- Más opciones aquí -->
                       </ul>
@@ -89,6 +90,7 @@
                       </button>
                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUsuario">
                         <li><a class="dropdown-item" href=" ' . RUTA_URL . '/cuidadores/perfilPriv/">Mi perfil</a></li>
+                        <li><a class="dropdown-item" href="' . RUTA_URL . '/mascotas/">Mis mascotas</a></li>
                         <li><a class="dropdown-item" href="#">Mis reservas</a></li>
                         <!-- Más opciones aquí -->
                       </ul>

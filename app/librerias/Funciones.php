@@ -110,25 +110,14 @@ function comprobarContrasena($contrasena)
     // Si pasa todas las validaciones
     return true;
 }
-function validarRutaImagen($ruta)
+function comprobarImagenesSubidas(array $files): bool
 {
-    // Asegurarse de que la ruta contiene solo caracteres permitidos
-    $patron = "/^[a-zA-Z0-9\/\-_\.\\\:\%\ ]+$/";
-    if (!preg_match($patron, $ruta)) {
-        return false;
+    $tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp'];
+    foreach ($files['type'] as $tipo) {
+        if (!in_array($tipo, $tiposPermitidos, true)) {
+            return false;
+        }
     }
-
-    // Comprobar que el archivo tiene una extensión de imagen válida
-    $extensionesPermitidas = array("jpg", "jpeg", "png", "webp", "gif");
-    $posicionPunto = strrpos($ruta, '.');
-    if ($posicionPunto === false) {
-        return false;
-    }
-    $extension = substr($ruta, $posicionPunto + 1);
-    if (!in_array(strtolower($extension), $extensionesPermitidas)) {
-        return false;
-    }
-
     return true;
 }
 

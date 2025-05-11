@@ -1,5 +1,5 @@
 <?php
-require RUTA_APP . "/librerias/FuncionesFormulario.php";
+require RUTA_APP . "/librerias/Funciones.php";
 class Cuidadores extends Controlador
 {
     private $cuidadorModelo;
@@ -17,6 +17,29 @@ class Cuidadores extends Controlador
         $resenas = $this->cuidadorModelo->obtenerResenas($id);
         $mascotas = $this->cuidadorModelo->obtenerMascotasCuidador($id);
 
+        foreach ($servicios as $s) {
+            $precio = number_format($s->precio, 2);
+
+            switch (strtolower($s->servicio)) {
+                case 'taxi':
+                    $s->precio = "10€ + {$precio}€/km";
+                    break;
+                case 'alojamiento':
+                    $s->precio = "{$precio}€/noche";
+                    break;
+                case 'guardería de día':
+                    $s->precio = "{$precio}€/día";
+                    break;
+                case 'paseos':
+                case 'paseo de perros':
+                    $s->precio = "{$precio}€/paseo";
+                    break;
+                case 'cuidado a domicilio':
+                case 'visitas a domicilio':
+                    $s->precio = "{$precio}€/visita";
+                    break;
+            }
+        }
 
         $this->vista('cuidadores/perfil', [
             'cuidador' => $datosCuidador,
@@ -37,6 +60,29 @@ class Cuidadores extends Controlador
         $servicios = $this->cuidadorModelo->obtenerServicios($id);
         $admite = $this->cuidadorModelo->obtenerTiposMascotas($id);
 
+        foreach ($servicios as $s) {
+            $precio = number_format($s->precio, 2);
+
+            switch (strtolower($s->servicio)) {
+                case 'taxi':
+                    $s->precio = "10€ + {$precio}€/km";
+                    break;
+                case 'alojamiento':
+                    $s->precio = "{$precio}€/noche";
+                    break;
+                case 'guardería de día':
+                    $s->precio = "{$precio}€/día";
+                    break;
+                case 'paseos':
+                case 'paseo de perros':
+                    $s->precio = "{$precio}€/paseo";
+                    break;
+                case 'cuidado a domicilio':
+                case 'visitas a domicilio':
+                    $s->precio = "{$precio}€/visita";
+                    break;
+            }
+        }
         $this->vista('cuidadores/perfilPriv', [
             'datos' => $datos,
             'servicios' => $servicios,
@@ -138,28 +184,71 @@ class Cuidadores extends Controlador
                 $errores['pais'] = "País obligatorio.";
             }
 
+            if (empty($_FILES['imagenes']['name'][0])) {
+                $errores['imagenes'] = 'Sube al menos una imagen.';
+            }
+
             $imagenFinal = $datos->imagen;
-            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
+            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $temp = $_FILES['imagen']['tmp_name'];
                 $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
-                $nuevaRuta = 'public/img/avatar/cuidador_' . $id . '.webp';
+                // Construimos la ruta 
+                $nuevaRuta = "public/img/cuidadores/{$id}.webp";
 
-                if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'])) {
+                if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
                     $rutaCompleta = RUTA_APP . '/../' . $nuevaRuta;
-                    $imagen = null;
 
-                    if ($ext === 'jpg' || $ext === 'jpeg') $imagen = imagecreatefromjpeg($temp);
-                    if ($ext === 'png') $imagen = imagecreatefrompng($temp);
-                    if ($ext === 'webp') $imagen = imagecreatefromwebp($temp);
+                    // 1) Carga la imagen original en GD
+                    switch ($ext) {
+                        case 'jpg':
+                        case 'jpeg':
+                            $imagen = imagecreatefromjpeg($temp);
+                            break;
+                        case 'png':
+                            $imagen = imagecreatefrompng($temp);
+                            break;
+                        case 'webp':
+                            $imagen = imagecreatefromwebp($temp);
+                            break;
+                    }
 
                     if ($imagen) {
+                        // 2) Primera exportación a WebP calidad 80
                         imagewebp($imagen, $rutaCompleta, 80);
                         imagedestroy($imagen);
-                        $imagenFinal = $nuevaRuta;
-                        $_SESSION['imagen_usuario'] = $imagenFinal;
+
+                        // 3) Si sigue pesando > 1 MB, redimensionamos al 50%
+                        if (filesize($rutaCompleta) > 1024 * 1024) {
+                            // Obtenemos dimensiones actuales
+                            list($ancho, $alto) = getimagesize($rutaCompleta);
+                            $nuevoAncho = intval($ancho / 2);
+                            $nuevoAlto  = intval($alto  / 2);
+
+                            // Cargamos de nuevo como WebP
+                            $tmp = imagecreatefromwebp($rutaCompleta);
+                            $rec = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+                            imagecopyresampled($rec, $tmp, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                            imagewebp($rec, $rutaCompleta, 80);
+                            imagedestroy($tmp);
+                            imagedestroy($rec);
+
+                            // 4) Si después de redimensionar sigue > 1 MB, error
+                            if (filesize($rutaCompleta) > 1024 * 1024) {
+                                $errores['imagen'] = 'La imagen pesa demasiado.';
+                            } else {
+                                $imagenFinal = $nuevaRuta;
+                                $_SESSION['imagen_usuario'] = $imagenFinal;
+                            }
+                        } else {
+                            // ok a la primera
+                            $imagenFinal = $nuevaRuta;
+                            $_SESSION['imagen_usuario'] = $imagenFinal;
+                        }
+                    } else {
+                        $errores['imagen'] = 'No se pudo procesar la imagen.';
                     }
                 } else {
-                    $errores['imagen'] = "Formato de imagen no válido.";
+                    $errores['imagen'] = 'Formato de imagen no válido.';
                 }
             }
 
@@ -257,14 +346,21 @@ class Cuidadores extends Controlador
                 // Insertar los servicios seleccionados con sus precios
                 if (!empty($_POST['servicios'])) {
                     foreach ($_POST['servicios'] as $servicio) {
-                        $precioCampo = 'precio_' . $servicio;
-                        if (isset($_POST[$precioCampo]) && is_numeric($_POST[$precioCampo])) {
-                            $precio = floatval($_POST[$precioCampo]);
-                            $this->cuidadorModelo->insertarServicio($id, $servicio, $precio);
+                        // Consolida la misma transformación que en la vista:
+                        $clave = str_replace(' ', '_', $servicio);
+                        if (
+                            isset($_POST['precio'][$clave]) &&
+                            is_numeric($_POST['precio'][$clave])
+                        ) {
+                            $precio = floatval($_POST['precio'][$clave]);
+                            $this->cuidadorModelo->insertarServicio(
+                                $id,
+                                $servicio,   // nombre real “Cuidado a domicilio”
+                                $precio
+                            );
                         }
                     }
                 }
-
                 // Redirigir al perfil privado del cuidador
                 redireccionar('/cuidadores/perfilPriv');
             }
