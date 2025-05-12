@@ -21,7 +21,7 @@ class Mascotas_Model
 
     public function obtenerMascotaPorId($id)
     {
-        $this->db->query("SELECT * FROM patitas_mascotas WHERE id = :id");
+        $this->db->query("SELECT id, nombre, tipo, raza, edad, tamano, observaciones FROM patitas_mascotas WHERE id = :id");
         $this->db->bind(':id', $id);
         return $this->db->registro();
     }
@@ -36,7 +36,8 @@ class Mascotas_Model
         return $this->db->registros();
     }
 
-    public function insertarMascota($datos) {
+    public function insertarMascota($datos)
+    {
         $this->db->query("
             INSERT INTO patitas_mascotas
               (nombre, tipo, raza, edad, tamano, observaciones, propietario_tipo, propietario_id)
@@ -55,7 +56,8 @@ class Mascotas_Model
         return $this->db->lastInsertId();
     }
 
-    public function insertarImagen($mascota_id, $ruta) {
+    public function insertarImagen($mascota_id, $ruta)
+    {
         $this->db->query("
             INSERT INTO patitas_mascotas_imagenes (mascota_id, imagen)
             VALUES (:mid, :img)
@@ -65,4 +67,28 @@ class Mascotas_Model
         return $this->db->execute();
     }
 
+    public function actualizarMascota($datos)
+    {
+        $this->db->query("UPDATE patitas_mascotas 
+        SET nombre = :nombre, tipo = :tipo, raza = :raza, edad = :edad, 
+            tamano = :tamano, observaciones = :observaciones
+        WHERE id = :id");
+
+        $this->db->bind(':id', $datos['id']);
+        $this->db->bind(':nombre', $datos['nombre']);
+        $this->db->bind(':tipo', $datos['tipo']);
+        $this->db->bind(':raza', $datos['raza']);
+        $this->db->bind(':edad', $datos['edad']);
+        $this->db->bind(':tamano', $datos['tamano']);
+        $this->db->bind(':observaciones', $datos['observaciones']);
+
+        return $this->db->execute();
+    }
+
+    public function eliminarMascota($id)
+    {
+        $this->db->query("DELETE FROM patitas_mascotas WHERE id = :id");
+        $this->db->bind(':id', $id);
+        return $this->db->execute();
+    }
 }

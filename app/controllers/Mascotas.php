@@ -24,15 +24,27 @@ class Mascotas extends Controlador
         $this->vista('mascotas/inicio', ['mascotas' => $mascotas]);
     }
 
-    public function editar($id_mascota)
-    {
-        $mascota = $this->mascotaModelo->obtenerMascotaPorId($id_mascota);
-        $imagenes = $this->mascotaModelo->obtenerImagenes($id_mascota);
-        $this->vista('mascotas/editarMascotas', ['mascota' => $mascota, 'imagenes' => $imagenes]);
-    }
-
     public function agregarMascota()
     {
+        // Cargar razas desde los CSV
+        $razasPerro = array_map('str_getcsv', file(RUTA_APP . '/models/api-dog.csv'));
+        $razasGato  = array_map('str_getcsv', file(RUTA_APP . '/models/api-cat.csv'));
+
+        // Quitar encabezado y reestructurar
+        array_shift($razasPerro);
+        array_shift($razasGato);
+
+        // Formatear como ['raza' => 'tamaño']
+        $perros = [];
+        foreach ($razasPerro as $r) {
+            $perros[$r[1]] = $r[2];
+        }
+
+        $gatos = [];
+        foreach ($razasGato as $r) {
+            $gatos[$r[1]] = $r[2];
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 1) Sanear entrada con test_input()
             $entrada = [
@@ -54,7 +66,7 @@ class Mascotas extends Controlador
                 'imagenes' => '',
             ];
 
-            // 3) Validaciones usando tus funciones
+            // 3) Validaciones usando mis funciones
             if (!comprobarDatos($entrada['nombre'])) {
                 $errores['nombre'] = 'El nombre es obligatorio.';
             }
@@ -68,13 +80,27 @@ class Mascotas extends Controlador
                 $errores['edad'] = 'La edad debe ser un número ≥ 0.';
             }
             if (!in_array($entrada['tamano'], ['pequeño', 'mediano', 'grande'], true)) {
-                $errores['tamano'] = 'Selecciona un tamaño.';
+                $errores['tamano'] = 'El tamano indicado no es correcto.';
             }
             if (empty($_FILES['imagenes']['name'][0])) {
                 $errores['imagenes'] = 'Sube al menos una imagen.';
             }
             if (!comprobarImagenesSubidas($_FILES['imagenes'])) {
                 $errores['imagenes'] = 'Solo se permiten JPG, PNG o WEBP.';
+            }
+
+            // Comprobar si la raza indicada coinciede con el tamaño en el csv
+            $raza = $entrada['raza'];
+            $tamanoIngresado = $entrada['tamano'];
+
+            if ($entrada['tipo'] === 'perro' && isset($perros[$raza])) {
+                if ($perros[$raza] !== $tamanoIngresado) {
+                    $errores['tamano'] = 'El tamaño no coincide con la raza seleccionada.';
+                }
+            } elseif ($entrada['tipo'] === 'gato' && isset($gatos[$raza])) {
+                if ($gatos[$raza] !== $tamanoIngresado) {
+                    $errores['tamano'] = 'El tamaño no coincide con la raza seleccionada.';
+                }
             }
 
             // 4) Si no hay errores, procesar alta
@@ -149,17 +175,20 @@ class Mascotas extends Controlador
                     }
 
                     // 5) Insertar URL en BD
-                    $url = "public/img/mascotas/{$fileName}";
+                    $url = "img/mascotas/{$fileName}";
                     $this->mascotaModelo->insertarImagen($idMascota, $url);
                     $index++;
                 }
 
                 // Si hubo error de imágenes, mostraremos formulario de nuevo
                 if ($errores['imagenes'] !== '') {
+
                     // borrar registro de BD y archivos parciales, opcional
                     $this->vista('mascotas/agregarMascota', [
                         'entrada' => $entrada,
-                        'errores' => $errores
+                        'errores' => $errores,
+                        'razasPerro' => $perros,
+                        'razasGato'  => $gatos
                     ]);
                     return;
                 }
@@ -170,28 +199,11 @@ class Mascotas extends Controlador
             // 5) Si hay errores de validación, volvemos al formulario
             $this->vista('mascotas/agregarMascota', [
                 'entrada' => $entrada,
-                'errores' => $errores
+                'errores' => $errores,
+                'razasPerro' => $perros,
+                'razasGato'  => $gatos
             ]);
         } else {
-            // Cargar razas desde los CSV
-            $razasPerro = array_map('str_getcsv', file(RUTA_APP . '/models/api-dog.csv'));
-            $razasGato  = array_map('str_getcsv', file(RUTA_APP . '/models/api-cat.csv'));
-
-            // Quitar encabezado y reestructurar
-            array_shift($razasPerro);
-            array_shift($razasGato);
-
-            // Formatear como ['raza' => 'tamaño']
-            $perros = [];
-            foreach ($razasPerro as $r) {
-                $perros[$r[1]] = $r[2];
-            }
-
-            $gatos = [];
-            foreach ($razasGato as $r) {
-                $gatos[$r[1]] = $r[2];
-            }
-
             $this->vista('mascotas/agregarMascota', [
                 'entrada' => [],
                 'errores' => [],
@@ -199,5 +211,202 @@ class Mascotas extends Controlador
                 'razasGato'  => $gatos
             ]);
         }
+    }
+
+    public function editarMascotas($id_mascota)
+    {
+        // Cargar razas desde los CSV
+        $razasPerro = array_map('str_getcsv', file(RUTA_APP . '/models/api-dog.csv'));
+        $razasGato  = array_map('str_getcsv', file(RUTA_APP . '/models/api-cat.csv'));
+
+        // Quitar encabezado y reestructurar
+        array_shift($razasPerro);
+        array_shift($razasGato);
+
+        // Formatear como ['raza' => 'tamaño']
+        $perros = [];
+        foreach ($razasPerro as $r) {
+            $perros[$r[1]] = $r[2];
+        }
+
+        $gatos = [];
+        foreach ($razasGato as $r) {
+            $gatos[$r[1]] = $r[2];
+        }
+
+        // Obtener la mascota a editar
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $entrada = [
+                'id'             => $_POST['id'],
+                'nombre'         => test_input($_POST['nombre'] ?? ''),
+                'tipo'           => $_POST['tipo'] ?? '',
+                'raza'           => test_input($_POST['raza'] ?? ''),
+                'edad'           => $_POST['edad'] ?? '',
+                'tamano'         => $_POST['tamano'] ?? '',
+                'observaciones'  => test_input($_POST['observaciones'] ?? ''),
+                'propietario_tipo' => $_POST['propietario_tipo'] ?? '',
+                'propietario_id'   => $_POST['propietario_id'] ?? ''
+            ];
+
+            $errores = [
+                'nombre' => '',
+                'tipo' => '',
+                'raza' => '',
+                'edad' => '',
+                'tamano' => '',
+                'imagenes' => ''
+            ];
+
+            if (!comprobarDatos($entrada['nombre'])) {
+                $errores['nombre'] = 'El nombre es obligatorio.';
+            }
+            if (!in_array($entrada['tipo'], ['perro', 'gato'], true)) {
+                $errores['tipo'] = 'Selecciona perro o gato.';
+            }
+            if (!comprobarDatos($entrada['raza'])) {
+                $errores['raza'] = 'La raza es obligatoria.';
+            }
+            if (!comprobarNumero($entrada['edad']) || (int)$entrada['edad'] < 0) {
+                $errores['edad'] = 'La edad debe ser un número ≥ 0.';
+            }
+            if (!in_array($entrada['tamano'], ['pequeño', 'mediano', 'grande'], true)) {
+                $errores['tamano'] = 'Selecciona un tamaño.';
+            }
+            if (!empty($_FILES['nuevas_imagenes']['name'][0]) && !comprobarImagenesSubidas($_FILES['nuevas_imagenes'])) {
+                $errores['imagenes'] = 'Solo se permiten imágenes JPG, PNG o WEBP.';
+            }
+
+            // Comprobar si la raza indicada coinciede con el tamaño en el csv
+            $raza = $entrada['raza'];
+            $tamanoIngresado = $entrada['tamano'];
+
+            if ($entrada['tipo'] === 'perro' && isset($perros[$raza])) {
+                if ($perros[$raza] !== $tamanoIngresado) {
+                    $errores['tamano'] = 'El tamaño no coincide con la raza seleccionada.';
+                }
+            } elseif ($entrada['tipo'] === 'gato' && isset($gatos[$raza])) {
+                if ($gatos[$raza] !== $tamanoIngresado) {
+                    $errores['tamano'] = 'El tamaño no coincide con la raza seleccionada.';
+                }
+            }
+
+            // Si no hay errores
+            if (formularioErrores(...array_values($errores))) {
+                $this->mascotaModelo->actualizarMascota($entrada);
+
+                // Procesar nuevas imágenes si las hay
+                if (!empty($_FILES['nuevas_imagenes']['name'][0])) {
+                    $uploadsDir = __DIR__ . '/../../public/img/mascotas/';
+                    if (!is_dir($uploadsDir)) {
+                        mkdir($uploadsDir, 0755, true);
+                    }
+
+                    $index = count($this->mascotaModelo->obtenerImagenes($entrada['id'])) + 1;
+                    foreach ($_FILES['nuevas_imagenes']['tmp_name'] as $i => $tmpName) {
+                        if ($_FILES['nuevas_imagenes']['error'][$i] !== UPLOAD_ERR_OK) continue;
+
+                        $ext = strtolower(pathinfo($_FILES['nuevas_imagenes']['name'][$i], PATHINFO_EXTENSION));
+                        $fileName = "{$entrada['id']}_{$index}.webp";
+                        $rutaCompleta = $uploadsDir . $fileName;
+
+                        switch ($ext) {
+                            case 'jpg':
+                            case 'jpeg':
+                                $img = imagecreatefromjpeg($tmpName);
+                                break;
+                            case 'png':
+                                $img = imagecreatefrompng($tmpName);
+                                break;
+                            case 'webp':
+                                $img = imagecreatefromwebp($tmpName);
+                                break;
+                            default:
+                                continue 2;
+                        }
+
+                        if (!$img) continue;
+
+                        imagewebp($img, $rutaCompleta, 80);
+                        imagedestroy($img);
+
+                        if (filesize($rutaCompleta) > 1024 * 1024) {
+                            list($w, $h) = getimagesize($rutaCompleta);
+                            $nw = (int)($w / 2);
+                            $nh = (int)($h / 2);
+
+                            $tmp2 = imagecreatefromwebp($rutaCompleta);
+                            $res  = imagecreatetruecolor($nw, $nh);
+                            imagecopyresampled($res, $tmp2, 0, 0, 0, 0, $nw, $nh, $w, $h);
+                            imagewebp($res, $rutaCompleta, 80);
+                            imagedestroy($tmp2);
+                            imagedestroy($res);
+
+                            if (filesize($rutaCompleta) > 1024 * 1024) {
+                                unlink($rutaCompleta);
+                                continue;
+                            }
+                        }
+
+                        $url = "public/img/mascotas/{$fileName}";
+                        $this->mascotaModelo->insertarImagen($entrada['id'], $url);
+                        $index++;
+                    }
+                }
+
+                redireccionar('/mascotas');
+            }
+
+            // Si hay errores, recargar con los datos actuales + errores
+            $mascota = (object) $entrada;
+            $imagenes = $this->mascotaModelo->obtenerImagenes($mascota->id);
+            $this->vista('mascotas/editarMascotas', [
+                'mascota' => $mascota,
+                'imagenes' => $imagenes,
+                'errores' => $errores
+            ]);
+        } else {
+            // Vista inicial
+            $mascota = $this->mascotaModelo->obtenerMascotaPorId($id_mascota);
+            $imagenes = $this->mascotaModelo->obtenerImagenes($id_mascota);
+
+            $this->vista('mascotas/editarMascotas', [
+                'mascota' => $mascota,
+                'imagenes' => $imagenes,
+                'errores' => []
+            ]);
+        }
+    }
+
+    public function eliminarMascota($id_mascota)
+    {
+        $mascota = $this->mascotaModelo->obtenerMascotaPorId($id_mascota);
+
+        if (!$mascota) {
+            redireccionar('/mascotas');
+        }
+
+        if ($mascota) {
+            $imagenes = $this->mascotaModelo->obtenerImagenes($id_mascota);
+            // Eliminar mascota de la base de datos
+            $resultado = $this->mascotaModelo->eliminarMascota($id_mascota);
+
+            if ($resultado) {
+
+                foreach ($imagenes as $imagen) {
+                    $rutaImagen = $imagen->imagen;
+
+                    if (file_exists($rutaImagen)) {
+                        unlink($rutaImagen);
+                    }
+                }
+                redireccionar('/mascotas/inicio');
+            } else {
+                // Manejar error de eliminación
+                $errores = 'Error al eliminar la mascota.';
+                $this->vista('mascotas/inicio', $errores);
+            }
+        }
+
+        redireccionar('/mascotas');
     }
 }

@@ -1,8 +1,7 @@
 (() => {
-  // Recupera la matriz que definimos inline
   const galerias = window.galeriasMascotas || [];
+  const RUTA_URL = window.RUTA_URL || "";
 
-  // Referencias al DOM
   const visor = document.getElementById("visorImagen");
   const imgLarge = document.getElementById("imagenAmpliada");
   const btnPrev = document.querySelector(".visor-prev");
@@ -12,12 +11,18 @@
   let mascotaAct = 0;
   let imgAct = 0;
 
-  // Abre el visor en la mascota e imagen indicadas
   function abrirVisor(idxMascota, idxImg) {
     mascotaAct = idxMascota;
     imgAct = idxImg;
-    imgLarge.src = galerias[mascotaAct][imgAct];
+    const gal = galerias[mascotaAct];
+    if (!gal || !gal.length) return;
+
+    imgLarge.src = gal[imgAct];
     visor.style.display = "flex";
+
+    const tieneVarias = gal.length > 1;
+    btnPrev.style.display = tieneVarias ? "block" : "none";
+    btnNext.style.display = tieneVarias ? "block" : "none";
   }
 
   function cerrarVisor() {
@@ -26,19 +31,25 @@
 
   function imagenSiguiente() {
     const gal = galerias[mascotaAct];
+    if (!gal || gal.length <= 1) return;
     imgAct = (imgAct + 1) % gal.length;
     imgLarge.src = gal[imgAct];
   }
 
   function imagenAnterior() {
     const gal = galerias[mascotaAct];
+    if (!gal || gal.length <= 1) return;
     imgAct = (imgAct - 1 + gal.length) % gal.length;
     imgLarge.src = gal[imgAct];
   }
 
-  // Cuando el DOM esté listo, engancha los eventos
+  // Exponer funciones globales (porque el HTML usa onclick)
+  window.abrirVisor = abrirVisor;
+  window.cerrarVisor = cerrarVisor;
+  window.imagenSiguiente = imagenSiguiente;
+  window.imagenAnterior = imagenAnterior;
+
   document.addEventListener("DOMContentLoaded", () => {
-    // Miniaturas
     document.querySelectorAll(".mascota-thumb").forEach((el) => {
       el.addEventListener("click", () => {
         const mi = parseInt(el.dataset.mascotaIndex, 10);
@@ -47,9 +58,15 @@
       });
     });
 
-    // Controles del visor
-    btnClose.addEventListener("click", cerrarVisor);
-    btnNext.addEventListener("click", imagenSiguiente);
-    btnPrev.addEventListener("click", imagenAnterior);
+    const modal = document.getElementById("confirmarEliminacionModal");
+    const btnEliminar = document.getElementById("btnConfirmarEliminar");
+
+    if (modal && btnEliminar) {
+      modal.addEventListener("show.bs.modal", function (event) {
+        const triggerBtn = event.relatedTarget;
+        const idMascota = triggerBtn.getAttribute("data-id");
+        btnEliminar.href = RUTA_URL + "/mascotas/eliminarMascota/" + idMascota;
+      });
+    }
   });
 })();

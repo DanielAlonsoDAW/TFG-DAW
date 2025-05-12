@@ -193,7 +193,7 @@ class Cuidadores extends Controlador
                 $temp = $_FILES['imagen']['tmp_name'];
                 $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
                 // Construimos la ruta 
-                $nuevaRuta = "public/img/cuidadores/{$id}.webp";
+                $nuevaRuta = "img/cuidadores/{$id}.webp";
 
                 if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
                     $rutaCompleta = RUTA_APP . '/../' . $nuevaRuta;
