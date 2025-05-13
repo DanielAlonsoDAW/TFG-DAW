@@ -20,13 +20,18 @@ $tamanosGato = array_column($gatoActivo, 'tamano');
       <div class="mb-4">
         <label class="form-label">Acepta:</label>
         <span id="error-tipo" class="text-danger"></span>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" name="acepta_perro" id="acepta_perro" <?= isset($entrada['acepta_perro']) || !empty($perroActivo) ? 'checked' : '' ?>>
-          <label class="form-check-label" for="acepta_perro">Perro</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="checkbox" name="acepta_gato" id="acepta_gato" <?= isset($entrada['acepta_gato']) || !empty($gatoActivo) ? 'checked' : '' ?>>
-          <label class="form-check-label" for="acepta_gato">Gato</label>
+        <div class="d-flex gap-3 mt-2">
+          <input type="checkbox" class="btn-check" id="acepta_perro" name="acepta_perro" autocomplete="off"
+            <?= isset($entrada['acepta_perro']) || !empty($perroActivo) ? 'checked' : '' ?>>
+          <label class="btn btn-perro" for="acepta_perro">
+            <i class="fa-solid fa-dog"></i> Perro
+          </label>
+
+          <input type="checkbox" class="btn-check" id="acepta_gato" name="acepta_gato" autocomplete="off"
+            <?= isset($entrada['acepta_gato']) || !empty($gatoActivo) ? 'checked' : '' ?>>
+          <label class="btn btn-gato" for="acepta_gato">
+            <i class="fa-solid fa-cat"></i> Gato
+          </label>
         </div>
       </div>
 

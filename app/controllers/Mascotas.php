@@ -362,6 +362,8 @@ class Mascotas extends Controlador
             $this->vista('mascotas/editarMascotas', [
                 'mascota' => $mascota,
                 'imagenes' => $imagenes,
+                'razasPerro' => $perros,
+                'razasGato'  => $gatos,
                 'errores' => $errores
             ]);
         } else {
@@ -372,6 +374,8 @@ class Mascotas extends Controlador
             $this->vista('mascotas/editarMascotas', [
                 'mascota' => $mascota,
                 'imagenes' => $imagenes,
+                'razasPerro' => $perros,
+                'razasGato'  => $gatos,
                 'errores' => []
             ]);
         }

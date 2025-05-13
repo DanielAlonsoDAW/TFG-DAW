@@ -25,7 +25,7 @@ require RUTA_APP . '/views/inc/header.php';
 
         <div class="col-md-6 col-lg-6">
             <div class="service-card h-100">
-                <h4>🏡 Cuidado a domicilio</h4>
+                <h4>🏠 Cuidado a domicilio</h4>
                 <p>
                     Tu cuidador cuida tanto de tus mascotas como de tu casa.
                     Tus animales reciben atención individualizada en su entorno habitual,
@@ -46,7 +46,7 @@ require RUTA_APP . '/views/inc/header.php';
 
         <div class="col-md-6 col-lg-6">
             <div class="service-card h-100">
-                <h4>🏠 Visitas a domicilio</h4>
+                <h4>🏘️ Visitas a domicilio</h4>
                 <p>
                     Atención personalizada para tu mascota sin que tenga que salir de casa. Durante visitas de 30 a 60 minutos, el cuidador se encarga de alimentarlo,
                     jugar con él, limpiar si es necesario y administrar medicación, brindándole cariño y cuidados adaptados a sus rutinas.

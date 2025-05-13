@@ -18,13 +18,11 @@ if (!empty($_GET['tamano'])) {
 <script src="js/leaflet/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
-
-
 <!-- Buscador -->
 <div id="cabecera-buscador">
     <div class="container my-4">
         <h2 class="text-center mb-4">Busca cuidadores cerca de ti</h2>
-        <div class="formulario-container col-12 col-md-10 col-lg-8">
+        <div class="formulario-container col-12 col-md-10">
             <form action="<?php echo RUTA_URL; ?>/buscador/api_filtrar" method="GET" id="form-filtros" class="row gy-4 gx-3 justify-content-center">
                 <!-- Ciudad -->
                 <div class="col-12 col-md-6">
@@ -40,16 +38,13 @@ if (!empty($_GET['tamano'])) {
                 <div class="col-12 col-md-6 text-center">
                     <label class="form-label mb-3">Tipo de mascota</label>
                     <div class="d-flex justify-content-center flex-wrap gap-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Perro" id="mascota-perro"
-                                <?php if (!empty($_GET['tipo_mascota']) && in_array('Perro', explode(',', $_GET['tipo_mascota']))) echo 'checked'; ?>>
-                            <label class="form-check-label" for="mascota-perro">Perro</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="tipo_mascota[]" value="Gato" id="mascota-gato"
-                                <?php if (!empty($_GET['tipo_mascota']) && in_array('Gato', explode(',', $_GET['tipo_mascota']))) echo 'checked'; ?>>
-                            <label class="form-check-label" for="mascota-gato">Gato</label>
-                        </div>
+                        <input type="checkbox" class="btn-check" name="tipo_mascota[]" value="Perro" id="mascota-perro"
+                            <?= (!empty($_GET['tipo_mascota']) && in_array('Perro', explode(',', $_GET['tipo_mascota']))) ? 'checked' : '' ?>>
+                        <label class="btn btn-perro" for="mascota-perro"><i class="fa-solid fa-dog"></i> Perro</label>
+
+                        <input type="checkbox" class="btn-check" name="tipo_mascota[]" value="Gato" id="mascota-gato"
+                            <?= (!empty($_GET['tipo_mascota']) && in_array('Gato', explode(',', $_GET['tipo_mascota']))) ? 'checked' : '' ?>>
+                        <label class="btn btn-gato" for="mascota-gato"><i class="fa-solid fa-cat"></i> Gato</label>
                     </div>
                 </div>
                 <!-- Servicio -->
@@ -67,37 +62,48 @@ if (!empty($_GET['tamano'])) {
 
                 </div>
                 <!-- Tamaño del animal para Perro -->
-                <div class="col-12 col-md-6 <?php echo empty(array_filter($tamanoArray, fn($t) => $t['tipo'] === 'perro')) ? 'd-none' : ''; ?>" id="bloque-tamano-perro">
+                <div class="col-8 col-md-6 <?= empty(array_filter($tamanoArray, fn($t) => $t['tipo'] === 'perro')) ? 'd-none' : '' ?>" id="bloque-tamano-perro">
                     <label class="form-label d-block mb-2">Tamaño del perro</label>
-                    <div class="d-flex justify-content-center flex-wrap gap-4">
+                    <div class="d-flex justify-content-center flex-wrap gap-2">
                         <?php
-                        $tamanosPerro = ['Pequeño', 'Mediano', 'Grande'];
-                        foreach ($tamanosPerro as $tam) {
+                        $tamanosPerro = [
+                            'Pequeño' => '< 35 cm',
+                            'Mediano' => '35–49 cm',
+                            'Grande'  => '≥ 50 cm'
+                        ];
+                        foreach ($tamanosPerro as $tam => $medida) {
                             $isChecked = in_array(['tipo' => 'perro', 'tamano' => $tam], $tamanoArray);
+                            $id = 'perro-' . strtolower($tam);
                             echo '
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="tamano_perro[]" value="' . $tam . '" id="perro-' . strtolower($tam) . '"' . ($isChecked ? ' checked' : '') . '>
-                    <label class="form-check-label" for="perro-' . strtolower($tam) . '">' . $tam . '</label>
-                </div>
-            ';
+          <input type="checkbox" class="btn-check" id="' . $id . '" name="tamano_perro[]" value="' . $tam . '" ' . ($isChecked ? 'checked' : '') . ' autocomplete="off">
+          <label class="btn btn-perro mt-2" for="' . $id . '">
+            <i class="fa-solid fa-dog me-1"></i> ' . $tam . ' (' . $medida . ')
+          </label>
+        ';
                         }
                         ?>
                     </div>
                 </div>
+
                 <!-- Tamaño del animal para Gato -->
-                <div class="col-12 col-md-6 <?php echo empty(array_filter($tamanoArray, fn($t) => $t['tipo'] === 'gato')) ? 'd-none' : ''; ?>" id="bloque-tamano-gato">
+                <div class="col-8 col-md-6 <?= empty(array_filter($tamanoArray, fn($t) => $t['tipo'] === 'gato')) ? 'd-none' : '' ?>" id="bloque-tamano-gato">
                     <label class="form-label d-block mb-2">Tamaño del gato</label>
-                    <div class="d-flex justify-content-center flex-wrap gap-4">
+                    <div class="d-flex justify-content-center flex-wrap gap-2">
                         <?php
-                        $tamanosGato = ['Pequeño', 'Mediano', 'Grande'];
-                        foreach ($tamanosGato as $tam) {
+                        $tamanosGato = [
+                            'Pequeño' => '< 3 kg',
+                            'Mediano' => '3–5 kg',
+                            'Grande'  => '> 5 kg'
+                        ];
+                        foreach ($tamanosGato as $tam => $peso) {
                             $isChecked = in_array(['tipo' => 'gato', 'tamano' => $tam], $tamanoArray);
+                            $id = 'gato-' . strtolower($tam);
                             echo '
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="tamano_gato[]" value="' . $tam . '" id="gato-' . strtolower($tam) . '"' . ($isChecked ? ' checked' : '') . '>
-                    <label class="form-check-label" for="gato-' . strtolower($tam) . '">' . $tam . '</label>
-                </div>
-            ';
+          <input type="checkbox" class="btn-check" id="' . $id . '" name="tamano_gato[]" value="' . $tam . '" ' . ($isChecked ? 'checked' : '') . ' autocomplete="off">
+          <label class="btn btn-gato mt-2" for="' . $id . '">
+            <i class="fa-solid fa-cat me-1"></i> ' . $tam . ' (' . $peso . ')
+          </label>
+        ';
                         }
                         ?>
                     </div>

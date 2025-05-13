@@ -3,7 +3,7 @@
 <div class="container mt-5 mb-5">
     <h2 class="section-title">Añadir Nueva Mascota</h2>
     <div class="formulario-container col-12 col-md-8 col-lg-6">
-        <form method="POST" enctype="multipart/form-data" novalidate>
+        <form id="formAgregarMascota" method="POST" enctype="multipart/form-data" novalidate>
             <?php
             $e  = $datos['errores']  ?? [];
             $in = $datos['entrada'] ?? [];
@@ -19,15 +19,13 @@
 
             <!-- Tipo -->
             <div class="mb-3">
-                <label class="form-label">Tipo:</label>
-                <select
-                    name="tipo"
-                    class="form-select <?= !empty($e['tipo']) ? 'is-invalid' : '' ?>">
-                    <option value="" disabled <?= empty($in['tipo']) ? 'selected' : '' ?>>Elige...</option>
-                    <option value="perro" <?= (isset($in['tipo']) && $in['tipo'] === 'perro') ? 'selected' : '' ?>>Perro</option>
-                    <option value="gato" <?= (isset($in['tipo']) && $in['tipo'] === 'gato')  ? 'selected' : '' ?>>Gato</option>
-                </select>
-                <span class="text-danger"><?= $e['tipo'] ?? '' ?></span>
+                <label class="form-label">Tipo</label><br>
+                <input type="radio" class="btn-check" name="tipo" id="btn-perro" value="perro" <?= ($in['tipo'] ?? '') === 'perro' ? 'checked' : '' ?>>
+                <label class="btn btn-perro me-2" for="btn-perro"><i class="fa-solid fa-dog"></i> Perro</label>
+
+                <input type="radio" class="btn-check" name="tipo" id="btn-gato" value="gato" <?= ($in['tipo'] ?? '') === 'gato' ? 'checked' : '' ?>>
+                <label class="btn btn-gato" for="btn-gato"><i class="fa-solid fa-cat"></i> Gato</label>
+                <span class="text-danger"><?= $e['Tipo'] ?? '' ?></span>
             </div>
 
             <!-- Raza -->

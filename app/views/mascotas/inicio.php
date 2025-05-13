@@ -2,8 +2,8 @@
 
 <div class="container mt-5">
     <h2 class="section-title">Mis mascotas</h2>
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <a href="<?= RUTA_URL ?>/mascotas/agregarMascota" class="btn btn-success">Añadir mascota</a>
+    <div class="text-center mb-4">
+        <a href="<?= RUTA_URL ?>/mascotas/agregarMascota" class="btn btn-primary">Añadir mascota</a>
     </div>
 
     <?php if (empty($datos['mascotas'])): ?>
@@ -37,14 +37,14 @@
                                 <strong>Tamaño:</strong> <?= $m->tamano ?><br>
                                 <?php if ($m->observaciones): ?>
                                     <strong>Obs.:</strong> <?= htmlspecialchars($m->observaciones) ?>
+                                <?php endif; ?>
                             </p>
-                        <?php endif; ?>
-                        <a href="<?= RUTA_URL ?>/mascotas/editarMascotas/<?= $m->id ?>" class="btn btn-primary">
-                            Editar
-                        </a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $m->id ?>">
-                            Eliminar
-                        </button>
+                            <a href="<?= RUTA_URL ?>/mascotas/editarMascotas/<?= $m->id ?>" class="btn btn-primary">
+                                Editar
+                            </a>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $m->id ?>">
+                                Eliminar
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
 
 <!-- Modal de confirmación de eliminación -->
 <div class="modal fade" id="confirmarEliminacionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">Confirmar eliminación</h5>
@@ -79,9 +79,9 @@
 <!-- Visor overlay -->
 <div id="visorImagen" class="visor-overlay">
     <span class="visor-cerrar" onclick="cerrarVisor()">×</span>
-    <button class="visor-nav visor-prev" onclick="imagenAnterior()">&#10094;</button>
+    <button type="button" class="visor-nav visor-prev" onclick="imagenAnterior()">&#10094;</button>
     <img id="imagenAmpliada" class="visor-img" src="" alt="Imagen ampliada" />
-    <button class="visor-nav visor-next" onclick="imagenSiguiente()">&#10095;</button>
+    <button type="button" class="visor-nav visor-next" onclick="imagenSiguiente()">&#10095;</button>
 </div>
 <script>
     window.RUTA_URL = "<?= RUTA_URL ?>";
