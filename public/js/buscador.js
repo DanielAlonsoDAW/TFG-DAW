@@ -1,15 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1) Inicializar mapa
+  // 1) Inicializar mapa y layerGroup
   const map = L.map("map").setView([40.416775, -3.70379], 6);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
-
-  // 2) LayerGroup para todos los marcadores
   const markerGroup = L.layerGroup().addTo(map);
 
-  // 3) Función para pintar tarjeta en un fragmento
+  // 2) Función para crear una tarjeta de cuidador
   function crearTarjeta(c) {
     const card = document.createElement("div");
     card.className = "card custom-card mb-3";
@@ -50,42 +48,32 @@ document.addEventListener("DOMContentLoaded", () => {
     return card;
   }
 
-  // 4) Mostrar cuidadores optimizado
+  // 3) Función para renderizar marcadores y sidebar
   function mostrarCuidadores(cuidadores) {
-    // 4a) Preparamos sidebar y fragmento
     const sidebar = document.querySelector(".sidebar-custom");
     sidebar.innerHTML =
       '<h5 class="text-primary-custom mb-4">Cuidadores disponibles</h5>';
     const frag = document.createDocumentFragment();
 
-    // 4b) Limpiamos marcadores anteriores
+    // Limpiar marcadores anteriores
     markerGroup.clearLayers();
-
-    // 4c) Creamos un bounds para centrar todo junto
     const bounds = L.latLngBounds();
 
-    // 4d) Iteramos una sola vez
     cuidadores.forEach((c) => {
       const lat = parseFloat(c.lat),
         lng = parseFloat(c.lng);
-      const valid = !isNaN(lat) && !isNaN(lng);
-
-      if (valid) {
-        // Añadimos marker al layerGroup
+      if (!isNaN(lat) && !isNaN(lng)) {
         const m = L.marker([lat, lng]).bindPopup(
           `<strong>${c.nombre}</strong><br>${c.ciudad}`
         );
         markerGroup.addLayer(m);
         bounds.extend([lat, lng]);
       }
-      // Siempre creamos la tarjeta (sin marker si no hay coords)
       frag.appendChild(crearTarjeta(c));
     });
 
-    // 4e) Volcamos todas las tarjetas al sidebar de golpe
     sidebar.appendChild(frag);
 
-    // 4f) Ajustamos vista: un solo fitBounds
     if (bounds.isValid()) {
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
     } else {
@@ -93,53 +81,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 5) Carga API y render
-  async function cargarCuidadores(ciudad = "", tipo = "", serv = "", tam = "") {
-    const url =
-      `${RUTA_URL}/buscador/api_filtrar?` +
-      `ciudad=${encodeURIComponent(ciudad)}` +
-      `&tipo_mascota=${encodeURIComponent(tipo)}` +
-      `&servicio=${encodeURIComponent(serv)}` +
-      `&tamano=${encodeURIComponent(tam)}`;
+  // 4) Función para enviar el form por POST y procesar la respuesta
+  async function buscarConFiltros(form) {
+    // 4.1) Serializar JSON de tamaños
+    const tamPerro = Array.from(
+      form.querySelectorAll('input[name="tamano_perro[]"]:checked')
+    ).map((cb) => ({ tipo: "perro", tamano: cb.value }));
+    const tamGato = Array.from(
+      form.querySelectorAll('input[name="tamano_gato[]"]:checked')
+    ).map((cb) => ({ tipo: "gato", tamano: cb.value }));
+    form.querySelector("#input-tamano-json").value = JSON.stringify([
+      ...tamPerro,
+      ...tamGato,
+    ]);
+
+    // 4.2) Preparar FormData y hacer fetch
+    const fd = new FormData(form);
     try {
-      const res = await fetch(url);
+      const res = await fetch(form.action, {
+        method: "POST",
+        body: fd,
+      });
+      if (!res.ok) throw new Error(res.statusText);
       const data = await res.json();
       mostrarCuidadores(data);
     } catch (err) {
-      console.error("Error al cargar cuidadores:", err);
+      console.error("Error al buscar cuidadores:", err);
     }
   }
 
-  // 6) Parámetros iniciales y evento form
-  const params = new URLSearchParams(window.location.search);
-  cargarCuidadores(
-    params.get("ciudad") || "",
-    params.get("tipo_mascota") || "",
-    params.get("servicio") || "",
-    params.get("tamano") || ""
-  );
-
-  document.querySelector("#form-filtros").addEventListener("submit", (e) => {
+  // 5) Listener único de submit
+  const form = document.querySelector("#form-filtros");
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
-    const ciudadVal = document.querySelector("#input-ciudad").value.trim();
-    const tipoVal = Array.from(
-      document.querySelectorAll('input[name="tipo_mascota[]"]:checked')
-    )
-      .map((cb) => cb.value)
-      .join(",");
-    const servVal = document.querySelector("select[name='servicio']").value;
-    const tamPerro = Array.from(
-      document.querySelectorAll('input[name="tamano_perro[]"]:checked')
-    ).map((cb) => ({ tipo: "perro", tamano: cb.value }));
-    const tamGato = Array.from(
-      document.querySelectorAll('input[name="tamano_gato[]"]:checked')
-    ).map((cb) => ({ tipo: "gato", tamano: cb.value }));
-    const tamArr = [...tamPerro, ...tamGato];
-    const tamVal = encodeURIComponent(JSON.stringify(tamArr));
-
-    cargarCuidadores(ciudadVal, tipoVal, servVal, tamVal);
+    buscarConFiltros(form);
   });
 
+  // 6) Ejecutar búsqueda inicial (sin filtros)
+  buscarConFiltros(form);
+
+  // 7) Lógica de toggle de tamaños y filtro de servicio
   const opcionesServicio = {
     todos: [
       "Alojamiento",
@@ -159,49 +140,31 @@ document.addEventListener("DOMContentLoaded", () => {
       "Taxi",
     ],
   };
-
   const selectServicio = document.querySelector("select[name='servicio']");
-
-  function actualizarOpcionesServicio() {
-    const perro = chkPerro.checked;
-    const gato = chkGato.checked;
-
-    let serviciosPermitidos = [];
-
-    if (perro && gato) {
-      serviciosPermitidos = opcionesServicio.todos;
-    } else if (gato) {
-      serviciosPermitidos = opcionesServicio.gato;
-    } else if (perro) {
-      serviciosPermitidos = opcionesServicio.perro;
-    } else {
-      serviciosPermitidos = opcionesServicio.todos;
-    }
-
-    // Guardamos el valor actual seleccionado si sigue siendo válido
-    const valorSeleccionado = selectServicio.value;
-
-    // Limpiamos y reconstruimos el select
-    selectServicio.innerHTML =
-      '<option selected disabled value="">Servicio</option>';
-
-    serviciosPermitidos.forEach((serv) => {
-      const option = document.createElement("option");
-      option.value = serv;
-      option.textContent = serv;
-      selectServicio.appendChild(option);
-    });
-
-    // Restauramos el valor si aún está disponible
-    if (serviciosPermitidos.includes(valorSeleccionado)) {
-      selectServicio.value = valorSeleccionado;
-    }
-  }
-
   const chkPerro = document.getElementById("mascota-perro");
   const chkGato = document.getElementById("mascota-gato");
   const bloquePerro = document.getElementById("bloque-tamano-perro");
   const bloqueGato = document.getElementById("bloque-tamano-gato");
+
+  function actualizarOpcionesServicio() {
+    const perro = chkPerro.checked;
+    const gato = chkGato.checked;
+    let lista = opcionesServicio.todos;
+    if (perro && !gato) lista = opcionesServicio.perro;
+    if (gato && !perro) lista = opcionesServicio.gato;
+
+    // Reconstruir el <select>
+    const seleccionado = selectServicio.value;
+    selectServicio.innerHTML =
+      '<option disabled selected value="">Servicio</option>';
+    lista.forEach((serv) => {
+      const opt = document.createElement("option");
+      opt.value = serv;
+      opt.textContent = serv;
+      selectServicio.appendChild(opt);
+    });
+    if (lista.includes(seleccionado)) selectServicio.value = seleccionado;
+  }
 
   function actualizarFormulario() {
     bloquePerro.classList.toggle("d-none", !chkPerro.checked);
@@ -211,6 +174,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   chkPerro.addEventListener("change", actualizarFormulario);
   chkGato.addEventListener("change", actualizarFormulario);
-
   actualizarFormulario();
 });

@@ -17,7 +17,7 @@ require RUTA_APP . "/librerias/Funciones.php";
         <div class="container my-4">
             <h2 class="text-center mb-4">Busca cuidadores cerca de ti</h2>
             <div class="formulario-container col-12 col-md-10">
-                <form id="form-filtros" class="row gy-4 gx-3 justify-content-center">
+                <form id="form-filtros" method="POST" action="<?= RUTA_URL ?>/buscador" class="row gy-4 gx-3 justify-content-center">
 
                     <!-- Ciudad -->
                     <div class="col-12 col-md-6">
@@ -98,7 +98,7 @@ require RUTA_APP . "/librerias/Funciones.php";
                             </label>
                         </div>
                     </div>
-
+                    <input type="hidden" name="tamano" id="input-tamano-json">
                     <!-- Botón -->
                     <div class="col-12 col-md-6 text-center text-start">
                         <input type="submit" class="btn btn-primary px-4 py-2" value="Buscar" />

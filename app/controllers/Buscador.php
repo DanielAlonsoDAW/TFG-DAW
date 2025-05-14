@@ -9,138 +9,166 @@ class Buscador extends Controlador
         $this->buscadorModelo = $this->modelo('Buscador_Model');
     }
 
-    // Vista principal
     public function index()
     {
-        $this->vista('buscador/inicio');
+        $ciudad   = $_POST['ciudad']        ?? $_GET['ciudad']        ?? '';
+        $fecha    = $_POST['fecha']         ?? $_GET['fecha']         ?? '';
+        $servicio = $_POST['servicio']      ?? $_GET['servicio']      ?? '';
+
+        if (isset($_POST['tipo_mascota'])) {
+            $tipos = $_POST['tipo_mascota'];
+        } elseif (!empty($_GET['tipo_mascota'])) {
+            $tipos = explode(',', $_GET['tipo_mascota']);
+        } else {
+            $tipos = [];
+        }
+
+        $rawTam = $_POST['tamano'] ?? $_GET['tamano'] ?? '[]';
+        $tamano = json_decode($rawTam, true);
+        if (!is_array($tamano)) {
+            $tamano = [];
+        }
+
+        $datos = [
+            'ciudad'        => $ciudad,
+            'fecha'         => $fecha,
+            'servicio'      => $servicio,
+            'tipo_mascota'  => $tipos,
+            'tamano'        => $tamano,
+            'api_filtrar'   => RUTA_URL . '/buscador/api_filtrar'
+        ];
+
+        $this->vista('buscador/inicio', $datos);
     }
 
-    // API para obtener cuidadores filtrados por ciudad y ordenados por media de valoración
     public function api_filtrar()
     {
         header('Content-Type: application/json');
 
-        // Obtener parámetros desde GET
-        $ciudadInput = $_GET['ciudad'] ?? '';
-        $tipoMascotaInput = $_GET['tipo_mascota'] ?? '';
-        $servicioInput = $_GET['servicio'] ?? '';
-        $tamanoInput = $_GET['tamano'] ?? '[]';
-        $tamanoArray = json_decode(urldecode($tamanoInput), true);
-        if (!is_array($tamanoArray)) $tamanoArray = [];
+        $ciudadInput      = $_POST['ciudad']       ?? $_GET['ciudad']       ?? '';
+        $servicioInput    = $_POST['servicio']     ?? $_GET['servicio']     ?? '';
+        $tamanoInput      = $_POST['tamano']       ?? $_GET['tamano']       ?? '[]';
 
-        $tiposSeleccionados = array_map('strtolower', array_filter(explode(',', $tipoMascotaInput)));
+        $tipoRaw = $_POST['tipo_mascota'] ?? $_GET['tipo_mascota'] ?? [];
+        if (is_array($tipoRaw)) {
+            $tiposSeleccionados = array_map('strtolower', $tipoRaw);
+        } elseif (is_string($tipoRaw)) {
+            $tiposSeleccionados = array_map(
+                'strtolower',
+                array_filter(explode(',', $tipoRaw))
+            );
+        } else {
+            $tiposSeleccionados = [];
+        }
+
+        $tamanoArray = json_decode(urldecode($tamanoInput), true);
+        if (!is_array($tamanoArray)) {
+            $tamanoArray = [];
+        }
 
         $modelo = $this->buscadorModelo;
-        $todos = $modelo->obtenerCuidadoresConMedia();
+        $todos  = $modelo->obtenerCuidadoresConMedia();
 
-        $filtrados = array_filter($todos, function ($cuidador) use (
+        $filtrados = array_filter($todos, function ($c) use (
             $ciudadInput,
             $tiposSeleccionados,
             $servicioInput,
             $tamanoArray,
             $modelo
         ) {
-            // Filtro ciudad (coincidencia parcial, sin acento/sensible a mayúsculas)
-            if (!empty($ciudadInput) && stripos($cuidador->ciudad, $ciudadInput) === false) {
+            if (
+                $ciudadInput !== '' &&
+                stripos($c->ciudad, $ciudadInput) === false
+            ) {
                 return false;
             }
 
-            // Filtro por tipo de mascota
             if (!empty($tiposSeleccionados)) {
                 $tiposCuidador = array_map(
                     fn($t) => strtolower($t->tipo_mascota),
-                    $modelo->obtenerTiposMascotas($cuidador->id)
+                    $modelo->obtenerTiposMascotas($c->id)
                 );
-
-                $coincideTipo = false;
-                foreach ($tiposSeleccionados as $tipo) {
-                    if (in_array($tipo, $tiposCuidador)) {
-                        $coincideTipo = true;
+                $coincide = false;
+                foreach ($tiposSeleccionados as $t) {
+                    if (in_array($t, $tiposCuidador)) {
+                        $coincide = true;
                         break;
                     }
                 }
-
-                if (!$coincideTipo) return false;
+                if (!$coincide) return false;
             }
 
-            // Filtro por combinación tipo + tamaño
             if (!empty($tamanoArray)) {
-                $cuidadorCombinaciones = array_map(fn($t) => [
-                    'tipo' => strtolower($t->tipo_mascota),
-                    'tamano' => strtolower($t->tamano)
-                ], $modelo->obtenerTiposMascotas($cuidador->id));
-
+                $combosCuidador = array_map(
+                    fn($t) => [
+                        'tipo'   => strtolower($t->tipo_mascota),
+                        'tamano' => strtolower($t->tamano)
+                    ],
+                    $modelo->obtenerTiposMascotas($c->id)
+                );
                 $match = false;
-                foreach ($tamanoArray as $entrada) {
-                    $entradaTipo = strtolower($entrada['tipo'] ?? '');
-                    $entradaTamano = strtolower($entrada['tamano'] ?? '');
-
-                    foreach ($cuidadorCombinaciones as $c) {
-                        if ($c['tipo'] === $entradaTipo && $c['tamano'] === $entradaTamano) {
+                foreach ($tamanoArray as $e) {
+                    $eTipo   = strtolower($e['tipo']   ?? '');
+                    $eTamaño = strtolower($e['tamano'] ?? '');
+                    foreach ($combosCuidador as $cu) {
+                        if ($cu['tipo'] === $eTipo && $cu['tamano'] === $eTamaño) {
                             $match = true;
                             break 2;
                         }
                     }
                 }
-
                 if (!$match) return false;
             }
 
-            // Filtro por servicio
-            if (!empty($servicioInput)) {
-                $servicios = $modelo->obtenerServicios($cuidador->id);
-                $coincide = false;
-
-                foreach ($servicios as $s) {
+            if ($servicioInput !== '') {
+                $servs = $modelo->obtenerServicios($c->id);
+                $ok    = false;
+                foreach ($servs as $s) {
                     if (strtolower($s->servicio) === strtolower($servicioInput)) {
-                        $coincide = true;
+                        $ok = true;
                         break;
                     }
                 }
-
-                if (!$coincide) return false;
+                if (!$ok) return false;
             }
 
             return true;
         });
 
-        // Enriquecer resultados con reseñas y precios
-        foreach ($filtrados as $cuidador) {
-            $cuidador->servicios = $modelo->obtenerServicios($cuidador->id);
-            $cuidador->resenas = $modelo->obtenerResenas($cuidador->id);
-            $cuidador->total_resenas = count($cuidador->resenas);
+        foreach ($filtrados as $c) {
+            $c->servicios     = $modelo->obtenerServicios($c->id);
+            $c->resenas       = $modelo->obtenerResenas($c->id);
+            $c->total_resenas = count($c->resenas);
 
-            // Mejor reseña
-            $cuidador->mejor_resena = '';
-            if (!empty($cuidador->resenas)) {
-                usort($cuidador->resenas, fn($a, $b) => $b->calificacion <=> $a->calificacion);
-                $cuidador->mejor_resena = $cuidador->resenas[0]->comentario;
+            if (!empty($c->resenas)) {
+                usort($c->resenas, fn($a, $b) => $b->calificacion <=> $a->calificacion);
+                $c->mejor_resena = $c->resenas[0]->comentario;
+            } else {
+                $c->mejor_resena = '';
             }
 
-            // Precio del servicio seleccionado
-            $cuidador->precio_servicio = '';
-            if (!empty($servicioInput)) {
-                foreach ($cuidador->servicios as $s) {
+            $c->precio_servicio = '';
+            if ($servicioInput !== '') {
+                foreach ($c->servicios as $s) {
                     if (strtolower($s->servicio) === strtolower($servicioInput)) {
                         $precio = number_format($s->precio, 2);
-
                         switch (strtolower($s->servicio)) {
                             case 'taxi':
-                                $cuidador->precio_servicio = "10€ + {$precio}€/km";
+                                $c->precio_servicio = "10€ + {$precio}€/km";
                                 break;
                             case 'alojamiento':
-                                $cuidador->precio_servicio = "{$precio}€/noche";
+                                $c->precio_servicio = "{$precio}€/noche";
                                 break;
                             case 'guardería de día':
-                                $cuidador->precio_servicio = "{$precio}€/día";
+                                $c->precio_servicio = "{$precio}€/día";
                                 break;
                             case 'paseos':
                             case 'paseo de perros':
-                                $cuidador->precio_servicio = "{$precio}€/paseo";
+                                $c->precio_servicio = "{$precio}€/paseo";
                                 break;
                             case 'cuidado a domicilio':
                             case 'visitas a domicilio':
-                                $cuidador->precio_servicio = "{$precio}€/visita";
+                                $c->precio_servicio = "{$precio}€/visita";
                                 break;
                         }
                         break;
@@ -148,9 +176,10 @@ class Buscador extends Controlador
                 }
             }
         }
-        // Ordenar por media de valoración descendente
-        usort($filtrados, fn($a, $b) => $b->media_valoracion <=> $a->media_valoracion);
 
-        echo json_encode(array_slice($filtrados, 0, 10)); // Limita a los 10 mejores
+        usort($filtrados, fn($a, $b) => $b->media_valoracion <=> $a->media_valoracion);
+        $resultado = array_slice($filtrados, 0, 10);
+
+        echo json_encode($resultado);
     }
 }
