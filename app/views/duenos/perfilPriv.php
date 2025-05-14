@@ -1,27 +1,53 @@
-<?php
-// Cargamos el header previamente
-require RUTA_APP . '/views/inc/header.php';
-require RUTA_APP . "/librerias/Funciones.php";
-?>
-<form method="POST" class="container mt-5 mb-5">
-    <h3>Mi Perfil</h3>
+<?php require RUTA_APP . '/views/inc/header.php'; ?>
 
-    <div class="mb-3">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" class="form-control" value="<?= $datos['datos']->nombre ?>">
+<div class="container mt-5 mb-5 perfil-contenedor">
+    <h2 class="section-title">Mi Perfil</h2>
+
+    <div class="row align-items-start flex-column flex-md-row">
+        <!-- Nombre del usuario-->
+        <div class="col-md-4 text-center">
+            <img src="<?= RUTA_URL . '/' . $datos->imagen ?>" alt="Imagen de perfil" class="perfil-imagen shadow-sm mb-3">
+        </div>
+        <!-- Columna de la información del perfil -->
+        <div class="col-md-8 perfil-info">
+            <ul class="list-unstyled">
+                <!-- Nombre del usuario-->
+                <li>
+                    <i class="bi bi-person-fill text-dark"></i>
+                    <strong> Nombre:</strong>
+                    <?= htmlspecialchars($datos->nombre) ?>
+                </li>
+
+                <!-- Correo electrónico del usuario -->
+                <li>
+                    <?= getIcono('email') ?>
+                    <strong> Email:</strong>
+                    <?= htmlspecialchars($datos->email) ?>
+                </li>
+
+                <!-- Mostrar fecha de registro -->
+                <li>
+                    <i class="bi bi-calendar-check text-muted"></i>
+                    <strong> Registrado el:</strong>
+                    <?= date('d/m/Y', strtotime($datos->fecha_registro)) ?>
+                </li>
+            </ul>
+
+            <div class="mt-3 perfil-botones">
+                <!-- Botón para modificar credenciales de acceso -->
+                <a href="<?= RUTA_URL ?>/duenos/editarAccesos"
+                    class="btn btn-outline-primary mt-2 me-2">
+                    <?= getIcono('key') ?> Editar Accesos
+                </a>
+
+                <!-- Botón para editar información personal -->
+                <a href="<?= RUTA_URL ?>/duenos/editarDatos"
+                    class="btn btn-outline-primary mt-2">
+                    <?= getIcono('pencil') ?> Editar Datos
+                </a>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label>Email:</label>
-        <input type="email" name="email" class="form-control" value="<?= $datos['datos']->email ?>">
-    </div>
-
-    <div class="mb-3">
-        <label>Teléfono:</label>
-        <input type="text" name="telefono" class="form-control" value="<?= $datos['datos']->telefono ?>">
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-</form>
+</div>
 
 <?php require RUTA_APP . '/views/inc/footer.php'; ?>

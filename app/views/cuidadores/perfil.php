@@ -11,7 +11,6 @@ require RUTA_APP . '/views/inc/header.php';
                 <div class="card-body">
                     <h4 class="text-primary-custom"><?= $datos['cuidador']->nombre ?></h4>
                     <p><strong><?= getIcono("location") ?> Ciudad:</strong> <?= $datos['cuidador']->ciudad ?> (<?= $datos['cuidador']->pais ?>)</p>
-                    <p><strong><?= getIcono("phone") ?> Teléfono:</strong> <?= $datos['cuidador']->telefono ?></p>
                     <p><strong><?= getIcono("email") ?> Email:</strong> <?= $datos['cuidador']->email ?></p>
                     <p><strong><?= getIcono("star") ?> Valoración:</strong> <?= estrellasBootstrap($datos['cuidador']->promedio_calificacion) ?> (<?= number_format($datos['cuidador']->promedio_calificacion, 1) ?>/5)</p>
                 </div>

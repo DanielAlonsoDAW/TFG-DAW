@@ -1,14 +1,17 @@
-<?php require RUTA_APP . '/views/inc/header.php'; ?>
+<?php require RUTA_APP . '/views/inc/header.php';
+$entrada = $datos['entrada'] ?? [];
+$errores = $datos['errores'] ?? [];
+?>
 
 <div class="container mt-5 mb-5">
-  <h2 class="section-title">Editar Datos de Cuidador</h2>
+  <h2 class="section-title">Editar Datos</h2>
   <div class="formulario-container col-12 col-md-8 col-lg-6">
     <form method="POST" enctype="multipart/form-data">
 
       <div class="mb-3">
-        <label for="telefono">Teléfono:</label>
-        <input type="text" id="telefono" name="telefono" class="form-control" value="<?= $entrada['telefono'] ?? $datos['datos']->telefono ?>">
-        <div class="text-danger" id="error-telefono"><?= $errores['telefono'] ?? '' ?></div>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" class="form-control" value="<?= $entrada['nombre'] ?? $datos['datos']->nombre ?>">
+        <div class="text-danger" id="error-nombre"><?= $errores['nombre'] ?? '' ?></div>
       </div>
 
       <div class="mb-3">
@@ -46,5 +49,5 @@
     </form>
   </div>
 </div>
-<script src="<?php echo RUTA_URL; ?>/js/cuidadores/editarDatosCuidador.js"></script>
+<script src="<?php echo RUTA_URL; ?>/js/cuidadores/editarDatos.js"></script>
 <?php require RUTA_APP . '/views/inc/footer.php'; ?>

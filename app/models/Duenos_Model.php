@@ -19,7 +19,7 @@ class Duenos_Model
     public function actualizarDatos($datos)
     {
         $this->db->query("UPDATE patitas_duenos 
-                      SET nombre = :nombre, email = :email, telefono = :telefono
+                      SET nombre = :nombre, telefono = :telefono, imagen = :imagen 
                       WHERE id = :id");
 
         foreach ($datos as $campo => $valor) {
@@ -27,5 +27,12 @@ class Duenos_Model
         }
 
         return $this->db->execute();
+    }
+
+    public function obtenerContrasenaPorId($id)
+    {
+        $this->db->query("SELECT contrasena FROM patitas_duenos WHERE id = :id");
+        $this->db->bind(':id', $id);
+        return $this->db->registro();
     }
 }

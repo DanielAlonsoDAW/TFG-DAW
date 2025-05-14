@@ -2,12 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
 
   const campos = {
-    nombre: {
-      input: document.getElementById("nombre"),
-      error: document.getElementById("error-nombre"),
-      validar: (valor) => valor.trim() !== "",
-      mensaje: "El nombre es obligatorio.",
-    },
     email: {
       input: document.getElementById("email"),
       error: document.getElementById("error-email"),

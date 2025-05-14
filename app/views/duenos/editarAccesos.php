@@ -1,4 +1,7 @@
-<?php require RUTA_APP . '/views/inc/header.php'; ?>
+<?php require RUTA_APP . '/views/inc/header.php';
+$entrada = $datos['entrada'] ?? [];
+$errores = $datos['errores'] ?? [];
+?>
 
 <div class="container mt-5 mb-5">
     <h2 class="section-title">Editar Accesos</h2>
@@ -30,6 +33,6 @@
         </form>
     </div>
 </div>
-<script src="<?php echo RUTA_URL; ?>/js/cuidadores/editarAccesos.js"></script>
+<script src="<?php echo RUTA_URL; ?>/js/duenos/editarAccesos.js"></script>
 
 <?php require RUTA_APP . '/views/inc/footer.php'; ?>

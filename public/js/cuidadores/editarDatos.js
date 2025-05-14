@@ -2,11 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
 
   const campos = {
-    telefono: {
-      input: document.getElementById("telefono"),
-      error: document.getElementById("error-telefono"),
-      validar: (valor) => /^(6|7|9)\d{8}$/.test(valor.trim()),
-      mensaje: "El teléfono debe comenzar por 6, 7 o 9 y tener 9 dígitos.",
+    nombre: {
+      input: document.getElementById("nombre"),
+      error: document.getElementById("error-nombre"),
+      validar: (valor) => valor.trim() !== "",
+      mensaje: "El nombre es obligatorio.",
     },
     direccion: {
       input: document.getElementById("direccion"),

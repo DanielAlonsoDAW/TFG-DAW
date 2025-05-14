@@ -102,15 +102,10 @@ class Cuidadores extends Controlador
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errores = [
-                'nombre' => '',
                 'email' => '',
                 'contrasena_actual' => '',
                 'contrasena' => ''
             ];
-
-            if (!comprobarDatos($_POST['nombre'])) {
-                $errores['nombre'] = "El nombre no puede estar vacío.";
-            }
 
             if (!comprobarEmail($_POST['email'])) {
                 $errores['email'] = "El email no es válido.";
@@ -132,7 +127,6 @@ class Cuidadores extends Controlador
 
                 $this->cuidadorModelo->actualizarAccesos([
                     'id' => $id,
-                    'nombre' => test_input($_POST['nombre']),
                     'email' => test_input($_POST['email']),
                     'contrasena' => $contrasenaHash
                 ]);
@@ -150,7 +144,7 @@ class Cuidadores extends Controlador
         }
     }
 
-    public function editarDatosCuidador()
+    public function editarDatos()
     {
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'cuidador') {
             redireccionar('/autenticacion');
@@ -161,15 +155,15 @@ class Cuidadores extends Controlador
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errores = [
-                'telefono' => '',
+                'nombre' => '',
                 'direccion' => '',
                 'ciudad' => '',
                 'pais' => '',
                 'imagen' => ''
             ];
 
-            if (!comprobarTelefono($_POST['telefono'])) {
-                $errores['telefono'] = "Teléfono inválido.";
+            if (!comprobarDatos($_POST['nombre'])) {
+                $errores['nombre'] = "El nombre no puede estar vacío.";
             }
 
             if (!comprobarDatos($_POST['direccion'])) {
@@ -276,7 +270,7 @@ class Cuidadores extends Controlador
 
                 $this->cuidadorModelo->actualizarDatosCuidador([
                     'id' => $id,
-                    'telefono' => test_input($_POST['telefono']),
+                    'nombre' => test_input($_POST['nombre']),
                     'direccion' => test_input($_POST['direccion']),
                     'ciudad' => test_input($_POST['ciudad']),
                     'pais' => test_input($_POST['pais']),
@@ -288,13 +282,13 @@ class Cuidadores extends Controlador
                 redireccionar('/cuidadores/perfilPriv');
             }
 
-            $this->vista('cuidadores/editarDatosCuidador', [
+            $this->vista('cuidadores/editarDatos', [
                 'datos' => $datos,
                 'errores' => $errores,
                 'entrada' => $_POST
             ]);
         } else {
-            $this->vista('cuidadores/editarDatosCuidador', ['datos' => $datos]);
+            $this->vista('cuidadores/editarDatos', ['datos' => $datos]);
         }
     }
 

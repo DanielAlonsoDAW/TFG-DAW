@@ -543,14 +543,14 @@ footer p {
 }
 
 /* Vista Perfil Cuidador */
-.perfil-cuidador-contenedor {
+.perfil-contenedor {
   background-color: #f0fdfa;
   padding: 3rem;
   border-radius: 1.5rem;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
 }
 
-.perfil-cuidador-imagen {
+.perfil-imagen {
   width: 30vh;
   height: 30vh;
   object-fit: cover;
@@ -559,23 +559,23 @@ footer p {
   margin-bottom: 1rem;
 }
 
-.perfil-cuidador-info ul li {
+.perfil-info ul li {
   font-size: 1.05rem;
   margin-bottom: 0.5rem;
   color: #333;
 }
 
-.perfil-cuidador-info strong {
+.perfil-info strong {
   color: #006d77;
 }
 
-.perfil-cuidador-botones .btn {
+.perfil-botones .btn {
   border-color: #00b4ab;
   color: #006d77;
   transition: 0.3s;
 }
 
-.perfil-cuidador-botones .btn:hover {
+.perfil-botones .btn:hover {
   background-color: #bdebea;
   color: #004e54;
 }
@@ -595,7 +595,7 @@ footer p {
   margin-bottom: 1rem;
 }
 
-.perfil-cuidador-botones .btn {
+.perfil-botones .btn {
   background-color: transparent;
   color: #006d77;
   border: 1px solid #006d77;
@@ -603,7 +603,7 @@ footer p {
   transition: all 0.3s ease;
 }
 
-.perfil-cuidador-botones .btn:hover {
+.perfil-botones .btn:hover {
   background-color: #bdebea;
   color: #004e54;
 }
@@ -619,4 +619,10 @@ footer p {
 .btn-primary:hover {
   background-color: #008e86;
   transform: scale(1.02);
+}
+
+label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #006d77;
 }
