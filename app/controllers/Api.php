@@ -51,4 +51,66 @@ class Api extends Controlador
 
         echo json_encode($intercaladas);
     }
+
+    public function calcularDistancia()
+    {
+        header('Content-Type: application/json');
+
+        $datos = json_decode(file_get_contents("php://input"), true);
+        $origen = trim($datos['origen'] ?? '');
+        $destino = trim($datos['destino'] ?? '');
+
+        if (!$origen || !$destino) {
+            echo json_encode(['error' => 'Direcciones requeridas']);
+            exit;
+        }
+
+        // 1. Geocodificar con Nominatim
+        function geocodificar($direccion)
+        {
+            $url = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($direccion);
+            $json = file_get_contents($url);
+            $res = json_decode($json, true);
+            return $res[0] ?? null;
+        }
+
+        $coorOrigen = geocodificar($origen);
+        $coorDestino = geocodificar($destino);
+
+        if (!$coorOrigen || !$coorDestino) {
+            echo json_encode(['error' => 'No se pudo geocodificar']);
+            exit;
+        }
+
+        // 2. Llamar a OpenRouteService desde PHP
+        $apiKey = getenv('ORS_API_KEY');
+        $body = [
+            "coordinates" => [
+                [(float)$coorOrigen['lon'], (float)$coorOrigen['lat']],
+                [(float)$coorDestino['lon'], (float)$coorDestino['lat']]
+            ]
+        ];
+
+        $ch = curl_init("https://api.openrouteservice.org/v2/directions/driving-car/geojson");
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: ' . $apiKey,
+                'Content-Type: application/json'
+            ],
+            CURLOPT_POSTFIELDS => json_encode($body)
+        ]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+        if (isset($data['features'][0]['properties']['summary']['distance'])) {
+            $distanciaKm = $data['features'][0]['properties']['summary']['distance'] / 1000;
+            echo json_encode(['distancia_km' => round($distanciaKm, 2)]);
+        } else {
+            echo json_encode(['error' => 'No se pudo calcular la ruta']);
+        }
+    }
 }

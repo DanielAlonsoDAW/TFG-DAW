@@ -48,13 +48,13 @@ class Cuidadores_Model
 
     public function obtenerPerfilCuidador($id)
     {
-        $sql = "SELECT c.id, c.nombre, c.email, c.direccion, c.ciudad, c.pais, 
+        $sql = "SELECT c.id, c.nombre, c.direccion, c.ciudad, c.pais, 
                c.descripcion, c.max_mascotas_dia, c.imagen, c.fecha_registro,
                AVG(r.calificacion) AS promedio_calificacion
         FROM patitas_cuidadores c
         LEFT JOIN patitas_resenas r ON c.id = r.cuidador_id
         WHERE c.id = :id
-        GROUP BY c.id, c.nombre, c.email, c.direccion, c.ciudad, c.pais, 
+        GROUP BY c.id, c.nombre, c.direccion, c.ciudad, c.pais, 
                  c.descripcion, c.max_mascotas_dia, c.imagen, c.fecha_registro";
         $this->db->query($sql);
         $this->db->bind(':id', $id);

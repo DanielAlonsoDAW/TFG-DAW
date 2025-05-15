@@ -6,14 +6,38 @@ require RUTA_APP . '/views/inc/header.php';
     <div class="row g-5">
         <!-- Columna izquierda: Imagen y datos básicos -->
         <div class="col-md-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm mb-4">
                 <img src="<?= RUTA_URL . '/' . $datos['cuidador']->imagen ?>" class="img-fluid rounded shadow-sm cuidador-img-responsive mb-3" alt="Imagen cuidador">
                 <div class="card-body">
                     <h4 class="text-primary-custom"><?= $datos['cuidador']->nombre ?></h4>
                     <p><strong><?= getIcono("location") ?> Ciudad:</strong> <?= $datos['cuidador']->ciudad ?> (<?= $datos['cuidador']->pais ?>)</p>
-                    <p><strong><?= getIcono("email") ?> Email:</strong> <?= $datos['cuidador']->email ?></p>
                     <p><strong><?= getIcono("star") ?> Valoración:</strong> <?= estrellasBootstrap($datos['cuidador']->promedio_calificacion) ?> (<?= number_format($datos['cuidador']->promedio_calificacion, 1) ?>/5)</p>
                 </div>
+            </div>
+
+            <div class="info-section mb-4">
+                <h4>Servicios ofrecidos</h4>
+                <ul class="list-group list-group-flush">
+                    <?php foreach ($datos['servicios'] as $s): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <?= htmlspecialchars($s->servicio) ?>
+                            <span class="servicio-precio"><?= $s->precio ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <div class="info-section mb-4">
+                <h4>Acepta</h4>
+                <ul class="list-inline">
+                    <?php foreach ($datos['admite'] as $a): ?>
+                        <li class="list-inline-item badge badge-acepta m-1">
+                            <?= getIcono($a->tipo_mascota) ?>
+                            <?= ucfirst($a->tipo_mascota) ?>
+                            <?= $a->tamano ?> <?= getClasificacionTamano($a->tipo_mascota, $a->tamano) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
         </div>
 
@@ -48,32 +72,6 @@ require RUTA_APP . '/views/inc/header.php';
                     </div>
                 <?php endif; ?>
             </div>
-
-            <div class="info-section mb-4">
-                <h4>Servicios ofrecidos</h4>
-                <ul class="list-group list-group-flush">
-                    <?php foreach ($datos['servicios'] as $s): ?>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <?= htmlspecialchars($s->servicio) ?>
-                            <span class="servicio-precio"><?= $s->precio ?></span>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-
-            <div class="info-section mb-4">
-                <h4>Acepta</h4>
-                <ul class="list-inline">
-                    <?php foreach ($datos['admite'] as $a): ?>
-                        <li class="list-inline-item badge badge-acepta m-1">
-                            <?= getIcono($a->tipo_mascota) ?>
-                            <?= ucfirst($a->tipo_mascota) ?>
-                            <?= $a->tamano ?> <?= getClasificacionTamano($a->tipo_mascota, $a->tamano) ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-
             <div class="info-section mb-4">
                 <h4>Reseñas</h4>
                 <?php if (!empty($datos['resenas'])): ?>
