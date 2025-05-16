@@ -626,3 +626,28 @@ label {
   font-weight: bold;
   color: #006d77;
 }
+
+/* Reservas */
+
+.ocultosTaxi{
+  display: none;
+}
+.visiblesTaxi{
+  display: block;
+}
+
+#map-container {
+  height: 35vh;
+  border: 1px solid #ccc;
+  border-radius: 2vh;
+  margin-top: 1rem;
+}
+
+.mapa-oculto {
+  display: none;
+}
+
+.mapa-visible {
+  display: block;
+}
+

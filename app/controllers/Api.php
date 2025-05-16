@@ -55,8 +55,21 @@ class Api extends Controlador
     public function calcularDistancia()
     {
         header('Content-Type: application/json');
+        file_put_contents('log_input.txt', file_get_contents("php://input"));
 
-        $datos = json_decode(file_get_contents("php://input"), true);
+        // Leer JSON del body
+        $raw = file_get_contents("php://input");
+
+        // Convertir a UTF-8 si no lo está
+        $rawUtf8 = mb_convert_encoding($raw, 'UTF-8', mb_detect_encoding($raw, 'UTF-8, ISO-8859-1, Windows-1252', true));
+
+        $datos = json_decode($rawUtf8, true);
+
+        if (!is_array($datos)) {
+            echo json_encode(['error' => 'El cuerpo no es JSON válido', 'raw' => $raw]);
+            exit;
+        }
+
         $origen = trim($datos['origen'] ?? '');
         $destino = trim($datos['destino'] ?? '');
 
@@ -65,11 +78,21 @@ class Api extends Controlador
             exit;
         }
 
-        // 1. Geocodificar con Nominatim
+        // Función segura para geocodificar usando Nominatim
         function geocodificar($direccion)
         {
             $url = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($direccion);
-            $json = file_get_contents($url);
+
+            $opts = [
+                "http" => [
+                    "header" => "User-Agent: MiAppPHP/1.0\r\n"
+                ]
+            ];
+            $context = stream_context_create($opts);
+            $json = @file_get_contents($url, false, $context);
+
+            if (!$json) return null;
+
             $res = json_decode($json, true);
             return $res[0] ?? null;
         }
@@ -78,12 +101,21 @@ class Api extends Controlador
         $coorDestino = geocodificar($destino);
 
         if (!$coorOrigen || !$coorDestino) {
-            echo json_encode(['error' => 'No se pudo geocodificar']);
+            echo json_encode([
+                'error' => 'No se pudo geocodificar',
+                'origen' => $coorOrigen,
+                'destino' => $coorDestino
+            ]);
             exit;
         }
 
-        // 2. Llamar a OpenRouteService desde PHP
-        $apiKey = getenv('ORS_API_KEY');
+        // Preparar datos para OpenRouteService
+        $apiKey = "5b3ce3597851110001cf624890f393bd77d040f7a519dcf050146271"; //getenv('ORS_API_KEY');
+        if (!$apiKey) {
+            echo json_encode(['error' => 'API Key no configurada']);
+            exit;
+        }
+
         $body = [
             "coordinates" => [
                 [(float)$coorOrigen['lon'], (float)$coorOrigen['lat']],
@@ -103,14 +135,26 @@ class Api extends Controlador
         ]);
 
         $response = curl_exec($ch);
+        $curlError = curl_error($ch);
         curl_close($ch);
+
+        if ($response === false) {
+            echo json_encode([
+                'error' => 'Error en la solicitud a OpenRouteService',
+                'detalle' => $curlError // 👈 Añade esto para saber qué falla exactamente
+            ]);
+            exit;
+        }
 
         $data = json_decode($response, true);
         if (isset($data['features'][0]['properties']['summary']['distance'])) {
             $distanciaKm = $data['features'][0]['properties']['summary']['distance'] / 1000;
             echo json_encode(['distancia_km' => round($distanciaKm, 2)]);
         } else {
-            echo json_encode(['error' => 'No se pudo calcular la ruta']);
+            echo json_encode([
+                'error' => 'No se pudo calcular la ruta',
+                'respuesta_ors' => $data
+            ]);
         }
     }
 }
