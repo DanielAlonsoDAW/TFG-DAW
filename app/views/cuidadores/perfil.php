@@ -12,6 +12,18 @@ require RUTA_APP . '/views/inc/header.php';
                     <h4 class="text-primary-custom"><?= $datos['cuidador']->nombre ?></h4>
                     <p><strong><?= getIcono("location") ?> Ciudad:</strong> <?= $datos['cuidador']->ciudad ?> (<?= $datos['cuidador']->pais ?>)</p>
                     <p><strong><?= getIcono("star") ?> Valoración:</strong> <?= estrellasBootstrap($datos['cuidador']->promedio_calificacion) ?> (<?= number_format($datos['cuidador']->promedio_calificacion, 1) ?>/5)</p>
+                    <div class="text-center mt-4">
+                        <a href="<?= RUTA_URL ?>/reservas/crear/<?= $datos['cuidador']->id ?>" class="btn btn-primary mt-4">Reservar ahora</a>
+                    </div>
+
+                    <h4 class="text-primary-custom text-center mt-4">Disponibilidad</h4>
+                    <div id="calendarioDisponibilidad" class="my-2" data-reservas='<?= json_encode($datos["reservas"]) ?>'
+                        data-max-mascotas='<?= $datos["cuidador"]->max_mascotas_dia ?>'></div>
+                    <div class="m-3 d-flex gap-3 align-items-center flex-wrap">
+                        <span class="badge" style="background-color:#2ecc71;">Disponible</span>
+                        <span class="badge" style="background-color:#f39c12;">Parcialmente ocupado</span>
+                        <span class="badge" style="background-color:#e74c3c;">Sin disponibilidad</span>
+                    </div>
                 </div>
             </div>
 
@@ -86,12 +98,11 @@ require RUTA_APP . '/views/inc/header.php';
                     <p class="text-muted">Aún no hay reseñas disponibles.</p>
                 <?php endif; ?>
             </div>
-
-            <div class="text-end mt-4">
-                <a href="<?= RUTA_URL ?>/reservas/crear/<?= $datos['cuidador']->id ?>" class="btn btn-perfil px-4 py-2">Reservar ahora</a>
-            </div>
         </div>
     </div>
 </div>
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+<script src="<?= RUTA_URL ?>/js/cuidadores/perfil.js"></script>
 
 <?php require RUTA_APP . '/views/inc/footer.php'; ?>

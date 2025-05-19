@@ -16,6 +16,7 @@ class Cuidadores extends Controlador
         $admite = $this->cuidadorModelo->obtenerTiposMascotas($id);
         $resenas = $this->cuidadorModelo->obtenerResenas($id);
         $mascotas = $this->cuidadorModelo->obtenerMascotasCuidador($id);
+        $reservas = $this->cuidadorModelo->obtenerReservasConfirmadas($id);
 
         foreach ($servicios as $s) {
             $precio = number_format($s->precio, 2);
@@ -46,7 +47,8 @@ class Cuidadores extends Controlador
             'servicios' => $servicios,
             'admite' => $admite,
             'resenas' => $resenas,
-            'mascotas' => $mascotas
+            'mascotas' => $mascotas,
+            'reservas' => $reservas
         ]);
     }
     public function perfilPriv()

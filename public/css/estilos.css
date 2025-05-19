@@ -651,3 +651,93 @@ label {
   display: block;
 }
 
+/* Calendario */
+.fc {
+  font-family: "Segoe UI", Arial, sans-serif !important;
+  background-color: #f0fdfa !important;
+  border-radius: 1rem !important;
+  padding: 0 !important;
+  color: #006d77 !important;
+}
+
+.fc-toolbar-title {
+  font-size: 1.1rem !important;
+  font-weight: bold !important;
+  color: #006d77 !important;
+}
+
+.fc-header-toolbar{
+  margin-bottom: 0.5em !important;
+}
+
+.fc-button {
+  background-color: #00b4ab !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 500 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.2em !important;
+  margin: 0.5em !important;
+}
+
+.fc-button:hover {
+  background-color: #008e86 !important;
+  color: white !important;
+}
+
+.fc-daygrid-day {
+  border: 1px solid #e0f0f0 !important;
+  padding: 0 !important;
+}
+
+.fc-day-today {
+  background-color: #d1f4f1 !important;
+}
+
+.fc-col-header-cell-cushion {
+  color: #006d77 !important;
+  font-weight: bold !important;
+  text-transform: capitalize !important;
+  text-decoration: none !important;
+}
+
+.fc-daygrid-day-number {
+  color: #006d77 !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+.fc-daygrid-day-frame {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.fc-event {
+  font-size: 0.75rem !important;
+  padding: 3px 5px !important;
+  border-radius: 6px !important;
+  font-weight: 500 !important;
+  border: none !important;
+}
+
+.fc-daygrid-day-events {
+  display: none !important;
+}
+
+/* Colores según estado */
+.fc-event.red {
+  background-color: #e74c3c !important;
+  color: white !important;
+}
+
+.fc-event.orange {
+  background-color: #f39c12 !important;
+  color: white !important;
+}
+
+.fc-event.green {
+  background-color: #2ecc71 !important;
+  color: white !important;
+}

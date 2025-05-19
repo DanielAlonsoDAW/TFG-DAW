@@ -55,7 +55,6 @@ class Api extends Controlador
     public function calcularDistancia()
     {
         header('Content-Type: application/json');
-        file_put_contents('log_input.txt', file_get_contents("php://input"));
 
         // Leer JSON del body
         $raw = file_get_contents("php://input");
