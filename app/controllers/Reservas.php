@@ -17,6 +17,7 @@ class Reservas extends Controlador
 
     public function crear($cuidador_id)
     {
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $datos = [
                 'duenio_id' => $_SESSION['usuario_id'],
@@ -60,13 +61,14 @@ class Reservas extends Controlador
             $cuidador = $this->cuidadorModelo->obtenerPerfilCuidador($cuidador_id);
             $servicios = $this->cuidadorModelo->obtenerServicios($cuidador_id);
             $mascotas = $this->reservaModelo->obtenerMascotas($_SESSION['usuario_id']);
+            $reservas = $this->reservaModelo->obtenerReservasConfirmadas($cuidador_id);
 
             $precios = [];
             foreach ($servicios as $serv) {
                 $precios[$serv->servicio] = (float) $serv->precio;
             }
 
-            $datos = ['cuidador' => $cuidador, 'mascotas' => $mascotas, 'precios' => $precios];
+            $datos = ['cuidador' => $cuidador, 'mascotas' => $mascotas, 'precios' => $precios, 'reservas' => $reservas];
             $this->vista('reservas/crear', $datos);
         }
     }

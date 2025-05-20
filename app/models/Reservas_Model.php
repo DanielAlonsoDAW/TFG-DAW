@@ -62,4 +62,16 @@ class Reservas_Model
         $this->db->bind(':id', $duenio_id);
         return $this->db->registros();
     }
+
+    public function obtenerReservasConfirmadas($cuidador_id)
+    {
+        $this->db->query("
+        SELECT fecha_inicio, fecha_fin, SUM(numero_mascotas) as total_mascotas
+        FROM patitas_reservas
+        WHERE cuidador_id = :id AND estado = 'confirmada'
+        GROUP BY fecha_inicio, fecha_fin
+    ");
+        $this->db->bind(':id', $cuidador_id);
+        return $this->db->registros();
+    }
 }

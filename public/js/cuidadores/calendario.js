@@ -54,6 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
     initialView: "dayGridMonth", // Vista inicial: mes en cuadrícula
     locale: "es", // Idioma: español
     height: "auto", // Altura automática
+    firstDay: 1, // Primer día de la semana: Lunes
+    // Estilo de la cabecera del calendario
     headerToolbar: {
       left: "",
       center: "title",
@@ -68,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Personaliza el color de fondo de los días no ocupados
     dayCellDidMount: function (info) {
-      const fecha = info.date.toISOString().split("T")[0];
+      const fecha = info.date.toISOString().split("T")[1];
       const hoy = new Date();
       hoy.setHours(0, 0, 0, 0); // normaliza "hoy" a medianoche
       const fechaCelda = new Date(info.date);

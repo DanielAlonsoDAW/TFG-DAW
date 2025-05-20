@@ -729,15 +729,33 @@ label {
 /* Colores según estado */
 .fc-event.red {
   background-color: #e74c3c !important;
-  color: white !important;
 }
 
 .fc-event.orange {
   background-color: #f39c12 !important;
-  color: white !important;
 }
 
 .fc-event.green {
   background-color: #2ecc71 !important;
-  color: white !important;
+}
+
+/* Badge styles for availability states */
+.badge.disponible {
+  color: black;
+  background-color: #d4edda;
+}
+
+.badge.no-disponible {
+  color: black;
+  background-color: #f0f0f0;
+}
+
+.badge.parcialmente-ocupado {
+  color: black;
+  background-color: #ffe082;
+}
+
+.badge.lleno {
+  color: black;
+  background-color: #e74c3c;
 }

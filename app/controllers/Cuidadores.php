@@ -3,10 +3,12 @@ require RUTA_APP . "/librerias/Funciones.php";
 class Cuidadores extends Controlador
 {
     private $cuidadorModelo;
+    private $reservaModelo;
     public function __construct()
     {
         session_start();
         $this->cuidadorModelo = $this->modelo('Cuidadores_Model');
+        $this->reservaModelo = $this->modelo('Reservas_Model');
     }
 
     public function perfil($id)
@@ -16,7 +18,7 @@ class Cuidadores extends Controlador
         $admite = $this->cuidadorModelo->obtenerTiposMascotas($id);
         $resenas = $this->cuidadorModelo->obtenerResenas($id);
         $mascotas = $this->cuidadorModelo->obtenerMascotasCuidador($id);
-        $reservas = $this->cuidadorModelo->obtenerReservasConfirmadas($id);
+        $reservas = $this->reservaModelo->obtenerReservasConfirmadas($id);
 
         foreach ($servicios as $s) {
             $precio = number_format($s->precio, 2);
@@ -26,16 +28,15 @@ class Cuidadores extends Controlador
                     $s->precio = "10€ + {$precio}€/km";
                     break;
                 case 'alojamiento':
+                case 'cuidado a domicilio':
                     $s->precio = "{$precio}€/noche";
                     break;
                 case 'guardería de día':
                     $s->precio = "{$precio}€/día";
                     break;
                 case 'paseos':
-                case 'paseo de perros':
                     $s->precio = "{$precio}€/paseo";
                     break;
-                case 'cuidado a domicilio':
                 case 'visitas a domicilio':
                     $s->precio = "{$precio}€/visita";
                     break;
@@ -51,6 +52,7 @@ class Cuidadores extends Controlador
             'reservas' => $reservas
         ]);
     }
+
     public function perfilPriv()
     {
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'cuidador') {
@@ -70,16 +72,15 @@ class Cuidadores extends Controlador
                     $s->precio = "10€ + {$precio}€/km";
                     break;
                 case 'alojamiento':
+                case 'cuidado a domicilio':
                     $s->precio = "{$precio}€/noche";
                     break;
                 case 'guardería de día':
                     $s->precio = "{$precio}€/día";
                     break;
                 case 'paseos':
-                case 'paseo de perros':
                     $s->precio = "{$precio}€/paseo";
                     break;
-                case 'cuidado a domicilio':
                 case 'visitas a domicilio':
                     $s->precio = "{$precio}€/visita";
                     break;

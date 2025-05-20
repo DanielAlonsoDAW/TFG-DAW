@@ -1,5 +1,6 @@
+// Espera a que el DOM esté completamente cargado antes de ejecutar el script
 document.addEventListener("DOMContentLoaded", () => {
-  // Referencias a elementos del DOM
+  // Obtención de referencias a los elementos del formulario y resumen
   const servicioSelect = document.getElementById("servicio");
   const resumenServicio = document.getElementById("resumen-servicio");
   const resumenMascotas = document.getElementById("resumen-mascotas");
@@ -9,24 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const resumenDistancia = document.getElementById("resumen-distancia");
   const direccionOrigen = document.getElementById("direccion_origen");
   const direccionDestino = document.getElementById("direccion_destino");
+  let distanciaTaxiKm = 0; // Distancia calculada para el servicio de taxi
+  let precioTaxiTotal = 0; // Precio total del taxi
 
-  // Variables de estado para almacenar la distancia y el precio del taxi
-  let distanciaTaxiKm = 0;
-  let precioTaxiTotal = 0;
-
-  /**
-   * Realiza una petición al backend para calcular la distancia entre dos direcciones.
-   * Si la distancia es válida, actualiza el resumen y el precio del servicio de Taxi.
-   */
+  // Función asíncrona para actualizar la distancia y el precio del taxi
   async function actualizarDistanciaYPrecioTaxi() {
     const origen = direccionOrigen.value.trim();
     const destino = direccionDestino.value.trim();
-
-    // Si alguna dirección está vacía, no se realiza la petición
-    if (!origen || !destino) return;
-
+    if (!origen || !destino) return; // Si falta alguna dirección, no hace nada
     try {
-      // Solicita la distancia al backend mediante una petición POST
+      // Llama a la API para calcular la distancia entre origen y destino
       const res = await fetch(
         `http://localhost/TFG-DAW/api/calcularDistancia`,
         {
@@ -35,112 +28,107 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ origen, destino }),
         }
       );
-
       const data = await res.json();
-
-      // Si no se recibe la distancia, se lanza un error
       if (!data.distancia_km) {
         throw new Error(data.error || "Distancia no disponible");
       }
-
-      // Actualiza la distancia y el resumen en el DOM
       distanciaTaxiKm = data.distancia_km;
       resumenDistancia.textContent = `${distanciaTaxiKm.toFixed(2)} km`;
-
-      // Actualiza el resumen con los nuevos valores
-      actualizarResumen(true);
+      actualizarResumen(true); // Actualiza el resumen con la nueva distancia
     } catch (error) {
-      // Manejo de errores en caso de fallo en la petición
+      // Manejo de errores en caso de fallo en la API
       console.error("Error al calcular distancia:", error);
       resumenDistancia.textContent = "Error";
       resumenTaxi.textContent = "Error";
     }
   }
 
-  /**
-   * Actualiza el resumen de la reserva en tiempo real.
-   * Incluye el servicio seleccionado, número de mascotas, precios y total.
-   * Si el servicio es Taxi, calcula el precio en función de la distancia y mascotas.
-   */
+  // Función para actualizar el resumen de la reserva
   function actualizarResumen(_desdeTaxi = false) {
     const servicio = servicioSelect.value;
+    // Cuenta cuántas mascotas han sido seleccionadas
     const numMascotas = document.querySelectorAll(
       ".mascotas-check:checked"
     ).length;
+    // Obtiene el precio unitario según el servicio seleccionado
     const precioUnitario = preciosPorServicio[servicio] || 0;
-
-    // Actualiza los campos del resumen en el DOM
     resumenServicio.textContent = servicio || "-";
     resumenMascotas.textContent = numMascotas;
     resumenPrecioBase.textContent = `${precioUnitario.toFixed(2)}€`;
-
     if (servicio === "Taxi") {
-      // Cálculo específico para el servicio de Taxi
+      // Cálculo específico para el servicio de taxi
       const tarifaPorKm = preciosPorServicio["Taxi"] || 0;
       const suplementoFijo = 10;
-
-      // Calcula el precio total del taxi en función de la distancia y el número de mascotas
       const precioKm = tarifaPorKm * distanciaTaxiKm * numMascotas;
       precioTaxiTotal = suplementoFijo + precioKm;
-
       resumenTaxi.textContent = `${precioKm.toFixed(2)}€`;
       resumenTotal.textContent = `${precioTaxiTotal.toFixed(2)}€`;
     } else {
-      // Cálculo general para otros servicios
-      const total =
-        precioUnitario * numMascotas +
-        (servicio === "Taxi" ? precioTaxiTotal : 0);
+      // Cálculo para otros servicios (alojamiento, cuidado, etc.)
+      const fechaInicio = new Date(
+        document.getElementById("fecha_inicio").value
+      );
+      const fechaFin = new Date(document.getElementById("fecha_fin").value);
+      let dias = 0;
+      // Calcula la cantidad de días entre las fechas seleccionadas
+      if (
+        !isNaN(fechaInicio.getTime()) &&
+        !isNaN(fechaFin.getTime()) &&
+        fechaFin >= fechaInicio
+      ) {
+        const diferenciaMs = fechaFin - fechaInicio;
+        dias = Math.ceil(diferenciaMs / (1000 * 60 * 60 * 24));
+        // Para servicios por noche, se descuenta un día
+        const serviciosPorNoche = ["Alojamiento", "Cuidado a domicilio"];
+        if (serviciosPorNoche.includes(servicio) && dias > 0) {
+          dias -= 1;
+        }
+      }
+      // Se establece el número de días en el resumen
+      document.getElementById("resumen-dias").textContent = dias;
 
+      // Calcula el total según el número de mascotas, días y precio unitario
+      const total =
+        precioUnitario * numMascotas * dias +
+        (servicio === "Taxi" ? precioTaxiTotal : 0);
       resumenTotal.textContent = `${total.toFixed(2)}€`;
     }
   }
 
-  /**
-   * Listener para mostrar u ocultar los campos relacionados con el servicio de Taxi.
-   * Si se deselecciona Taxi, reinicia los valores asociados.
-   */
+  // Evento al cambiar el tipo de servicio
   servicioSelect.addEventListener("change", () => {
     const isTaxi = servicioSelect.value === "Taxi";
-
-    // Muestra u oculta los campos específicos de Taxi
+    // Muestra u oculta campos específicos del taxi
     document.querySelectorAll(".ocultosTaxi").forEach((el) => {
       el.classList.toggle("visiblesTaxi", isTaxi);
     });
-
-    // Reinicia los valores si no es Taxi
     if (!isTaxi) {
+      // Resetea los valores relacionados con el taxi si no es taxi
       resumenDistancia.textContent = "0.00 km";
       resumenTaxi.textContent = "0.00€";
       distanciaTaxiKm = 0;
       precioTaxiTotal = 0;
     }
-
     actualizarResumen();
   });
 
-  /**
-   * Aplica la lógica de negocio para deshabilitar los servicios "Paseos" y "Guardería de día"
-   * si se selecciona al menos una mascota de tipo "gato".
-   */
+  // Evento al seleccionar/deseleccionar mascotas
   document.querySelectorAll(".mascotas-check").forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
-      // Verifica si hay al menos un gato seleccionado
+      // Si hay algún gato seleccionado, deshabilita servicios no aptos para gatos
       const hayGato = Array.from(
         document.querySelectorAll(".mascotas-check:checked")
       ).some((cb) => cb.dataset.tipo === "gato");
-
-      // Deshabilita los servicios no permitidos para gatos
       Array.from(servicioSelect.options).forEach((option) => {
         if (["Paseos", "Guardería de día"].includes(option.value)) {
           option.disabled = hayGato;
         }
       });
-
       actualizarResumen();
     });
   });
 
-  // Recalcula la distancia y el precio del taxi al cambiar las direcciones de origen o destino
+  // Eventos para actualizar distancia y precio del taxi al cambiar direcciones
   direccionOrigen.addEventListener("change", actualizarDistanciaYPrecioTaxi);
   direccionDestino.addEventListener("change", actualizarDistanciaYPrecioTaxi);
 });

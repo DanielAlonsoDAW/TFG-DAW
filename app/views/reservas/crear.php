@@ -19,6 +19,15 @@ $precios = $datos['precios'] ?? [];
                         <?= estrellasBootstrap($cuidador->promedio_calificacion ?? 0) ?>
                         (<?= number_format($cuidador->promedio_calificacion ?? 0, 1) ?>/5)
                     </p>
+                    <h4 class="text-primary-custom text-center mt-4">Disponibilidad</h4>
+                    <div id="calendarioDisponibilidad" class="my-2" data-reservas='<?= json_encode($datos["reservas"]) ?>'
+                        data-max-mascotas='<?= $datos["cuidador"]->max_mascotas_dia ?>'></div>
+                    <div class="m-3 d-flex gap-3 align-items-center flex-wrap">
+                        <span class="badge disponible">Disponible</span>
+                        <span class="badge no-disponible">No disponible</span>
+                        <span class="badge parcialmente-ocupado">Parcialmente ocupado</span>
+                        <span class="badge lleno">Lleno</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,6 +55,17 @@ $precios = $datos['precios'] ?? [];
                         <label for="fecha_fin" class="form-label">Fecha fin:</label>
                         <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" required>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="hora_inicio" class="form-label">Hora inicio:</label>
+                        <input type="time" name="hora_inicio" id="hora_inicio" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="hora_fin" class="form-label">Hora fin:</label>
+                        <input type="time" name="hora_fin" id="hora_fin" class="form-control">
+                    </div>
+
 
                     <div class="mb-3">
                         <label class="form-label">Mascotas:</label>
@@ -85,11 +105,11 @@ $precios = $datos['precios'] ?? [];
                     <li class="list-group-item"><strong>Servicio: </strong><span id="resumen-servicio">-</span></li>
                     <li class="list-group-item"><strong>Mascotas: </strong><span id="resumen-mascotas">0</span></li>
                     <li class="list-group-item"><strong>Precio base por mascota: </strong><span id="resumen-precio-base">0.00€</span></li>
+                    <li class="list-group-item"><strong>Días de servicio:</strong> <span id="resumen-dias">0</span></li>
                     <div id="resumenTaxiWrapper" class="ocultosTaxi">
                         <li id="grupo-distancia" class="list-group-item"><strong>Distancia estimada: </strong><span id="resumen-distancia">0.00 km</span></li>
                         <li id="grupo-taxi" class="list-group-item"><strong>Precio Taxi: </strong><span id="resumen-taxi">0.00€</span></li>
                         <li id="suplemento-taxi" class="list-group-item"><strong>Suplemento Taxi: </strong><span id="suplemento-taxi">10.00€</span></li>
-
                     </div>
                     <li class="list-group-item"><strong>Total estimado:</strong> <span id="resumen-total">0.00€</span></li>
                 </ul>
@@ -104,6 +124,7 @@ $precios = $datos['precios'] ?? [];
     const RUTA_URL = "<?= RUTA_URL ?>";
 </script>
 <script src="<?= RUTA_URL ?>/js/reservas/formulario.js"></script>
-
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+<script src="<?= RUTA_URL ?>/js/cuidadores/calendario.js"></script>
 
 <?php require RUTA_APP . '/views/inc/footer.php'; ?>

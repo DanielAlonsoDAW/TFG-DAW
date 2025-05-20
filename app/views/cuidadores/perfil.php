@@ -20,9 +20,10 @@ require RUTA_APP . '/views/inc/header.php';
                     <div id="calendarioDisponibilidad" class="my-2" data-reservas='<?= json_encode($datos["reservas"]) ?>'
                         data-max-mascotas='<?= $datos["cuidador"]->max_mascotas_dia ?>'></div>
                     <div class="m-3 d-flex gap-3 align-items-center flex-wrap">
-                        <span class="badge" style="background-color:#2ecc71;">Disponible</span>
-                        <span class="badge" style="background-color:#f39c12;">Parcialmente ocupado</span>
-                        <span class="badge" style="background-color:#e74c3c;">Sin disponibilidad</span>
+                        <span class="badge disponible">Disponible</span>
+                        <span class="badge no-disponible">No disponible</span>
+                        <span class="badge parcialmente-ocupado">Parcialmente ocupado</span>
+                        <span class="badge lleno">Lleno</span>
                     </div>
                 </div>
             </div>
@@ -42,6 +43,7 @@ require RUTA_APP . '/views/inc/header.php';
             <div class="info-section mb-4">
                 <h4>Acepta</h4>
                 <ul class="list-inline">
+                    <li class="my-2">Máximo <?= $datos["cuidador"]->max_mascotas_dia ?> mascotas al día</li>
                     <?php foreach ($datos['admite'] as $a): ?>
                         <li class="list-inline-item badge badge-acepta m-1">
                             <?= getIcono($a->tipo_mascota) ?>
@@ -103,6 +105,6 @@ require RUTA_APP . '/views/inc/header.php';
 </div>
 
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
-<script src="<?= RUTA_URL ?>/js/cuidadores/perfil.js"></script>
+<script src="<?= RUTA_URL ?>/js/cuidadores/calendario.js"></script>
 
 <?php require RUTA_APP . '/views/inc/footer.php'; ?>
