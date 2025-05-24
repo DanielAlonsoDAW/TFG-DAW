@@ -1,24 +1,32 @@
 <?php
+// Incluye el header común de la aplicación
 require RUTA_APP . '/views/inc/header.php';
 ?>
 
 <div class="container my-5">
     <div class="row g-5">
-        <!-- Columna izquierda: Imagen y datos básicos -->
+        <!-- Columna izquierda: Imagen y datos básicos del cuidador -->
         <div class="col-md-4">
             <div class="card shadow-sm mb-4">
+                <!-- Imagen del cuidador -->
                 <img src="<?= RUTA_URL . '/' . $datos['cuidador']->imagen ?>" class="img-fluid rounded shadow-sm cuidador-img-responsive mb-3" alt="Imagen cuidador">
                 <div class="card-body">
+                    <!-- Nombre del cuidador -->
                     <h4 class="text-primary-custom"><?= $datos['cuidador']->nombre ?></h4>
+                    <!-- Ciudad y país -->
                     <p><strong><?= getIcono("location") ?> Ciudad:</strong> <?= $datos['cuidador']->ciudad ?> (<?= $datos['cuidador']->pais ?>)</p>
+                    <!-- Valoración promedio -->
                     <p><strong><?= getIcono("star") ?> Valoración:</strong> <?= estrellasBootstrap($datos['cuidador']->promedio_calificacion) ?> (<?= number_format($datos['cuidador']->promedio_calificacion, 1) ?>/5)</p>
+                    <!-- Botón para reservar -->
                     <div class="text-center mt-4">
                         <a href="<?= RUTA_URL ?>/reservas/crear/<?= $datos['cuidador']->id ?>" class="btn btn-primary mt-4">Reservar ahora</a>
                     </div>
 
+                    <!-- Calendario de disponibilidad -->
                     <h4 class="text-primary-custom text-center mt-4">Disponibilidad</h4>
                     <div id="calendarioDisponibilidad" class="my-2" data-reservas='<?= json_encode($datos["reservas"]) ?>'
                         data-max-mascotas='<?= $datos["cuidador"]->max_mascotas_dia ?>'></div>
+                    <!-- Leyenda del calendario -->
                     <div class="m-3 d-flex gap-3 align-items-center flex-wrap">
                         <span class="badge disponible">Disponible</span>
                         <span class="badge no-disponible">No disponible</span>
@@ -28,6 +36,7 @@ require RUTA_APP . '/views/inc/header.php';
                 </div>
             </div>
 
+            <!-- Servicios ofrecidos por el cuidador -->
             <div class="info-section mb-4">
                 <h4>Servicios ofrecidos</h4>
                 <ul class="list-group list-group-flush">
@@ -40,6 +49,7 @@ require RUTA_APP . '/views/inc/header.php';
                 </ul>
             </div>
 
+            <!-- Tipos de mascotas aceptadas y cantidad máxima -->
             <div class="info-section mb-4">
                 <h4>Acepta</h4>
                 <ul class="list-inline">
@@ -55,11 +65,13 @@ require RUTA_APP . '/views/inc/header.php';
             </div>
         </div>
 
-        <!-- Columna derecha: info completa -->
+        <!-- Columna derecha: información detallada -->
         <div class="col-12 col-lg-8">
             <div class="info-section mb-4">
+                <!-- Descripción personal del cuidador -->
                 <h4>Sobre mí</h4>
                 <p><?= nl2br($datos['cuidador']->descripcion) ?></p>
+                <!-- Mascotas propias del cuidador -->
                 <?php if (!empty($datos['mascotas'])): ?>
                     <h4>Mis Mascotas</h4>
                     <div class="row">
@@ -76,7 +88,7 @@ require RUTA_APP . '/views/inc/header.php';
                                             <strong>Edad:</strong> <?= $mascota->edad ?> años<br>
                                             <strong>Tamaño:</strong> <?= ucfirst($mascota->tamano) ?> <?= getClasificacionTamano($mascota->tipo, $mascota->tamano) ?><br>
                                             <?php if ($mascota->observaciones): ?>
-                                                <strong>Obs:</strong> <?= nl2br($mascota->observaciones) ?>
+                                                <strong>Observaciones:</strong> <?= nl2br($mascota->observaciones) ?>
                                             <?php endif; ?>
                                         </p>
                                     </div>
@@ -86,6 +98,7 @@ require RUTA_APP . '/views/inc/header.php';
                     </div>
                 <?php endif; ?>
             </div>
+            <!-- Sección de reseñas de clientes -->
             <div class="info-section mb-4">
                 <h4>Reseñas</h4>
                 <?php if (!empty($datos['resenas'])): ?>
@@ -104,7 +117,11 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 </div>
 
+<!-- Scripts para el calendario de disponibilidad -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
 <script src="<?= RUTA_URL ?>/js/cuidadores/calendario.js"></script>
 
-<?php require RUTA_APP . '/views/inc/footer.php'; ?>
+<?php
+// Incluye el footer común de la aplicación
+require RUTA_APP . '/views/inc/footer.php';
+?>

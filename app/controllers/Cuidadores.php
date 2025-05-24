@@ -86,6 +86,41 @@ class Cuidadores extends Controlador
                     break;
             }
         }
+
+        // Switch para tamaños de perro
+        foreach ($admite as $a) {
+            if ($a->tipo_mascota === 'perro') {
+                switch (strtolower($a->tamano)) {
+                    case 'pequeño':
+                        $a->tamano = 'Pequeño < 35 cm';
+                        break;
+                    case 'mediano':
+                        $a->tamano = 'Mediano 35-49 cm';
+                        break;
+                    case 'grande':
+                        $a->tamano = 'Grande ≥ 50 cm';
+                        break;
+                }
+            }
+        }
+
+        // Switch para tamaños de gato
+        foreach ($admite as $a) {
+            if ($a->tipo_mascota === 'gato') {
+                switch (strtolower($a->tamano)) {
+                    case 'pequeño':
+                        $a->tamano = 'Pequeño <3 kg';
+                        break;
+                    case 'mediano':
+                        $a->tamano = 'Mediano 3-5 kg';
+                        break;
+                    case 'grande':
+                        $a->tamano = 'Grande ≥ 5 kg';
+                        break;
+                }
+            }
+        }
+
         $this->vista('cuidadores/perfilPriv', [
             'datos' => $datos,
             'servicios' => $servicios,

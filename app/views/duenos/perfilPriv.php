@@ -1,17 +1,22 @@
-<?php require RUTA_APP . '/views/inc/header.php'; ?>
+<?php 
+// Incluimos el header común a todas las vistas
+require RUTA_APP . '/views/inc/header.php'; 
+?>
 
 <div class="container mt-5 mb-5 perfil-contenedor">
+    <!-- Título de la sección de perfil -->
     <h2 class="section-title">Mi Perfil</h2>
 
     <div class="row align-items-start flex-column flex-md-row">
-        <!-- Nombre del usuario-->
+        <!-- Columna de la imagen de perfil del usuario -->
         <div class="col-md-4 text-center">
+            <!-- Mostramos la imagen de perfil del usuario -->
             <img src="<?= RUTA_URL . '/' . $datos->imagen ?>" alt="Imagen de perfil" class="perfil-imagen shadow-sm mb-3">
         </div>
         <!-- Columna de la información del perfil -->
         <div class="col-md-8 perfil-info">
             <ul class="list-unstyled">
-                <!-- Nombre del usuario-->
+                <!-- Nombre del usuario -->
                 <li>
                     <i class="bi bi-person-fill text-dark"></i>
                     <strong> Nombre:</strong>
@@ -25,7 +30,7 @@
                     <?= htmlspecialchars($datos->email) ?>
                 </li>
 
-                <!-- Mostrar fecha de registro -->
+                <!-- Fecha de registro del usuario -->
                 <li>
                     <i class="bi bi-calendar-check text-muted"></i>
                     <strong> Registrado el:</strong>
@@ -50,4 +55,7 @@
     </div>
 </div>
 
-<?php require RUTA_APP . '/views/inc/footer.php'; ?>
+<?php 
+// Incluimos el footer común a todas las vistas
+require RUTA_APP . '/views/inc/footer.php'; 
+?>

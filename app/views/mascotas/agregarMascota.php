@@ -1,15 +1,20 @@
-<?php require RUTA_APP . '/views/inc/header.php'; ?>
+<?php 
+// Incluye el header común de la aplicación
+require RUTA_APP . '/views/inc/header.php'; 
+?>
 
 <div class="container mt-5 mb-5">
     <h2 class="section-title">Añadir Nueva Mascota</h2>
     <div class="formulario-container col-12 col-md-8 col-lg-6">
+        <!-- Formulario para agregar una nueva mascota -->
         <form id="formAgregarMascota" method="POST" enctype="multipart/form-data" novalidate>
             <?php
+            // Recupera errores y datos de entrada previos si existen
             $e  = $datos['errores']  ?? [];
             $in = $datos['entrada'] ?? [];
             ?>
 
-            <!-- Nombre -->
+            <!-- Campo: Nombre de la mascota -->
             <div class="mb-3">
                 <label for="nombre" class="form-label">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" class="form-control <?= !empty($e['nombre']) ? 'is-invalid' : '' ?>"
@@ -17,7 +22,7 @@
                 <span class="text-danger"><?= $e['nombre'] ?? '' ?></span>
             </div>
 
-            <!-- Tipo -->
+            <!-- Campo: Tipo de mascota (Perro o Gato) -->
             <div class="mb-3">
                 <label class="form-label">Tipo</label><br>
                 <input type="radio" class="btn-check" name="tipo" id="btn-perro" value="perro" <?= ($in['tipo'] ?? '') === 'perro' ? 'checked' : '' ?>>
@@ -28,7 +33,7 @@
                 <span class="text-danger"><?= $e['Tipo'] ?? '' ?></span>
             </div>
 
-            <!-- Raza -->
+            <!-- Campo: Raza de la mascota (se rellena dinámicamente según el tipo) -->
             <div class="mb-3">
                 <label for="raza" class="form-label">Raza:</label>
                 <select id="raza" name="raza" data-valor-previo="<?= htmlspecialchars($in['raza'] ?? '') ?>"
@@ -38,8 +43,7 @@
                 <span class="text-danger"><?= $e['raza'] ?? '' ?></span>
             </div>
 
-
-            <!-- Edad -->
+            <!-- Campo: Edad de la mascota -->
             <div class="mb-3">
                 <label for="edad" class="form-label">Edad (años):</label>
                 <input type="number" id="edad" name="edad" min="0" class="form-control <?= !empty($e['edad']) ? 'is-invalid' : '' ?>"
@@ -47,27 +51,32 @@
                 <span class="text-danger"><?= $e['edad'] ?? '' ?></span>
             </div>
 
-            <!-- Tamaño -->
+            <!-- Campo: Tamaño de la mascota (se gestiona con JS) -->
             <div class="mb-3">
-                <label for="tamano" class="form-label">Tamaño:</label>
-                <input type="text" id="tamano" name="tamano" class="form-control <?= !empty($e['tamano']) ? 'is-invalid' : '' ?>"
-                    readonly value="<?= htmlspecialchars($in['tamano'] ?? '') ?>">
+                <label class="form-label">Tamaño:</label>
+                <div id="tamano" class="<?= !empty($e['tamano']) ? 'border border-danger text-danger' : '' ?>">
+                    <span class="badge bg-primary p-2" id="tamano-badge">
+                    </span>
+                </div>
+                <input type="hidden" id="tamano-hidden" name="tamano" value="<?= htmlspecialchars($in['tamano'] ?? '') ?>">
                 <span class="text-danger"><?= $e['tamano'] ?? '' ?></span>
             </div>
 
-            <!-- Observaciones -->
+            <!-- Campo: Observaciones adicionales -->
             <div class="mb-3">
                 <label for="observaciones" class="form-label">Observaciones:</label>
                 <textarea id="observaciones" name="observaciones" class="form-control"><?= htmlspecialchars($in['observaciones'] ?? '') ?></textarea>
             </div>
 
-            <!-- Imágenes -->
+            <!-- Campo: Subida de imágenes de la mascota -->
             <div class="mb-3">
                 <label for="imagenes" class="form-label">Imágenes:</label>
                 <input type="file" id="imagenes" name="imagenes[]" multiple accept="image/*" class="form-control <?= !empty($e['imagenes']) ? 'is-invalid' : '' ?>">
+                <small class="form-text text-muted">Puedes seleccionar varias imágenes</small>
                 <span class="text-danger"><?= $e['imagenes'] ?? '' ?></span>
             </div>
 
+            <!-- Botón para enviar el formulario -->
             <div class="text-center mt-4">
                 <button type="submit" class="btn btn-primary">Guardar Mascota</button>
             </div>
@@ -75,11 +84,15 @@
     </div>
 </div>
 
+<!-- Variables de razas para JS (rellena el select de raza dinámicamente) -->
 <script>
     const razasPerro = <?= json_encode($datos['razasPerro'] ?? []) ?>;
     const razasGato = <?= json_encode($datos['razasGato'] ?? []) ?>;
 </script>
+<!-- Script personalizado para la lógica del formulario -->
 <script src="<?= RUTA_URL ?>/js/mascotas/agregar.js"></script>
 
-
-<?php require RUTA_APP . '/views/inc/footer.php'; ?>
+<?php 
+// Incluye el footer común de la aplicación
+require RUTA_APP . '/views/inc/footer.php'; 
+?>

@@ -4,16 +4,29 @@ class Cuidadores_Model
 {
     private $db;
 
+    /**
+     * Constructor de la clase. Inicializa la conexión a la base de datos.
+     */
     public function __construct()
     {
         $this->db = new DataBase();
     }
+
+    /**
+     * Obtiene la lista de cuidadores con su nombre y ciudad.
+     * @return array
+     */
     public function obtenerCuidadores()
     {
         $this->db->query("SELECT nombre, ciudad FROM patitas_cuidadores");
         return $this->db->registros();
     }
 
+    /**
+     * Obtiene la contraseña de un cuidador por su ID.
+     * @param int $id
+     * @return mixed
+     */
     public function obtenerContrasenaPorId($id)
     {
         $this->db->query("SELECT contrasena FROM patitas_cuidadores WHERE id = :id");
@@ -21,6 +34,10 @@ class Cuidadores_Model
         return $this->db->registro();
     }
 
+    /**
+     * Obtiene cuidadores junto con la media de sus valoraciones.
+     * @return array
+     */
     public function obtenerCuidadoresConMedia()
     {
         $sql = "SELECT c.id, c.nombre, c.ciudad,
@@ -33,6 +50,10 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    /**
+     * Obtiene los 15 cuidadores mejor valorados.
+     * @return array
+     */
     public function obtenerCuidadoresTOP()
     {
         $sql = "SELECT  c.id, c.nombre, c.ciudad, c.pais,c.descripcion, c.imagen,
@@ -46,21 +67,31 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    /**
+     * Obtiene el perfil completo de un cuidador por su ID.
+     * @param int $id
+     * @return mixed
+     */
     public function obtenerPerfilCuidador($id)
     {
-        $sql = "SELECT c.id, c.nombre, c.direccion, c.ciudad, c.pais, 
+        $sql = "SELECT c.id, c.nombre, c.email, c.direccion, c.ciudad, c.pais, 
                c.descripcion, c.max_mascotas_dia, c.imagen, c.fecha_registro,
                AVG(r.calificacion) AS promedio_calificacion
         FROM patitas_cuidadores c
         LEFT JOIN patitas_resenas r ON c.id = r.cuidador_id
         WHERE c.id = :id
-        GROUP BY c.id, c.nombre, c.direccion, c.ciudad, c.pais, 
+        GROUP BY c.id, c.nombre, c.email, c.direccion, c.ciudad, c.pais, 
                  c.descripcion, c.max_mascotas_dia, c.imagen, c.fecha_registro";
         $this->db->query($sql);
         $this->db->bind(':id', $id);
         return $this->db->registro();
     }
 
+    /**
+     * Obtiene los servicios ofrecidos por un cuidador.
+     * @param int $id
+     * @return array
+     */
     public function obtenerServicios($id)
     {
         $sql = "SELECT servicio, precio
@@ -71,6 +102,11 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    /**
+     * Obtiene los tipos de mascotas admitidas por un cuidador.
+     * @param int $id
+     * @return array
+     */
     public function obtenerTiposMascotas($id)
     {
         $sql = "SELECT tipo_mascota, tamano
@@ -81,6 +117,11 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    /**
+     * Obtiene las reseñas recibidas por un cuidador.
+     * @param int $id
+     * @return array
+     */
     public function obtenerResenas($id)
     {
         $sql = "SELECT r.comentario, r.calificacion, r.fecha_resena, d.nombre as duenio
@@ -93,6 +134,11 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    /**
+     * Obtiene las mascotas asociadas a un cuidador.
+     * @param int $id
+     * @return array
+     */
     public function obtenerMascotasCuidador($id)
     {
         $sql = "SELECT m.id, m.nombre, m.tipo, m.raza, m.edad, m.tamano, m.observaciones,
@@ -104,6 +150,11 @@ class Cuidadores_Model
         return $this->db->registros();
     }
 
+    /**
+     * Actualiza los datos de acceso (nombre, email, contraseña) de un cuidador.
+     * @param array $datos
+     * @return bool
+     */
     public function actualizarAccesos($datos)
     {
         $this->db->query("UPDATE patitas_cuidadores 
@@ -117,6 +168,11 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 
+    /**
+     * Actualiza los datos personales de un cuidador.
+     * @param array $datos
+     * @return bool
+     */
     public function actualizarDatosCuidador($datos)
     {
         $this->db->query("UPDATE patitas_cuidadores 
@@ -131,6 +187,11 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 
+    /**
+     * Elimina los tipos de mascotas admitidas por un cuidador.
+     * @param int $id
+     * @return bool
+     */
     public function eliminarAdmiteMascotas($id)
     {
         $this->db->query("DELETE FROM patitas_cuidador_admite WHERE cuidador_id = :id");
@@ -138,6 +199,13 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 
+    /**
+     * Inserta un tipo de mascota admitida para un cuidador.
+     * @param int $id
+     * @param string $tipo
+     * @param string $tamano
+     * @return bool
+     */
     public function insertarTipoMascota($id, $tipo, $tamano)
     {
         $this->db->query("INSERT INTO patitas_cuidador_admite (cuidador_id, tipo_mascota, tamano)
@@ -148,6 +216,12 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 
+    /**
+     * Actualiza el número máximo de mascotas que puede cuidar un cuidador al día.
+     * @param int $id
+     * @param int $max_mascotas_dia
+     * @return bool
+     */
     public function actualizarMaxMascotas($id, $max_mascotas_dia)
     {
         $this->db->query("UPDATE patitas_cuidadores 
@@ -160,6 +234,11 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 
+    /**
+     * Elimina los servicios ofrecidos por un cuidador.
+     * @param int $id
+     * @return bool
+     */
     public function eliminarServicios($id)
     {
         $this->db->query("DELETE FROM patitas_cuidador_servicios WHERE cuidador_id = :id");
@@ -167,6 +246,13 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 
+    /**
+     * Inserta un servicio ofrecido por un cuidador.
+     * @param int $id
+     * @param string $servicio
+     * @param float $precio
+     * @return bool
+     */
     public function insertarServicio($id, $servicio, $precio)
     {
         $this->db->query("INSERT INTO patitas_cuidador_servicios (cuidador_id, servicio, precio)
@@ -177,3 +263,4 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 }
+

@@ -53,6 +53,7 @@ footer p {
   color: #006d77 !important;
   font-weight: 500;
   transition: 0.3s;
+  padding: 0.5rem;
 }
 
 .navbar .nav-link:hover,
@@ -61,6 +62,7 @@ footer p {
   color: #004e54 !important;
   background-color: #bdebea !important;
   border-radius: 1em;
+  padding: 0.5rem;
 }
 
 .navbar-brand {
@@ -81,12 +83,14 @@ footer p {
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   border-radius: 1em;
   transition: all 0.3s ease;
+    padding: 0.375rem 0.75rem;
 }
 
 #dropdownUsuario:hover,
 #dropdownUsuario:focus {
   background-color: #bdebea;
   color: #004e54;
+    padding: 0.375rem 0.75rem;
 }
 
 /* User Avatar */
@@ -116,6 +120,7 @@ footer p {
   background-color: #bdebea;
   color: #004e54;
   border-radius: 5px;
+  padding: 0.5rem 1rem;
 }
 
 /* Search Section */
@@ -758,4 +763,17 @@ label {
 .badge.lleno {
   color: black;
   background-color: #e74c3c;
+}
+
+.bg-primary {
+  background-color: #d1f4f1 !important;
+  color: #075e54 !important;
+  font-weight: 500 !important;
+  border-radius: 0.75em !important;
+  padding: 0.4em 0.8em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5em !important;
+  font-size: 1rem !important;
+  border: 1px solid #b2e0dd !important;
 }

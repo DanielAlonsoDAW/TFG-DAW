@@ -63,17 +63,17 @@ require RUTA_APP . "/librerias/Funciones.php";
                         <div class="d-flex justify-content-center flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="perro-pequeno" name="tamano_perro[]" value="Pequeño" autocomplete="off">
                             <label class="btn btn-perro mt-2" for="perro-pequeno">
-                                <i class="fa-solid fa-dog me-1"></i> Pequeño (&lt; 35 cm)
+                                <i class="fa-solid fa-dog me-1"></i> Pequeño &lt; 35 cm
                             </label>
 
                             <input type="checkbox" class="btn-check" id="perro-mediano" name="tamano_perro[]" value="Mediano" autocomplete="off">
                             <label class="btn btn-perro mt-2" for="perro-mediano">
-                                <i class="fa-solid fa-dog me-1"></i> Mediano (35–49 cm)
+                                <i class="fa-solid fa-dog me-1"></i> Mediano 35–49 cm
                             </label>
 
                             <input type="checkbox" class="btn-check" id="perro-grande" name="tamano_perro[]" value="Grande" autocomplete="off">
                             <label class="btn btn-perro mt-2" for="perro-grande">
-                                <i class="fa-solid fa-dog me-1"></i> Grande (≥ 50 cm)
+                                <i class="fa-solid fa-dog me-1"></i> Grande ≥ 50 cm
                             </label>
                         </div>
                     </div>
@@ -84,17 +84,17 @@ require RUTA_APP . "/librerias/Funciones.php";
                         <div class="d-flex justify-content-center flex-wrap gap-2">
                             <input type="checkbox" class="btn-check" id="gato-pequeno" name="tamano_gato[]" value="Pequeño" autocomplete="off">
                             <label class="btn btn-gato mt-2" for="gato-pequeno">
-                                <i class="fa-solid fa-cat me-1"></i> Pequeño (&lt; 3 kg)
+                                <i class="fa-solid fa-cat me-1"></i> Pequeño &lt; 3 kg
                             </label>
 
                             <input type="checkbox" class="btn-check" id="gato-mediano" name="tamano_gato[]" value="Mediano" autocomplete="off">
                             <label class="btn btn-gato mt-2" for="gato-mediano">
-                                <i class="fa-solid fa-cat me-1"></i> Mediano (3–5 kg)
+                                <i class="fa-solid fa-cat me-1"></i> Mediano 3–5 kg
                             </label>
 
                             <input type="checkbox" class="btn-check" id="gato-grande" name="tamano_gato[]" value="Grande" autocomplete="off">
                             <label class="btn btn-gato mt-2" for="gato-grande">
-                                <i class="fa-solid fa-cat me-1"></i> Grande (&gt; 5 kg)
+                                <i class="fa-solid fa-cat me-1"></i> Grande &gt; 5 kg
                             </label>
                         </div>
                     </div>
