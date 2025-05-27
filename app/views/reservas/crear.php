@@ -57,17 +57,6 @@ $precios = $datos['precios'] ?? [];
                     </div>
 
                     <div class="mb-3">
-                        <label for="hora_inicio" class="form-label">Hora inicio:</label>
-                        <input type="time" name="hora_inicio" id="hora_inicio" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="hora_fin" class="form-label">Hora fin:</label>
-                        <input type="time" name="hora_fin" id="hora_fin" class="form-control">
-                    </div>
-
-
-                    <div class="mb-3">
                         <label class="form-label">Mascotas:</label>
                         <div class="row">
                             <?php foreach ($mascotas as $mascota): ?>
@@ -105,7 +94,8 @@ $precios = $datos['precios'] ?? [];
                     <li class="list-group-item"><strong>Servicio: </strong><span id="resumen-servicio">-</span></li>
                     <li class="list-group-item"><strong>Mascotas: </strong><span id="resumen-mascotas">0</span></li>
                     <li class="list-group-item"><strong>Precio base por mascota: </strong><span id="resumen-precio-base">0.00€</span></li>
-                    <li class="list-group-item"><strong>Días de servicio:</strong> <span id="resumen-dias">0</span></li>
+                    <li id="grupos-noches" class="list-group-item resumen-oculto"><strong>Noches de servicio:</strong> <span id="resumen-noches">0</span></li>
+                    <li id="grupos-dias" class="list-group-item resumen-oculto"><strong>Días de servicio:</strong> <span id="resumen-dias">0</span></li>
                     <div id="resumenTaxiWrapper" class="ocultosTaxi">
                         <li id="grupo-distancia" class="list-group-item"><strong>Distancia estimada: </strong><span id="resumen-distancia">0.00 km</span></li>
                         <li id="grupo-taxi" class="list-group-item"><strong>Precio Taxi: </strong><span id="resumen-taxi">0.00€</span></li>

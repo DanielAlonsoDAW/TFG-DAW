@@ -39,12 +39,18 @@ class Reservas extends Controlador
                 die("Este cuidador no tiene disponibilidad en esas fechas.");
             }
 
-            // Calcular precio (ejemplo simple)
+            // Verificar si el cuidador ya tiene una reserva de "Cuidado a domicilio" en ese rango
+            $tieneReservaDomicilio = $this->reservaModelo->cuidadorOcupadoPorDomicilio($cuidador_id, $datos['fecha_inicio'], $datos['fecha_fin']);
+            if ($tieneReservaDomicilio) {
+                die("El cuidador ya tiene una reserva de 'Cuidado a domicilio' en esas fechas y no está disponible.");
+            }
+
+            // Calcular precio
             $precioBase = $this->reservaModelo->obtenerPrecioPorServicio($cuidador_id, $datos['servicio']);
             $total = $precioBase * $mascotasExtra;
 
             if ($datos['servicio'] == 'Taxi') {
-                $total += 5.00; // Tarifa base taxi, o cálculo por distancia
+                $total += 10.00;
             }
 
             // Guardar reserva
@@ -55,7 +61,7 @@ class Reservas extends Controlador
                 $this->reservaModelo->asociarMascota($reservaId, $mascotaId);
             }
 
-            redireccionar('/usuarios/misReservas');
+            redireccionar('/duenos/misReservas');
         } else {
             // Mostrar formulario
             $cuidador = $this->cuidadorModelo->obtenerPerfilCuidador($cuidador_id);

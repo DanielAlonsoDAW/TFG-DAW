@@ -26,17 +26,12 @@ class Reservas_Model
         return $this->db->registro()->max_mascotas_dia;
     }
 
-    public function obtenerPrecioPorServicio($cuidador_id, $servicio)
-    {
-        // Aquí puedes consultar una tabla con precios si la tienes
-        // O retornar un precio fijo de ejemplo
-        return 10.00; // Ejemplo
-    }
-
     public function crearReserva($datos, $total)
     {
-        $this->db->query("INSERT INTO patitas_reservas (duenio_id, cuidador_id, fecha_inicio, fecha_fin, servicio, total, numero_mascotas) 
-                          VALUES (:duenio_id, :cuidador_id, :inicio, :fin, :servicio, :total, :num)");
+        $this->db->query("INSERT INTO patitas_reservas 
+        (duenio_id, cuidador_id, fecha_inicio, fecha_fin, servicio, total, numero_mascotas, estado) 
+        VALUES (:duenio_id, :cuidador_id, :inicio, :fin, :servicio, :total, :num, :estado)");
+
         $this->db->bind(':duenio_id', $datos['duenio_id']);
         $this->db->bind(':cuidador_id', $datos['cuidador_id']);
         $this->db->bind(':inicio', $datos['fecha_inicio']);
@@ -44,6 +39,7 @@ class Reservas_Model
         $this->db->bind(':servicio', $datos['servicio']);
         $this->db->bind(':total', $total);
         $this->db->bind(':num', count($datos['mascotas']));
+        $this->db->bind(':estado', 'reservada');
         $this->db->execute();
         return $this->db->lastInsertId();
     }
@@ -72,6 +68,32 @@ class Reservas_Model
         GROUP BY fecha_inicio, fecha_fin
     ");
         $this->db->bind(':id', $cuidador_id);
+        return $this->db->registros();
+    }
+
+    public function cuidadorOcupadoPorDomicilio($cuidador_id, $inicio, $fin)
+{
+    $this->db->query("SELECT COUNT(*) as total FROM patitas_reservas 
+                      WHERE cuidador_id = :id 
+                      AND servicio = 'Cuidado a domicilio' 
+                      AND fecha_inicio <= :fin AND fecha_fin >= :inicio
+                      AND estado IN ('reservada', 'confirmada')");
+    $this->db->bind(':id', $cuidador_id);
+    $this->db->bind(':inicio', $inicio);
+    $this->db->bind(':fin', $fin);
+    return $this->db->registro()->total > 0;
+}
+
+    public function obtenerReservasPorDueno($dueno_id)
+    {
+        $this->db->query("
+        SELECT r.*, c.nombre AS cuidador_nombre
+        FROM patitas_reservas r
+        JOIN patitas_cuidadores c ON r.cuidador_id = c.id
+        WHERE r.duenio_id = :id
+        ORDER BY r.fecha_inicio DESC
+    ");
+        $this->db->bind(':id', $dueno_id);
         return $this->db->registros();
     }
 }

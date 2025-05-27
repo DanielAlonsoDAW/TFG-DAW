@@ -35,34 +35,6 @@ require RUTA_APP . '/views/inc/header.php';
                     </div>
                 </div>
             </div>
-
-            <!-- Servicios ofrecidos por el cuidador -->
-            <div class="info-section mb-4">
-                <h4>Servicios ofrecidos</h4>
-                <ul class="list-group list-group-flush">
-                    <?php foreach ($datos['servicios'] as $s): ?>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <?= htmlspecialchars($s->servicio) ?>
-                            <span class="servicio-precio"><?= $s->precio ?></span>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-
-            <!-- Tipos de mascotas aceptadas y cantidad máxima -->
-            <div class="info-section mb-4">
-                <h4>Acepta</h4>
-                <ul class="list-inline">
-                    <li class="my-2">Máximo <?= $datos["cuidador"]->max_mascotas_dia ?> mascotas al día</li>
-                    <?php foreach ($datos['admite'] as $a): ?>
-                        <li class="list-inline-item badge badge-acepta m-1">
-                            <?= getIcono($a->tipo_mascota) ?>
-                            <?= ucfirst($a->tipo_mascota) ?>
-                            <?= $a->tamano ?> <?= getClasificacionTamano($a->tipo_mascota, $a->tamano) ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
         </div>
 
         <!-- Columna derecha: información detallada -->
@@ -98,6 +70,35 @@ require RUTA_APP . '/views/inc/header.php';
                     </div>
                 <?php endif; ?>
             </div>
+
+            <!-- Servicios ofrecidos por el cuidador -->
+            <div class="info-section mb-4">
+                <h4>Servicios ofrecidos</h4>
+                <ul class="list-group list-group-flush">
+                    <?php foreach ($datos['servicios'] as $s): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <?= htmlspecialchars($s->servicio) ?>
+                            <span class="servicio-precio"><?= $s->precio ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <!-- Tipos de mascotas aceptadas y cantidad máxima -->
+            <div class="info-section mb-4">
+                <h4>Acepta</h4>
+                <ul class="list-inline">
+                    <li class="my-2">Máximo <?= $datos["cuidador"]->max_mascotas_dia ?> mascotas al día</li>
+                    <?php foreach ($datos['admite'] as $a): ?>
+                        <li class="list-inline-item badge badge-acepta m-1">
+                            <?= getIcono($a->tipo_mascota) ?>
+                            <?= ucfirst($a->tipo_mascota) ?>
+                            <?= $a->tamano ?> <?= getClasificacionTamano($a->tipo_mascota, $a->tamano) ?>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
             <!-- Sección de reseñas de clientes -->
             <div class="info-section mb-4">
                 <h4>Reseñas</h4>

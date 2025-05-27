@@ -51,27 +51,44 @@ document.addEventListener("DOMContentLoaded", () => {
       ".mascotas-check:checked"
     ).length;
     // Obtiene el precio unitario según el servicio seleccionado
-    const precioUnitario = preciosPorServicio[servicio] || 0;
+    const precioUnitario =
+      typeof preciosPorServicio !== "undefined" && preciosPorServicio[servicio]
+        ? preciosPorServicio[servicio]
+        : 0;
     resumenServicio.textContent = servicio || "-";
     resumenMascotas.textContent = numMascotas;
     resumenPrecioBase.textContent = `${precioUnitario.toFixed(2)}€`;
+
+    const resumenNoches = document.getElementById("grupos-noches");
+    const resumenDias = document.getElementById("grupos-dias");
+
     if (servicio === "Taxi") {
       // Cálculo específico para el servicio de taxi
-      const tarifaPorKm = preciosPorServicio["Taxi"] || 0;
+      const tarifaPorKm =
+        typeof preciosPorServicio !== "undefined" && preciosPorServicio["Taxi"]
+          ? preciosPorServicio["Taxi"]
+          : 0;
       const suplementoFijo = 10;
       const precioKm = tarifaPorKm * distanciaTaxiKm * numMascotas;
       precioTaxiTotal = suplementoFijo + precioKm;
       resumenTaxi.textContent = `${precioKm.toFixed(2)}€`;
       resumenTotal.textContent = `${precioTaxiTotal.toFixed(2)}€`;
+      // Oculta noches y días para taxi
+      if (resumenNoches) resumenNoches.classList.add("resumen-oculto");
+      if (resumenDias) resumenDias.classList.add("resumen-oculto");
     } else {
       // Cálculo para otros servicios (alojamiento, cuidado, etc.)
-      const fechaInicio = new Date(
-        document.getElementById("fecha_inicio").value
-      );
-      const fechaFin = new Date(document.getElementById("fecha_fin").value);
+      const fechaInicioElem = document.getElementById("fecha_inicio");
+      const fechaFinElem = document.getElementById("fecha_fin");
+      const fechaInicio = fechaInicioElem
+        ? new Date(fechaInicioElem.value)
+        : null;
+      const fechaFin = fechaFinElem ? new Date(fechaFinElem.value) : null;
       let dias = 0;
       // Calcula la cantidad de días entre las fechas seleccionadas
       if (
+        fechaInicio &&
+        fechaFin &&
         !isNaN(fechaInicio.getTime()) &&
         !isNaN(fechaFin.getTime()) &&
         fechaFin >= fechaInicio
@@ -84,14 +101,33 @@ document.addEventListener("DOMContentLoaded", () => {
           dias -= 1;
         }
       }
-      // Se establece el número de días en el resumen
-      document.getElementById("resumen-dias").textContent = dias;
+
+      if (["Alojamiento", "Cuidado a domicilio"].includes(servicio)) {
+        // Mostrar noches
+        if (resumenNoches) {
+          document.getElementById("resumen-noches").textContent = dias;
+          resumenNoches.classList.remove("resumen-oculto");
+        }
+        if (resumenDias) resumenDias.classList.add("resumen-oculto");
+      } else if (
+        ["Paseos", "Guardería de día", "Visitas a domicilio"].includes(servicio)
+      ) {
+        // Mostrar días
+        if (resumenDias) {
+          document.getElementById("resumen-dias").textContent = dias;
+          resumenDias.classList.remove("resumen-oculto");
+        }
+        if (resumenNoches) resumenNoches.classList.add("resumen-oculto");
+      } else {
+        // Oculta ambos si el servicio no es de días/noches
+        if (resumenNoches) resumenNoches.classList.add("resumen-oculto");
+        if (resumenDias) resumenDias.classList.add("resumen-oculto");
+      }
 
       // Calcula el total según el número de mascotas, días y precio unitario
-      const total =
-        precioUnitario * numMascotas * dias +
-        (servicio === "Taxi" ? precioTaxiTotal : 0);
+      const total = precioUnitario * numMascotas * dias;
       resumenTotal.textContent = `${total.toFixed(2)}€`;
+      resumenTaxi.textContent = "0.00€";
     }
   }
 
@@ -102,15 +138,31 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".ocultosTaxi").forEach((el) => {
       el.classList.toggle("visiblesTaxi", isTaxi);
     });
+
+    // Añade o quita los atributos requeridos a las direcciones de origen y destino
+    direccionOrigen.required = isTaxi;
+    direccionDestino.required = isTaxi;
+
+    // Resetea los valores relacionados con el taxi si no es taxi
     if (!isTaxi) {
-      // Resetea los valores relacionados con el taxi si no es taxi
+      direccionOrigen.value = "";
+      direccionDestino.value = "";
       resumenDistancia.textContent = "0.00 km";
       resumenTaxi.textContent = "0.00€";
       distanciaTaxiKm = 0;
       precioTaxiTotal = 0;
     }
+    // Actualiza el resumen al cambiar el servicio
     actualizarResumen();
   });
+
+  // Evento al cambiar las fechas de inicio y fin
+  document
+    .getElementById("fecha_inicio")
+    .addEventListener("change", actualizarResumen);
+  document
+    .getElementById("fecha_fin")
+    .addEventListener("change", actualizarResumen);
 
   // Evento al seleccionar/deseleccionar mascotas
   document.querySelectorAll(".mascotas-check").forEach((checkbox) => {

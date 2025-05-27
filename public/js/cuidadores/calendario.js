@@ -24,12 +24,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Itera por cada día dentro del rango de la reserva
     while (current < fechaFin) {
       const dateStr = current.toISOString().split("T")[0];
+      // Determina la clase CSS para el día según el tipo de servicio y número de mascotas
+      let className = "";
+      // Verifica si la reserva es a domicilio o tiene un número de mascotas que supera el máximo permitido
+      const esDomicilio = r.servicio === "Cuidado a domicilio";
       const mascotas = parseInt(r.total_mascotas);
 
-      // Determina la clase CSS según la cantidad de mascotas reservadas
-      let className = "";
-      if (mascotas >= maxMascotas) {
-        className = "red"; // Día completamente ocupado
+      // Asigna una clase CSS según el estado del día
+      // Si es un servicio a domicilio, se marca como ocupado completamente
+      if (esDomicilio) {
+        className = "red"; // Día completamente ocupado por servicio de "Cuidado a domicilio"
+      } else if (mascotas >= maxMascotas) {
+        className = "red"; // Día completamente ocupado por límite de mascotas
       } else {
         className = "orange"; // Día parcialmente ocupado
       }

@@ -7,11 +7,18 @@ require RUTA_APP . "/librerias/Funciones.php";
 class Duenos extends Controlador
 {
     private $duenoModelo;
+    private $reservaModelo;
+
+    /**
+     * Constructor del controlador.
+     * Inicia la sesión y carga los modelos necesarios.
+     */
 
     public function __construct()
     {
         session_start();
         $this->duenoModelo = $this->modelo('Duenos_Model');
+        $this->reservaModelo = $this->modelo('Reservas_Model');
     }
 
     /**
@@ -148,6 +155,9 @@ class Duenos extends Controlador
         $this->vista('duenos/editarDatos', $datos);
     }
 
+    /**
+     * Muestra y procesa el formulario para editar los accesos del dueño.
+     */
     public function editarAccesos()
     {
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'dueno') {
@@ -205,5 +215,21 @@ class Duenos extends Controlador
             ];
             $this->vista('duenos/editarAccesos', $datos);
         }
+    }
+
+    /**
+     * Muestra las reservas del dueño autenticado.
+     */
+    public function misReservas()
+    {
+        // Verifica que exista una sesión activa y que el usuario pertenezca al grupo 'dueno'
+        if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'dueno') {
+            redireccionar('/autenticacion');
+        }
+        // Obtiene las reservas del dueño autenticado
+        $dueno_id = $_SESSION['usuario_id'];
+        $reservas = $this->reservaModelo->obtenerReservasPorDueno($dueno_id);
+
+        $this->vista('duenos/misReservas', ['reservas' => $reservas]);
     }
 }
