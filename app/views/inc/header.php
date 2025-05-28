@@ -72,7 +72,7 @@
                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUsuario">
                         <li><a class="dropdown-item" href=" ' . RUTA_URL . '/duenos/perfilPriv/">Mi perfil</a></li>
                         <li><a class="dropdown-item" href="' . RUTA_URL . '/mascotas/">Mis mascotas</a></li>
-                        <li><a class="dropdown-item" href="#">Mis reservas</a></li>
+                        <li><a class="dropdown-item" href="' . RUTA_URL . '/duenos/misReservas/">Mis reservas</a></li>
                         <!-- Más opciones aquí -->
                       </ul>
                     </div>';

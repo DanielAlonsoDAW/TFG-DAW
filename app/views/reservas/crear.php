@@ -105,6 +105,15 @@ $precios = $datos['precios'] ?? [];
                 </ul>
                 <button type="submit" form="formReserva" class="btn btn-primary w-100">Reservar y Pagar</button>
             </div>
+            <?php if (!empty($datos['errores'])): ?>
+                <div class="alert alert-danger mt-5">
+                    <ul class="mb-0">
+                        <?php foreach ($datos['errores'] as $error): ?>
+                            <li><?= htmlspecialchars($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

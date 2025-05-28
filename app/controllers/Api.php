@@ -122,7 +122,7 @@ class Api extends Controlador
         }
 
         // Preparar datos para la API de OpenRouteService
-        $apiKey = "5b3ce3597851110001cf624890f393bd77d040f7a519dcf050146271"; //getenv('ORS_API_KEY');
+        $apiKey = getenv('ORS_API_KEY');
         if (!$apiKey) {
             echo json_encode(['error' => 'API Key no configurada']);
             exit;

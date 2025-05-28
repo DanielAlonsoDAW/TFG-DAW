@@ -91,4 +91,23 @@ class Mascotas_Model
         $this->db->bind(':id', $id);
         return $this->db->execute();
     }
+
+    public function mascotasValidas($mascotas, $propietario_id)
+    {
+        if (empty($mascotas)) {
+            return false;
+        }
+
+        $placeholders = implode(',', array_fill(0, count($mascotas), '?'));
+        $sql = "SELECT id FROM patitas_mascotas WHERE propietario_id = ? AND id IN ($placeholders)";
+        $this->db->query($sql);
+
+        $this->db->bind(1, $propietario_id);
+
+        foreach ($mascotas as $index => $mascota) {
+            $this->db->bind($index + 2, $mascota);
+        }
+
+        return count($this->db->registros()) === count($mascotas);
+    }
 }

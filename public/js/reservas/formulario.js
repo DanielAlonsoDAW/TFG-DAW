@@ -95,10 +95,14 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
         const diferenciaMs = fechaFin - fechaInicio;
         dias = Math.ceil(diferenciaMs / (1000 * 60 * 60 * 24));
-        // Para servicios por noche, se descuenta un día
-        const serviciosPorNoche = ["Alojamiento", "Cuidado a domicilio"];
-        if (serviciosPorNoche.includes(servicio) && dias > 0) {
-          dias -= 1;
+        // Para servicios por día, se suma un día
+        const serviciosPorDia = [
+          "Paseos",
+          "Guardería de día",
+          "Visitas a domicilio",
+        ];
+        if (serviciosPorDia.includes(servicio) && dias > 0) {
+          dias += 1;
         }
       }
 

@@ -154,27 +154,25 @@ function comprobarFecha($fecha)
     }
     return true;
 }
-function comprobarFecha_Nacimiento($fecha_nacimiento)
-{
-    $fecha = date('Y-m-d', strtotime($fecha_nacimiento));
-    if (!comprobarFecha($fecha)) return false;
-    $fecha_actual = date('Y-m-d');
-    if ($fecha >= $fecha_actual) {
-        return false;
-    }
-    return true;
-}
-function comprobarFecha_Recogida($fecha_recogida)
+
+function comprobarFecha_Inicio($fecha_recogida)
 {
     $fecha = date('Y-m-d', strtotime($fecha_recogida));
-    if (!comprobarFecha($fecha)) return false;
-    $fecha_actual = date('Y-m-d');
-    if ($fecha < $fecha_actual) {
+    
+    if (!comprobarFecha($fecha)) {
         return false;
     }
+
+    $fecha_actual = date('Y-m-d');
+    // Comprobar que la fecha recogida sea posterior a la fecha actual
+    if ($fecha <= $fecha_actual) {
+        return false;
+    }
+
     return true;
 }
-function comprobarFecha_Devolucion($fecha_recogida, $fecha_devolucion)
+
+function comprobarFecha_Fin($fecha_recogida, $fecha_devolucion)
 {
     $fecha_inicial = date('Y-m-d', strtotime($fecha_recogida));
     $fecha_final = date('Y-m-d', strtotime($fecha_devolucion));
@@ -295,4 +293,53 @@ function getIcono($tipo)
         default:
             return '';
     }
+}
+
+function calcularDistanciaKm($origen, $destino)
+{
+
+    $coorOrigen = geocodificar($origen);
+    $coorDestino = geocodificar($destino);
+
+    if (!$coorOrigen || !$coorDestino) {
+        return null;
+    }
+
+    $apiKey = getenv('ORS_API_KEY');
+    if (!$apiKey) {
+        return null;
+    }
+
+    $body = [
+        "coordinates" => [
+            [(float)$coorOrigen['lon'], (float)$coorOrigen['lat']],
+            [(float)$coorDestino['lon'], (float)$coorDestino['lat']]
+        ]
+    ];
+
+    $ch = curl_init("https://api.openrouteservice.org/v2/directions/driving-car/geojson");
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: ' . $apiKey,
+            'Content-Type: application/json'
+        ],
+        CURLOPT_POSTFIELDS => json_encode($body)
+    ]);
+
+    $response = curl_exec($ch);
+    $curlError = curl_error($ch);
+    curl_close($ch);
+
+    if ($response === false) {
+        return null;
+    }
+
+    $data = json_decode($response, true);
+    if (isset($data['features'][0]['properties']['summary']['distance'])) {
+        return $data['features'][0]['properties']['summary']['distance'] / 1000;
+    }
+
+    return null;
 }
