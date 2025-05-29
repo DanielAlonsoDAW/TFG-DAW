@@ -626,6 +626,19 @@ footer p {
   transform: scale(1.02);
 }
 
+.btn-danger {
+  background-color: #dc3545 !important;
+  border: none;
+  padding: 0.5rem 1.0rem;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.btn-danger:hover {
+  background-color: #a51b29 !important;
+  transform: scale(1.02);
+}
+
 label {
   font-size: 1.1rem;
   font-weight: bold;
@@ -764,4 +777,16 @@ label {
   gap: 0.5em !important;
   font-size: 1rem !important;
   border: 1px solid #b2e0dd !important;
+}
+
+/*Tabla de Reservas*/
+th {
+    color: #006d77 !important;
+    background-color: #f0fdfa !important;
+    text-align: center !important;
+}
+
+.modal-body {
+    background-color: #f0fdfa !important;
+    color: #006d77 !important;
 }

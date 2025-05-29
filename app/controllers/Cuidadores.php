@@ -4,11 +4,17 @@ class Cuidadores extends Controlador
 {
     private $cuidadorModelo;
     private $reservaModelo;
+    private $mascotaModelo;
+    /**
+     * Constructor del controlador.
+     * Inicia la sesión y carga los modelos necesarios.
+     */
     public function __construct()
     {
         session_start();
         $this->cuidadorModelo = $this->modelo('Cuidadores_Model');
         $this->reservaModelo = $this->modelo('Reservas_Model');
+        $this->mascotaModelo = $this->modelo('Mascotas_Model');
     }
 
     public function perfil($id)
@@ -454,5 +460,44 @@ class Cuidadores extends Controlador
         }
 
         return null;
+    }
+
+    /**
+     * Muestra las reservas del cuidador autenticado.
+     */
+    public function misReservas()
+    {
+        // Verifica que exista una sesión activa y que el usuario pertenezca al grupo 'cuidador'
+        if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'cuidador') {
+            redireccionar('/autenticacion');
+        }
+
+        // Obtiene las reservas del cuidador autenticado
+        $cuidador_id = $_SESSION['usuario_id'];
+        $reservas = $this->reservaModelo->obtenerReservasPorCuidador($cuidador_id);
+
+        // Añade los datos completos de las mascotas a cada reserva
+        foreach ($reservas as $reserva) {
+            $mascotasReserva = $this->reservaModelo->obtenerMascotasDeReserva($reserva->id);
+            $mascotasConDatos = [];
+
+            foreach ($mascotasReserva as $mascotaRel) {
+                $mascota = $this->mascotaModelo->obtenerMascotaPorId($mascotaRel->mascota_id);
+
+                if ($mascota) {
+                    // Añadir imágenes a la mascota
+                    $imagenes = $this->mascotaModelo->obtenerImagenes($mascota->id);
+                    $mascota->imagenes = $imagenes;
+
+                    $mascotasConDatos[] = $mascota;
+                }
+            }
+
+            // Asignar mascotas a la reserva
+            $reserva->mascotas = $mascotasConDatos;
+        }
+
+        // Renderiza la vista con las reservas
+        $this->vista('cuidadores/misReservas', ['reservas' => $reservas]);
     }
 }

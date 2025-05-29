@@ -97,6 +97,26 @@ class Reservas_Model
         return $this->db->registros();
     }
 
+    public function obtenerReservasPorCuidador($cuidador_id)
+    {
+        $this->db->query("
+        SELECT r.*, c.nombre AS cuidador_nombre, r.numero_mascotas
+        FROM patitas_reservas r
+        JOIN patitas_duenos c ON r.duenio_id = c.id
+        WHERE r.cuidador_id = :id
+        ORDER BY r.fecha_inicio DESC
+    ");
+        $this->db->bind(':id', $cuidador_id);
+        return $this->db->registros();
+    }
+
+    public function obtenerMascotasDeReserva($reservaId)
+    {
+        $this->db->query("SELECT reserva_id, mascota_id FROM patitas_reserva_mascotas WHERE reserva_id = :reserva_id");
+        $this->db->bind(':reserva_id', $reservaId);
+        return $this->db->registros();
+    }
+
     public function obtenerPrecioPorServicio($cuidador_id, $servicio)
     {
         $this->db->query("SELECT precio FROM patitas_cuidador_servicios 

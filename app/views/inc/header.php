@@ -73,7 +73,6 @@
                         <li><a class="dropdown-item" href=" ' . RUTA_URL . '/duenos/perfilPriv/">Mi perfil</a></li>
                         <li><a class="dropdown-item" href="' . RUTA_URL . '/mascotas/">Mis mascotas</a></li>
                         <li><a class="dropdown-item" href="' . RUTA_URL . '/duenos/misReservas/">Mis reservas</a></li>
-                        <!-- Más opciones aquí -->
                       </ul>
                     </div>';
               // Botón cerrar sesión
@@ -91,8 +90,7 @@
                       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUsuario">
                         <li><a class="dropdown-item" href=" ' . RUTA_URL . '/cuidadores/perfilPriv/">Mi perfil</a></li>
                         <li><a class="dropdown-item" href="' . RUTA_URL . '/mascotas/">Mis mascotas</a></li>
-                        <li><a class="dropdown-item" href="#">Mis reservas</a></li>
-                        <!-- Más opciones aquí -->
+                        <li><a class="dropdown-item" href="' . RUTA_URL . '/cuidadores/misReservas/">Mis reservas</a></li>
                       </ul>
                     </div>';
               // Botón cerrar sesión

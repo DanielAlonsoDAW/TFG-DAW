@@ -14,7 +14,9 @@
                         <th>Servicio</th>
                         <th>Fechas</th>
                         <th>Estado</th>
-                        <th>Total (€)</th>
+                        <th>Total</th>
+                        <th>Facturas</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,6 +27,15 @@
                             <td><?= date('d/m/Y', strtotime($reserva->fecha_inicio)) ?> - <?= date('d/m/Y', strtotime($reserva->fecha_fin)) ?></td>
                             <td><span class="badge bg-success"><?= ucfirst($reserva->estado) ?></span></td>
                             <td><?= number_format($reserva->total, 2) ?>€</td>
+                            <td class="text-center"><a href="<?= RUTA_URL ?>/reservas/factura/<?= $reserva->id ?>" class="btn btn-primary btn-sm" target="_blank">Ver Factura</a></td>
+                            <td class="text-center">
+                                <?php if ($reserva->estado === 'confirmada'): ?>
+                                    <form action="<?= RUTA_URL ?>/reservas/cancelar/<?= $reserva->id ?>" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que quieres cancelar esta reserva?');">Cancelar</button>
+                                    </form>
+                                <?php endif; ?>
+
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

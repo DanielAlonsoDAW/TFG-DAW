@@ -1,6 +1,6 @@
-<?php 
+<?php
 // Incluimos el header común a todas las vistas
-require RUTA_APP . '/views/inc/header.php'; 
+require RUTA_APP . '/views/inc/header.php';
 ?>
 
 <div class="container mt-5">
@@ -53,7 +53,7 @@ require RUTA_APP . '/views/inc/header.php';
                                 Editar
                             </a>
                             <!-- Botón para eliminar la mascota (abre modal de confirmación) -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $m->id ?>">
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $m->id ?>">
                                 Eliminar
                             </button>
                         </div>
@@ -81,7 +81,7 @@ require RUTA_APP . '/views/inc/header.php';
                 ¿Estás seguro de que quieres eliminar esta mascota?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
                 <!-- Enlace para confirmar la eliminación (se actualiza dinámicamente con JS) -->
                 <a id="btnConfirmarEliminar" href="#" class="btn btn-danger">Eliminar</a>
             </div>
@@ -112,7 +112,7 @@ require RUTA_APP . '/views/inc/header.php';
 <!-- Script principal de la página de mascotas -->
 <script src="<?= RUTA_URL ?>/js/mascotas/inicio.js"></script>
 
-<?php 
+<?php
 // Incluimos el footer común a todas las vistas
-require RUTA_APP . '/views/inc/footer.php'; 
+require RUTA_APP . '/views/inc/footer.php';
 ?>
