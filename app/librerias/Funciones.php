@@ -158,7 +158,7 @@ function comprobarFecha($fecha)
 function comprobarFecha_Inicio($fecha_recogida)
 {
     $fecha = date('Y-m-d', strtotime($fecha_recogida));
-    
+
     if (!comprobarFecha($fecha)) {
         return false;
     }
@@ -342,4 +342,18 @@ function calcularDistanciaKm($origen, $destino)
     }
 
     return null;
+}
+
+function comprobarFecha_Cancelacion($fecha_inicio)
+{
+    $fechaInicio = new DateTime($fecha_inicio);
+    $fechaLimite = clone $fechaInicio;
+    $fechaLimite->modify('-2 days');
+    $fechaActual = new DateTime();
+
+    // Si la fecha actual es anterior o igual a la fecha límite, se puede cancelar
+    if ($fechaActual <= $fechaLimite) {
+        return true;
+    }
+    return false;
 }

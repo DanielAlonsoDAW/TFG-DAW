@@ -657,6 +657,22 @@ label {
   display: none;
 }
 
+ .reserva-primary{
+  background-color: #00b4ab !important;
+  border: none !important;
+  padding: 0.25rem 0.5rem !important;
+  font-size: 1rem !important;
+  transition: 0.2s !important;
+}
+
+.reserva-danger{
+  background-color: #dc3545 !important;
+  border: none !important;
+  padding: 0.25rem 0.5rem !important;
+  font-size: 1rem !important;
+  transition: 0.2s !important;
+}
+
 /* Calendario */
 .fc {
   font-family: "Segoe UI", Arial, sans-serif !important;
@@ -784,6 +800,11 @@ th {
     color: #006d77 !important;
     background-color: #f0fdfa !important;
     text-align: center !important;
+}
+
+.modal-title {
+    color: #006d77 !important;
+    font-weight: bold !important;
 }
 
 .modal-body {

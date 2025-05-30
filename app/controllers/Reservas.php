@@ -9,9 +9,7 @@ class Reservas extends Controlador
     public function __construct()
     {
         session_start();
-        if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] != 'dueno') {
-            redireccionar('/autenticacion');
-        }
+
         $this->reservaModelo = $this->modelo('Reservas_Model');
         $this->cuidadorModelo = $this->modelo('Cuidadores_Model');
         $this->mascotaModelo = $this->modelo('Mascotas_Model');
@@ -19,6 +17,9 @@ class Reservas extends Controlador
 
     public function crear($cuidador_id)
     {
+        if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] != 'dueno') {
+            redireccionar('/autenticacion');
+        }
         $errores = [];
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -150,6 +151,46 @@ class Reservas extends Controlador
             ];
 
             $this->vista('reservas/crear', $datos);
+        }
+    }
+
+    public function cancelar($id_reserva)
+    {
+        $reserva = $this->reservaModelo->obtenerReservaPorId($id_reserva);
+
+        if ($_SESSION['grupo'] == 'dueno') {
+            // Si el usuario es dueño, comprobar que la reserva pertenece al dueño
+            if (!$reserva || $reserva->duenio_id != $_SESSION['usuario_id'] || comprobarFecha_Cancelacion($reserva->fecha_inicio)) {
+                // Si la reserva no existe o no pertenece al dueño, redireccionar
+                redireccionar('/duenos/misReservas');
+            }
+            // Cancelar la reserva
+            $this->reservaModelo->cancelarReserva($id_reserva);
+
+            redireccionar('/duenos/misReservas');
+        } else {
+            // Si el usuario no es dueño, redireccionar
+            redireccionar('/autenticacion');
+        }
+    }
+
+    public function rechazar($id_reserva)
+    {
+        $reserva = $this->reservaModelo->obtenerReservaPorId($id_reserva);
+
+        if ($_SESSION['grupo'] == 'cuidador') {
+            if (!$reserva || $reserva->cuidador_id != $_SESSION['usuario_id'] || comprobarFecha_Cancelacion($reserva->fecha_inicio)) {
+                // Si la reserva no existe o no pertenece al cuidador, redireccionar
+                redireccionar('/cuidadores/misReservas');
+            }
+
+            // Rechazar la reserva
+            $this->reservaModelo->rechazarReserva($id_reserva);
+
+            redireccionar('/cuidadores/misReservas');
+        } else {
+            // Si el usuario no es cuidador, redireccionar
+            redireccionar('/autenticacion');
         }
     }
 }

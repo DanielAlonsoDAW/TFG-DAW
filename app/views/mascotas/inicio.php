@@ -99,7 +99,7 @@ require RUTA_APP . '/views/inc/header.php';
 
 <script>
     // Variables globales para JS: ruta base y galerías de imágenes de mascotas
-    window.RUTA_URL = "<?= RUTA_URL ?>";
+    const RUTA_URL = "<?= RUTA_URL ?>";
     window.galeriasMascotas = <?= json_encode(array_map(
                                     fn($m) => array_map(function ($img) {
                                         return (str_starts_with($img->imagen, 'http') || str_starts_with($img->imagen, '//'))

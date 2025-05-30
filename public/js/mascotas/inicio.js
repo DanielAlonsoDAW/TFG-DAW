@@ -1,6 +1,5 @@
 (() => {
   const galerias = window.galeriasMascotas || [];
-  const RUTA_URL = window.RUTA_URL || "";
 
   const visor = document.getElementById("visorImagen");
   const imgLarge = document.getElementById("imagenAmpliada");

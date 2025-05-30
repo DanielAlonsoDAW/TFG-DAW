@@ -53,4 +53,15 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") cerrarVisor();
   });
+
+  const modal = document.getElementById("confirmarEliminacionModal");
+  const btnEliminar = document.getElementById("btnConfirmarEliminar");
+
+  if (modal && btnEliminar) {
+    modal.addEventListener("show.bs.modal", function (event) {
+      const triggerBtn = event.relatedTarget;
+      const idReserva = triggerBtn.getAttribute("data-id");
+      btnEliminar.href = RUTA_URL + "/reservas/rechazar/" + idReserva;
+    });
+  }
 });

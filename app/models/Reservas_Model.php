@@ -44,11 +44,11 @@ class Reservas_Model
         return $this->db->lastInsertId();
     }
 
-    public function asociarMascota($reservaId, $mascotaId)
+    public function asociarMascota($reserva_id, $mascota_id)
     {
         $this->db->query("INSERT INTO patitas_reserva_mascotas (reserva_id, mascota_id) VALUES (:res, :mas)");
-        $this->db->bind(':res', $reservaId);
-        $this->db->bind(':mas', $mascotaId);
+        $this->db->bind(':res', $reserva_id);
+        $this->db->bind(':mas', $mascota_id);
         $this->db->execute();
     }
 
@@ -110,10 +110,10 @@ class Reservas_Model
         return $this->db->registros();
     }
 
-    public function obtenerMascotasDeReserva($reservaId)
+    public function obtenerMascotasDeReserva($reserva_id)
     {
         $this->db->query("SELECT reserva_id, mascota_id FROM patitas_reserva_mascotas WHERE reserva_id = :reserva_id");
-        $this->db->bind(':reserva_id', $reservaId);
+        $this->db->bind(':reserva_id', $reserva_id);
         return $this->db->registros();
     }
 
@@ -124,5 +124,26 @@ class Reservas_Model
         $this->db->bind(':id', $cuidador_id);
         $this->db->bind(':servicio', $servicio);
         return $this->db->registro()->precio ?? 0;
+    }
+
+    public function obtenerReservaPorId($id_reserva)
+    {
+        $this->db->query("SELECT * FROM patitas_reservas WHERE id = :id");
+        $this->db->bind(':id', $id_reserva);
+        return $this->db->registro();
+    }
+
+    public function cancelarReserva($reserva_id)
+    {
+        $this->db->query("UPDATE patitas_reservas SET estado = 'cancelada' WHERE id = :id");
+        $this->db->bind(':id', $reserva_id);
+        return $this->db->execute();
+    }
+
+    public function rechazarReserva($reserva_id)
+    {
+        $this->db->query("UPDATE patitas_reservas SET estado = 'rechazada' WHERE id = :id");
+        $this->db->bind(':id', $reserva_id);
+        return $this->db->execute();
     }
 }
