@@ -17,7 +17,6 @@
                         <th>Ver Mascotas</th>
                         <th>Estado</th>
                         <th>Total</th>
-                        <th>Facturas</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -31,12 +30,12 @@
                             <td class="text-center">
                                 <button
                                     type="button"
-                                    class="btn btn-primary reserva-primary btn-sm"
+                                    class="btn btn-secondary-custom btn-sm"
                                     data-bs-toggle="modal"
                                     data-bs-target="#mascotasModal<?= $reserva->id ?>">
                                     Ver Mascotas
                                 </button>
-                                <!-- Modal -->
+                                <!-- Modal ver mascotas -->
                                 <div class="modal fade" id="mascotasModal<?= $reserva->id ?>" tabindex="-1" aria-labelledby="mascotasModalLabel<?= $reserva->id ?>" aria-hidden="true">
                                     <div class="modal-dialog modal-xl modal-dialog-centered">
                                         <div class="modal-content">
@@ -106,15 +105,71 @@
                             </td>
                             <td><?= ucfirst($reserva->estado) ?></td>
                             <td><?= number_format($reserva->total, 2) ?>€</td>
-                            <td class="text-center"><a href="<?= RUTA_URL ?>/reservas/factura/<?= $reserva->id ?>" class="btn btn-primary reserva-primary btn-sm" target="_blank">Ver Factura</a></td>
                             <td class="text-center">
+                                <?php
+                                $hoy = date('Y-m-d');
+                                $fechaInicio = $reserva->fecha_inicio;
+                                $fechaFin = $reserva->fecha_fin;
+                                $diffFechas = calcularDiferenciaFechas($hoy, $fechaInicio);
+                                ?>
                                 <?php if ($reserva->estado === 'confirmada'): ?>
-                                    <!-- Botón para cancelar la reserva -->
-                                    <button type="button" class="btn btn-danger reserva-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $reserva->id ?>">
-                                        Rechazar Reserva
-                                    </button>
+                                    <?php if ($diffFechas >= 2): ?>
+                                        <!-- Botón para cancelar la reserva -->
+                                        <button type="button" class="btn btn-danger reserva-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $reserva->id ?>">
+                                            Rechazar Reserva
+                                        </button>
+                                    <?php elseif ($diffFechas == 0 || $diffFechas == -1 && $hoy < $fechaFin): ?>
+                                        <!-- Celda vacía: no mostrar nada -->
+                                    <?php elseif ($hoy >= $fechaFin): ?>
+                                        <!-- Botón para completar la reserva -->
+                                        <form action="<?= RUTA_URL ?>/reservas/completar/<?= $reserva->id ?>" method="post">
+                                            <button type="submit" class="btn btn-primary reserva-primary btn-sm">Completar Reserva</button>
+                                        </form>
+                                    <?php endif; ?>
+                                <?php elseif ($reserva->estado === 'completada' && !empty($datos['resenas'])): ?>
+                                    <?php
+                                    // Buscar si existe reseña para esta reserva
+                                    $resena_existente = null;
+                                    foreach ($datos['resenas'] as $resena) {
+                                        if (isset($resena->id) && $resena->reserva_id === $reserva->id) {
+                                            $resena_existente = $resena;
+                                            break;
+                                        }
+                                    }
+                                    ?>
+                                    <?php if ($resena_existente): ?>
+                                        <!-- Botón para mostrar reseña -->
+                                        <button type="button" class="btn btn-resena-modal btn-sm" data-bs-toggle="modal" data-bs-target="#resenaModal<?= $resena_existente->id ?>">
+                                            Mostrar Reseña
+                                        </button>
+                                        <!-- Modal mostrar reseña -->
+                                        <div class="modal fade" id="resenaModal<?= $resena_existente->id ?>" tabindex="-1" aria-labelledby="resenaModalLabel<?= $resena_existente->id ?>" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title w-100 text-center" id="resenaModalLabel<?= $resena_existente->id ?>">Reseña del Dueño</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <strong>Dueño:</strong> <?= htmlspecialchars($resena_existente->duenio) ?><br>
+                                                        <strong>Fecha:</strong> <?= date('d/m/Y', strtotime($resena_existente->fecha_resena)) ?><br>
+                                                        <strong>Valoración:</strong>
+                                                        <?php for ($i = 0; $i < (int)$resena_existente->calificacion; $i++): ?>
+                                                            <span class="text-warning">&#9733;</span>
+                                                        <?php endfor; ?>
+                                                        <?php for ($i = (int)$resena_existente->calificacion; $i < 5; $i++): ?>
+                                                            <span class="text-secondary">&#9733;</span>
+                                                        <?php endfor; ?>
+                                                        <br>
+                                                        <strong>Comentario:</strong>
+                                                        <p><?= nl2br(htmlspecialchars($resena_existente->comentario)) ?></p>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 <?php endif; ?>
-                                <!-- TODO : Añadir Botón de finalizar reserva -->
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -132,7 +187,7 @@
     <button class="visor-nav visor-next" onclick="imagenSiguiente()">&#10095;</button>
 </div>
 
-<!-- Modal de confirmación de eliminación -->
+<!-- Modal confirmación rechazo -->
 <div class="modal fade" id="confirmarEliminacionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

@@ -645,6 +645,18 @@ label {
   color: #006d77;
 }
 
+.btn-secondary-custom {
+  background-color: #d1f4f1;
+  color: #006d77;
+  transition: 0.2s;
+}
+
+.btn-secondary-custom:hover {
+  background-color: #bdebea;
+  color: #004e54;
+  transform: scale(1.02);
+}
+
 /* Reservas */
 
 .ocultosTaxi{
@@ -657,20 +669,25 @@ label {
   display: none;
 }
 
- .reserva-primary{
-  background-color: #00b4ab !important;
-  border: none !important;
+.reserva-primary{
   padding: 0.25rem 0.5rem !important;
-  font-size: 1rem !important;
-  transition: 0.2s !important;
 }
 
 .reserva-danger{
-  background-color: #dc3545 !important;
-  border: none !important;
   padding: 0.25rem 0.5rem !important;
-  font-size: 1rem !important;
-  transition: 0.2s !important;
+}
+
+.btn-resena-modal {
+  background-color: #008e86;
+  color:white;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.btn-resena-modal:hover {
+  background-color: #005752;
+  color: white;
 }
 
 /* Calendario */

@@ -193,4 +193,24 @@ class Reservas extends Controlador
             redireccionar('/autenticacion');
         }
     }
+
+    public function completar($id_reserva)
+    {
+        $reserva = $this->reservaModelo->obtenerReservaPorId($id_reserva);
+
+        if ($_SESSION['grupo'] == 'cuidador') {
+            if (!$reserva || $reserva->cuidador_id != $_SESSION['usuario_id'] || comprobarFecha_Cancelacion($reserva->fecha_inicio)) {
+                // Si la reserva no existe o no pertenece al cuidador, redireccionar
+                redireccionar('/cuidadores/misReservas');
+            }
+
+            // Completar la reserva
+            $this->reservaModelo->completarReserva($id_reserva);
+
+            redireccionar('/cuidadores/misReservas');
+        } else {
+            // Si el usuario no es cuidador, redireccionar
+            redireccionar('/autenticacion');
+        }
+    }
 }

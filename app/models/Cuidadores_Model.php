@@ -118,23 +118,6 @@ class Cuidadores_Model
     }
 
     /**
-     * Obtiene las reseñas recibidas por un cuidador.
-     * @param int $id
-     * @return array
-     */
-    public function obtenerResenas($id)
-    {
-        $sql = "SELECT r.comentario, r.calificacion, r.fecha_resena, d.nombre as duenio
-            FROM patitas_resenas r
-            JOIN patitas_cuidadores d ON r.duenio_id = d.id
-            WHERE r.cuidador_id = :id
-            ORDER BY r.fecha_resena DESC";
-        $this->db->query($sql);
-        $this->db->bind(':id', $id);
-        return $this->db->registros();
-    }
-
-    /**
      * Obtiene las mascotas asociadas a un cuidador.
      * @param int $id
      * @return array
@@ -262,5 +245,16 @@ class Cuidadores_Model
         $this->db->bind(':precio', $precio);
         return $this->db->execute();
     }
-}
 
+    public function obtenerCuidadorPorReservaId($reserva_id)
+    {
+        $sql = "SELECT c.id, c.nombre, c.email, c.direccion, c.ciudad, c.pais, 
+                c.descripcion, c.max_mascotas_dia, c.imagen, c.fecha_registro
+                FROM patitas_cuidadores c
+                JOIN patitas_reservas r ON c.id = r.cuidador_id
+                WHERE r.id = :reserva_id";
+        $this->db->query($sql);
+        $this->db->bind(':reserva_id', $reserva_id);
+        return $this->db->registro();
+    }
+}

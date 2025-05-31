@@ -5,6 +5,7 @@ class Cuidadores extends Controlador
     private $cuidadorModelo;
     private $reservaModelo;
     private $mascotaModelo;
+    private $resenaModelo;
     /**
      * Constructor del controlador.
      * Inicia la sesión y carga los modelos necesarios.
@@ -15,6 +16,7 @@ class Cuidadores extends Controlador
         $this->cuidadorModelo = $this->modelo('Cuidadores_Model');
         $this->reservaModelo = $this->modelo('Reservas_Model');
         $this->mascotaModelo = $this->modelo('Mascotas_Model');
+        $this->resenaModelo = $this->modelo('Resenas_Model');
     }
 
     public function perfil($id)
@@ -22,7 +24,7 @@ class Cuidadores extends Controlador
         $datosCuidador = $this->cuidadorModelo->obtenerPerfilCuidador($id);
         $servicios = $this->cuidadorModelo->obtenerServicios($id);
         $admite = $this->cuidadorModelo->obtenerTiposMascotas($id);
-        $resenas = $this->cuidadorModelo->obtenerResenas($id);
+        $resenas = $this->resenaModelo->obtenerResenasCuidador($id);
         $mascotas = $this->cuidadorModelo->obtenerMascotasCuidador($id);
         $reservas = $this->reservaModelo->obtenerReservasConfirmadas($id);
 
@@ -475,6 +477,7 @@ class Cuidadores extends Controlador
         // Obtiene las reservas del cuidador autenticado
         $cuidador_id = $_SESSION['usuario_id'];
         $reservas = $this->reservaModelo->obtenerReservasPorCuidador($cuidador_id);
+        $resenas = $this->resenaModelo->obtenerResenasCuidador($cuidador_id);
 
         // Añade los datos completos de las mascotas a cada reserva
         foreach ($reservas as $reserva) {
@@ -498,6 +501,6 @@ class Cuidadores extends Controlador
         }
 
         // Renderiza la vista con las reservas
-        $this->vista('cuidadores/misReservas', ['reservas' => $reservas]);
+        $this->vista('cuidadores/misReservas', ['reservas' => $reservas, 'resenas' => $resenas]);
     }
 }

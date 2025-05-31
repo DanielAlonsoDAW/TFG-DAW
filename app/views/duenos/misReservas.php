@@ -12,6 +12,7 @@
                     <tr>
                         <th>Cuidador</th>
                         <th>Servicio</th>
+                        <th>Mascotas</th>
                         <th>Fechas</th>
                         <th>Estado</th>
                         <th>Total</th>
@@ -24,10 +25,20 @@
                         <tr>
                             <td><?= htmlspecialchars($reserva->cuidador_nombre) ?></td>
                             <td><?= htmlspecialchars($reserva->servicio) ?></td>
+                            <td>
+                                <?php if (!empty($reserva->mascotas)): ?>
+                                    <?php
+                                    $mascotaNombres = array_map(function ($mascota) {
+                                        return htmlspecialchars(is_object($mascota) ? $mascota->nombre : $mascota);
+                                    }, $reserva->mascotas);
+                                    echo implode(', ', $mascotaNombres);
+                                    ?>
+                                <?php endif; ?>
+                            </td>
                             <td><?= date('d/m/Y', strtotime($reserva->fecha_inicio)) ?> - <?= date('d/m/Y', strtotime($reserva->fecha_fin)) ?></td>
                             <td><?= ucfirst($reserva->estado) ?></td>
                             <td><?= number_format($reserva->total, 2) ?>€</td>
-                            <td class="text-center"><a href="<?= RUTA_URL ?>/reservas/factura/<?= $reserva->id ?>" class="btn btn-primary reserva-primary btn-sm" target="_blank">Ver Factura</a></td>
+                            <td class="text-center"><a href="<?= RUTA_URL ?>/reservas/factura/<?= $reserva->id ?>" class="btn btn-secondary-custom btn-sm" target="_blank">Ver Factura</a></td>
                             <td class="text-center">
                                 <?php if ($reserva->estado === 'confirmada'): ?>
                                     <!-- Botón para cancelar la reserva -->
@@ -35,7 +46,24 @@
                                         Cancelar Reserva
                                     </button>
                                 <?php endif; ?>
-                                <!-- TODO : Añadir Botón de añadir/editar reseña cuando el estado sea Finalizada -->
+                                <!-- Botón de añadir/editar reseña cuando el estado sea Finalizada -->
+                                <?php if ($reserva->estado === 'completada'): ?>
+                                    <?php
+                                    // Buscar si existe reseña para esta reserva
+                                    $resena_existente = null;
+                                    foreach ($datos['resenas'] as $resena) {
+                                        if ($resena->reserva_id === $reserva->id) {
+                                            $resena_existente = $resena;
+                                            break;
+                                        }
+                                    }
+                                    ?>
+                                    <?php if ($resena_existente): ?>
+                                        <a href="<?= RUTA_URL ?>/resenas/editar/<?= $resena_existente->id ?>" class="btn btn-primary reserva-primary btn-sm">Editar Reseña</a>
+                                    <?php else: ?>
+                                        <a href="<?= RUTA_URL ?>/resenas/crear/<?= $reserva->id ?>" class="btn btn-primary reserva-primary btn-sm">Añadir Reseña</a>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -1,6 +1,6 @@
-<?php 
+<?php
 // Incluye el header común de la aplicación
-require RUTA_APP . '/views/inc/header.php'; 
+require RUTA_APP . '/views/inc/header.php';
 ?>
 
 <div class="container mt-5 mb-5">
@@ -78,7 +78,7 @@ require RUTA_APP . '/views/inc/header.php';
 
             <!-- Botón para enviar el formulario -->
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary">Guardar Mascota</button>
+                <button type="submit" class="btn btn-primary">Añadir Mascota</button>
             </div>
         </form>
     </div>
@@ -92,7 +92,7 @@ require RUTA_APP . '/views/inc/header.php';
 <!-- Script personalizado para la lógica del formulario -->
 <script src="<?= RUTA_URL ?>/js/mascotas/agregar.js"></script>
 
-<?php 
+<?php
 // Incluye el footer común de la aplicación
-require RUTA_APP . '/views/inc/footer.php'; 
+require RUTA_APP . '/views/inc/footer.php';
 ?>

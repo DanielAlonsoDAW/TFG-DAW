@@ -146,4 +146,11 @@ class Reservas_Model
         $this->db->bind(':id', $reserva_id);
         return $this->db->execute();
     }
+
+    public function completarReserva($reserva_id)
+    {
+        $this->db->query("UPDATE patitas_reservas SET estado = 'completada' WHERE id = :id");
+        $this->db->bind(':id', $reserva_id);
+        return $this->db->execute();
+    }
 }

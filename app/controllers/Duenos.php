@@ -8,6 +8,8 @@ class Duenos extends Controlador
 {
     private $duenoModelo;
     private $reservaModelo;
+    private $resenaModelo;
+    private $mascotaModelo;
 
     /**
      * Constructor del controlador.
@@ -19,6 +21,8 @@ class Duenos extends Controlador
         session_start();
         $this->duenoModelo = $this->modelo('Duenos_Model');
         $this->reservaModelo = $this->modelo('Reservas_Model');
+        $this->resenaModelo = $this->modelo('Resenas_Model');
+        $this->mascotaModelo = $this->modelo('Mascotas_Model');
     }
 
     /**
@@ -229,7 +233,21 @@ class Duenos extends Controlador
         // Obtiene las reservas del dueño autenticado
         $dueno_id = $_SESSION['usuario_id'];
         $reservas = $this->reservaModelo->obtenerReservasPorDueno($dueno_id);
+        $resenas = $this->resenaModelo->obtenerResenasDueno($dueno_id);
 
-        $this->vista('duenos/misReservas', ['reservas' => $reservas]);
+        // Añade los datos completos de las mascotas a cada reserva
+        foreach ($reservas as $reserva) {
+            $mascotasReserva = $this->reservaModelo->obtenerMascotasDeReserva($reserva->id);
+            $nombresMascotas = [];
+            foreach ($mascotasReserva as $mascotaRel) {
+                $mascota = $this->mascotaModelo->obtenerMascotaPorId($mascotaRel->mascota_id);
+                $nombresMascotas[] = $mascota->nombre;
+            }
+
+            // Asignar mascotas a la reserva
+            $reserva->mascotas = $nombresMascotas;
+        }
+
+        $this->vista('duenos/misReservas', ['reservas' => $reservas, 'resenas' => $resenas]);
     }
 }
