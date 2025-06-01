@@ -36,10 +36,10 @@ class Duenos extends Controlador
         }
 
         // Obtiene el ID del dueño desde la sesión
-        $duenoId = $_SESSION['usuario_id'];
+        $dueno_id = $_SESSION['usuario_id'];
 
         // Recupera los datos del perfil del dueño desde el modelo
-        $perfil = $this->duenoModelo->obtenerPerfilDueno($duenoId);
+        $perfil = $this->duenoModelo->obtenerPerfilDueno($dueno_id);
 
         // Renderiza la vista con los datos del perfil
         $this->vista('duenos/perfilPriv', $perfil);
@@ -56,9 +56,9 @@ class Duenos extends Controlador
 
         $errores = [];
         $entrada = [];
-        $duenoId = $_SESSION['usuario_id'];
+        $dueno_id = $_SESSION['usuario_id'];
         // Obtiene los datos actuales del dueño
-        $dueno = $this->duenoModelo->obtenerPerfilDueno($duenoId);
+        $dueno = $this->duenoModelo->obtenerPerfilDueno($dueno_id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Recoge y limpia los datos enviados por el formulario
@@ -76,7 +76,7 @@ class Duenos extends Controlador
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $temp = $_FILES['imagen']['tmp_name'];
                 $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
-                $nuevaRuta = "img/duenos/{$duenoId}.webp";
+                $nuevaRuta = "img/duenos/{$dueno_id}.webp";
                 $rutaCompleta = RUTA_APP . '/../' . $nuevaRuta;
 
                 // Verifica que el formato de imagen sea válido
@@ -137,7 +137,7 @@ class Duenos extends Controlador
             // Si no hay errores, actualiza los datos en la base de datos
             if (empty($errores)) {
                 $entrada = [
-                    'id' => $duenoId,
+                    'id' => $dueno_id,
                     'nombre' => trim($_POST['nombre']),
                     'imagen' => $imagenFinal
                 ];
@@ -249,5 +249,41 @@ class Duenos extends Controlador
         }
 
         $this->vista('duenos/misReservas', ['reservas' => $reservas, 'resenas' => $resenas]);
+    }
+
+    public function factura($reserva_id)
+    {
+        if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'dueno') {
+            redireccionar('/autenticacion');
+        }
+
+        $dueno_id = $_SESSION['usuario_id'];
+
+        // Obtener la factura desde la BD
+        $factura = $this->duenoModelo->obtenerFactura($reserva_id);
+        if (!$factura) {
+            redireccionar('/duenos/misReservas');
+        }
+
+        // Verificar que la reserva pertenece al dueño autenticado
+        $reserva = $this->reservaModelo->obtenerReservaPorId($reserva_id);
+        if (!$reserva || $reserva->duenio_id != $dueno_id) {
+            redireccionar('/duenos/misReservas');
+        }
+
+        // Ruta física al archivo
+        $rutaFisica = RUTA_PUBLIC . $factura->archivo_pdf_url;
+
+        if (!file_exists($rutaFisica)) {
+            var_dump($rutaFisica);
+            die("El archivo PDF no existe.");
+        }
+
+        // Mostrar el PDF en el navegador
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="' . basename($factura->archivo_pdf_url) . '"');
+        header('Content-Length: ' . filesize($rutaFisica));
+        readfile($rutaFisica);
+        exit;
     }
 }

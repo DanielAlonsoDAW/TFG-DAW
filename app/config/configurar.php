@@ -18,3 +18,6 @@ define('RUTA_URL', 'http://localhost/TFG-DAW');
 
 // Nombre del sitio
 define('NOMBRE_SITIO', 'Guarderia Patitas ');
+
+// Ruta absoluta al directorio public
+define('RUTA_PUBLIC', dirname(dirname(__DIR__)) . '/public');

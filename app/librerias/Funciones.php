@@ -295,53 +295,30 @@ function getIcono($tipo)
     }
 }
 
-function calcularDistanciaKm($origen, $destino)
+function getServicioTipoCoste($servicio)
 {
+    $servicio = strtolower($servicio);
+    $tipoCoste = '';
 
-    $coorOrigen = geocodificar($origen);
-    $coorDestino = geocodificar($destino);
-
-    if (!$coorOrigen || !$coorDestino) {
-        return null;
+    switch ($servicio) {
+        case 'taxi':
+            $tipoCoste = "Kilómetros";
+            break;
+        case 'alojamiento':
+            $tipoCoste = "Noches";
+            break;
+        case 'guardería de día':
+            $tipoCoste = "Días";
+            break;
+        case 'paseos':
+            $tipoCoste = "Paseos";
+            break;
+        case 'cuidado a domicilio':
+        case 'visitas a domicilio':
+            $tipoCoste = "Visitas";
+            break;
     }
-
-    $apiKey = getenv('ORS_API_KEY');
-    if (!$apiKey) {
-        return null;
-    }
-
-    $body = [
-        "coordinates" => [
-            [(float)$coorOrigen['lon'], (float)$coorOrigen['lat']],
-            [(float)$coorDestino['lon'], (float)$coorDestino['lat']]
-        ]
-    ];
-
-    $ch = curl_init("https://api.openrouteservice.org/v2/directions/driving-car/geojson");
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => [
-            'Authorization: ' . $apiKey,
-            'Content-Type: application/json'
-        ],
-        CURLOPT_POSTFIELDS => json_encode($body)
-    ]);
-
-    $response = curl_exec($ch);
-    $curlError = curl_error($ch);
-    curl_close($ch);
-
-    if ($response === false) {
-        return null;
-    }
-
-    $data = json_decode($response, true);
-    if (isset($data['features'][0]['properties']['summary']['distance'])) {
-        return $data['features'][0]['properties']['summary']['distance'] / 1000;
-    }
-
-    return null;
+    return $tipoCoste;
 }
 
 function comprobarFecha_Cancelacion($fecha_inicio)

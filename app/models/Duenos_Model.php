@@ -35,4 +35,19 @@ class Duenos_Model
         $this->db->bind(':id', $id);
         return $this->db->registro();
     }
+
+    public function guardarFactura($reserva_id, $archivo_url)
+    {
+        $this->db->query("INSERT INTO patitas_facturas (reserva_id, archivo_pdf_url) VALUES (:reserva_id, :archivo_url)");
+        $this->db->bind(':reserva_id', $reserva_id);
+        $this->db->bind(':archivo_url', $archivo_url);
+        return $this->db->execute();
+    }
+
+    public function obtenerFactura($reserva_id)
+    {
+        $this->db->query("SELECT * FROM patitas_facturas WHERE reserva_id = :reserva_id");
+        $this->db->bind(':reserva_id', $reserva_id);
+        return $this->db->registro();
+    }
 }

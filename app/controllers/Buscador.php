@@ -163,7 +163,6 @@ class Buscador extends Controlador
                                 $c->precio_servicio = "{$precio}€/día";
                                 break;
                             case 'paseos':
-                            case 'paseo de perros':
                                 $c->precio_servicio = "{$precio}€/paseo";
                                 break;
                             case 'cuidado a domicilio':

@@ -1,11 +1,13 @@
 <?php
 
 require RUTA_APP . "/librerias/Funciones.php";
+require_once RUTA_APP . "/librerias/tfpdf/tfpdf.php";
 class Reservas extends Controlador
 {
     private $reservaModelo;
     private $cuidadorModelo;
     private $mascotaModelo;
+    private $duenoModelo;
     public function __construct()
     {
         session_start();
@@ -13,6 +15,7 @@ class Reservas extends Controlador
         $this->reservaModelo = $this->modelo('Reservas_Model');
         $this->cuidadorModelo = $this->modelo('Cuidadores_Model');
         $this->mascotaModelo = $this->modelo('Mascotas_Model');
+        $this->duenoModelo = $this->modelo('Duenos_Model');
     }
 
     public function crear($cuidador_id)
@@ -83,13 +86,14 @@ class Reservas extends Controlador
 
 
                 if ($esTaxi) {
-                    $distanciaKm = calcularDistanciaKm($datos['origen'], $datos['destino']);
+                    $distanciaKm = $this->calcularDistanciaKm($datos['origen'], $datos['destino']);
                     if ($distanciaKm === null) {
                         $errores[] = "No se pudo calcular la distancia para el servicio Taxi.";
                     } else {
                         $tarifaPorKm     = $precioBase;
                         $suplementoFijo  = 10.00;
                         $total           = $suplementoFijo + ($tarifaPorKm * $distanciaKm * $mascotasExtra);
+                        $datos['distancia_km'] = $distanciaKm;
                     }
                 } else {
                     $dias = calcularDiferenciaFechas($datos['fecha_inicio'], $datos['fecha_fin']);
@@ -101,11 +105,144 @@ class Reservas extends Controlador
             }
 
             if (empty($errores)) {
-                $reservaId = $this->reservaModelo->crearReserva($datos, $total);
+                $reserva_id = $this->reservaModelo->crearReserva($datos, $total);
 
                 foreach ($datos['mascotas'] as $mascotaId) {
-                    $this->reservaModelo->asociarMascota($reservaId, $mascotaId);
+                    $this->reservaModelo->asociarMascota($reserva_id, $mascotaId);
                 }
+
+                // Obtener datos del dueño y cuidador
+                $duenio = $this->duenoModelo->obtenerPerfilDueno($datos['duenio_id']);
+                $cuidador = $this->cuidadorModelo->obtenerPerfilCuidador($cuidador_id);
+
+                // Calcular subtotal, IVA y total
+                $subtotal = round($total / 1.21, 2);
+                $iva = round($total - $subtotal, 2);
+                $total_con_iva = $total;
+
+                // Crear la carpeta si no existe
+                $rutaFactura = RUTA_PUBLIC . "/facturas/00" . $datos['duenio_id'];
+                if (!file_exists($rutaFactura)) {
+                    mkdir($rutaFactura, 0777, true);
+                }
+
+                // Nombre del archivo
+                $nombreArchivo = "$rutaFactura/INV$reserva_id.pdf";
+
+                // Crear PDF
+                // Inicializa el documento PDF con soporte UTF-8
+                $pdf = new TFPDF();
+                $pdf->AddPage();
+                $pdf->AddFont('DejaVu', '', 'DejaVuSansMono.ttf', true);
+                $pdf->AddFont('DejaVu-Bold', '', 'DejaVuSansMono-Bold.ttf', true);
+                $pdf->SetTextColor(0, 91, 92);
+
+                // Encabezado con la fecha y número de factura
+                $pdf->SetXY(10, 10);
+                $pdf->SetFont('DejaVu-Bold', '', 10);
+                $pdf->Cell(15, 5, 'Fecha:', 0, 0);
+                $pdf->SetFont('DejaVu', '', 10);
+                $pdf->Cell(0, 5,  date('d/m/Y'), 0, 1);
+                $pdf->SetFont('DejaVu-Bold', '', 10);
+                $pdf->Cell(25, 5, 'Factura Nº:', 0, 0);
+                $pdf->SetFont('DejaVu', '', 10);
+                $pdf->Cell(0, 5, 'INV' . $reserva_id, 0, 1);
+
+                // Logotipo y datos de la empresa
+                $pdf->Image(RUTA_PUBLIC . '/img/logo.png', 160, 10, 30);
+                $pdf->SetXY(160, 45);
+                $pdf->MultiCell(50, 5, "Guardería Patitas S.L.\nCIF: B12345678\nP.º del Prior, 97\n26004 Logroño, La Rioja", 0, 'L');
+
+                // Título principal
+                $pdf->SetFont('DejaVu-Bold', '', 16);
+                $pdf->SetXY(10, 25);
+                $pdf->Cell(0, 10, 'Factura de Reserva', 0, 1, 'C');
+
+                // Información del cliente
+                $pdf->SetXY(10, 45);
+                $pdf->SetFont('DejaVu-Bold', '', 10);
+                $pdf->Cell(20, 5, 'Dueño:', 0, 0);
+                $pdf->SetFont('DejaVu', '', 10);
+                $pdf->Cell(100, 5, $duenio->nombre, 0, 1);
+                $pdf->SetFont('DejaVu-Bold', '', 10);
+                $pdf->Cell(20, 5, 'Cuidador:', 0, 0);
+                $pdf->SetFont('DejaVu', '', 10);
+                $pdf->Cell(100, 5, $cuidador->nombre, 0, 1);
+
+                // Cabecera de los detalles de la reserva
+                $tipoCoste = getServicioTipoCoste($datos['servicio']);
+                $startX = 10;
+                $startY = 100;
+                $altoCelda = 6;
+                $anchosCols = [
+                    'servicio' => 45,
+                    'fechas' => 50,
+                    'detalleCoste' => 25,
+                    'mascotas' => 25,
+                    'subtotal' => 25,
+                ];
+                $sumaPrimeras4 = $anchosCols['servicio'] + $anchosCols['fechas'] + $anchosCols['detalleCoste'] + $anchosCols['mascotas'];
+
+                // Encabezado de la tabla
+                $pdf->SetFont('DejaVu-Bold', '', 11);
+                $pdf->SetXY($startX, $startY);
+                $pdf->Cell($anchosCols['servicio'], $altoCelda, 'Servicio', 0, 0, 'L');
+                $pdf->Cell($anchosCols['fechas'], $altoCelda, 'Fechas de Servicio', 0, 0, 'L');
+                $pdf->Cell($anchosCols['detalleCoste'], $altoCelda, $tipoCoste, 0, 0, 'L');
+                $pdf->Cell($anchosCols['mascotas'], $altoCelda, 'Mascotas', 0, 0, 'L');
+                $pdf->Cell($anchosCols['subtotal'], $altoCelda, 'Coste', 0, 1, 'C');
+
+                // Línea divisoria
+                $pdf->Line($startX, $pdf->GetY(), $startX + array_sum($anchosCols), $pdf->GetY());
+                $pdf->Ln(2);
+
+                // Fila de datos
+                $pdf->SetFont('DejaVu', '', 10);
+                $pdf->SetX($startX);
+                $pdf->Cell($anchosCols['servicio'], $altoCelda, $datos['servicio'], 0, 0, 'L');
+                $fechaInicio = date('d/m/Y', strtotime($datos['fecha_inicio']));
+                $fechaFin = date('d/m/Y', strtotime($datos['fecha_fin']));
+                $fechas = ($datos['servicio'] === 'Taxi') ? $fechaInicio : "$fechaInicio - $fechaFin";
+                $pdf->Cell($anchosCols['fechas'], $altoCelda, $fechas, 0, 0, 'L');
+                $detalleCoste = ($tipoCoste === 'Kilómetros') ? number_format($datos['distancia_km'], 2) . ' km' : (isset($dias) ? $dias : '-');
+                $pdf->Cell($anchosCols['detalleCoste'], $altoCelda, $detalleCoste, 0, 0, 'C');
+                $numeroMascotas = count($datos['mascotas']);
+                $pdf->Cell($anchosCols['mascotas'], $altoCelda, $numeroMascotas, 0, 0, 'C');
+                $pdf->Cell($anchosCols['subtotal'], $altoCelda, number_format($subtotal, 2) . '€', 0, 1, 'R');
+
+                // Fila del IVA
+                $pdf->SetFont('DejaVu-Bold', '', 10);
+                $pdf->SetXY(($startX + $sumaPrimeras4) - 15, $pdf->GetY());
+                $pdf->Cell($anchosCols['subtotal'], $altoCelda, 'IVA 21%:', 0, 0, 'L');
+                $pdf->SetFont('DejaVu', '', 10);
+                $numText = number_format($iva, 2) . '€';
+                $anchoNum = $pdf->GetStringWidth($numText);
+                $pdf->SetXY($startX + $sumaPrimeras4 + $anchosCols['subtotal'] - ($anchoNum + 2), $pdf->GetY());
+                $pdf->Cell($anchoNum, $altoCelda, $numText, 0, 1, 'L');
+                $pdf->SetFont('DejaVu-Bold', '', 10);
+
+                // Fila del Total
+                $pdf->SetXY(($startX + $sumaPrimeras4) - 15, $pdf->GetY());
+                $pdf->Cell($anchosCols['subtotal'], $altoCelda, 'Total:', 0, 0, 'L');
+                $pdf->SetFont('DejaVu', '', 10);
+                $numText = number_format($total_con_iva, 2) . '€';
+                $anchoNum = $pdf->GetStringWidth($numText);
+                $pdf->SetXY($startX + $sumaPrimeras4 + $anchosCols['subtotal'] - ($anchoNum + 2), $pdf->GetY());
+                $pdf->Cell($anchoNum, $altoCelda, $numText, 0, 1, 'L');
+
+                // Mensaje final
+                $pdf->Ln(10);
+                $pdf->SetFont('DejaVu', '', 10);
+                $pdf->SetTextColor(100, 100, 100);
+                $pdf->Cell(0, 6, 'Gracias por confiar en Guardería Patitas. ¡Nos vemos pronto!', 0, 1, 'C');
+
+                // Guardar el archivo
+                $pdf->Output('F', $nombreArchivo);
+
+                $archivoPublicUrl = "/facturas/00{$datos['duenio_id']}/INV{$reserva_id}.pdf";
+
+                // Guardar factura en la base de datos
+                $this->duenoModelo->guardarFactura($reserva_id, $archivoPublicUrl);
 
                 redireccionar('/duenos/misReservas');
             }
@@ -154,9 +291,9 @@ class Reservas extends Controlador
         }
     }
 
-    public function cancelar($id_reserva)
+    public function cancelar($reserva_id)
     {
-        $reserva = $this->reservaModelo->obtenerReservaPorId($id_reserva);
+        $reserva = $this->reservaModelo->obtenerReservaPorId($reserva_id);
 
         if ($_SESSION['grupo'] == 'dueno') {
             // Si el usuario es dueño, comprobar que la reserva pertenece al dueño
@@ -165,7 +302,7 @@ class Reservas extends Controlador
                 redireccionar('/duenos/misReservas');
             }
             // Cancelar la reserva
-            $this->reservaModelo->cancelarReserva($id_reserva);
+            $this->reservaModelo->cancelarReserva($reserva_id);
 
             redireccionar('/duenos/misReservas');
         } else {
@@ -174,9 +311,9 @@ class Reservas extends Controlador
         }
     }
 
-    public function rechazar($id_reserva)
+    public function rechazar($reserva_id)
     {
-        $reserva = $this->reservaModelo->obtenerReservaPorId($id_reserva);
+        $reserva = $this->reservaModelo->obtenerReservaPorId($reserva_id);
 
         if ($_SESSION['grupo'] == 'cuidador') {
             if (!$reserva || $reserva->cuidador_id != $_SESSION['usuario_id'] || comprobarFecha_Cancelacion($reserva->fecha_inicio)) {
@@ -185,7 +322,7 @@ class Reservas extends Controlador
             }
 
             // Rechazar la reserva
-            $this->reservaModelo->rechazarReserva($id_reserva);
+            $this->reservaModelo->rechazarReserva($reserva_id);
 
             redireccionar('/cuidadores/misReservas');
         } else {
@@ -194,9 +331,9 @@ class Reservas extends Controlador
         }
     }
 
-    public function completar($id_reserva)
+    public function completar($reserva_id)
     {
-        $reserva = $this->reservaModelo->obtenerReservaPorId($id_reserva);
+        $reserva = $this->reservaModelo->obtenerReservaPorId($reserva_id);
 
         if ($_SESSION['grupo'] == 'cuidador') {
             if (!$reserva || $reserva->cuidador_id != $_SESSION['usuario_id'] || comprobarFecha_Cancelacion($reserva->fecha_inicio)) {
@@ -205,12 +342,78 @@ class Reservas extends Controlador
             }
 
             // Completar la reserva
-            $this->reservaModelo->completarReserva($id_reserva);
+            $this->reservaModelo->completarReserva($reserva_id);
 
             redireccionar('/cuidadores/misReservas');
         } else {
             // Si el usuario no es cuidador, redireccionar
             redireccionar('/autenticacion');
         }
+    }
+
+    private function calcularDistanciaKm($origen, $destino)
+    {
+        $coorOrigen = $this->geocodificar($origen);
+        $coorDestino = $this->geocodificar($destino);
+
+        if (!$coorOrigen || !$coorDestino) {
+            return null;
+        }
+
+        $apiKey = getenv('ORS_API_KEY');
+        if (!$apiKey) {
+            return null;
+        }
+
+        $body = [
+            "coordinates" => [
+                [(float)$coorOrigen['lon'], (float)$coorOrigen['lat']],
+                [(float)$coorDestino['lon'], (float)$coorDestino['lat']]
+            ]
+        ];
+
+        $ch = curl_init("https://api.openrouteservice.org/v2/directions/driving-car/geojson");
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: ' . $apiKey,
+                'Content-Type: application/json'
+            ],
+            CURLOPT_POSTFIELDS => json_encode($body)
+        ]);
+
+        $response = curl_exec($ch);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($response === false) {
+            return null;
+        }
+
+        $data = json_decode($response, true);
+        if (isset($data['features'][0]['properties']['summary']['distance'])) {
+            return $data['features'][0]['properties']['summary']['distance'] / 1000;
+        }
+
+        return null;
+    }
+
+    private function geocodificar($direccion)
+    {
+        if (empty($direccion)) {
+            return null;
+        }
+        $url = "https://nominatim.openstreetmap.org/search?format=json&q=" . urlencode($direccion);
+        $opts = [
+            "http" => [
+                "header" => "User-Agent: MiAppPHP/1.0\r\n"
+            ]
+        ];
+        $context = stream_context_create($opts);
+        $json = @file_get_contents($url, false, $context);
+        if (!$json) return null;
+        $res = json_decode($json, true);
+        return $res[0] ?? null;
     }
 }

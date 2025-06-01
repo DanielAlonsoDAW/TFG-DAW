@@ -38,7 +38,7 @@
                             <td><?= date('d/m/Y', strtotime($reserva->fecha_inicio)) ?> - <?= date('d/m/Y', strtotime($reserva->fecha_fin)) ?></td>
                             <td><?= ucfirst($reserva->estado) ?></td>
                             <td><?= number_format($reserva->total, 2) ?>€</td>
-                            <td class="text-center"><a href="<?= RUTA_URL ?>/reservas/factura/<?= $reserva->id ?>" class="btn btn-secondary-custom btn-sm" target="_blank">Ver Factura</a></td>
+                            <td class="text-center"><a href="<?= RUTA_URL ?>/duenos/factura/<?= $reserva->id ?>" class="btn btn-secondary-custom btn-sm" target="_blank">Ver Factura</a></td>
                             <td class="text-center">
                                 <?php if ($reserva->estado === 'confirmada'): ?>
                                     <!-- Botón para cancelar la reserva -->
