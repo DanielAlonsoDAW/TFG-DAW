@@ -22,7 +22,7 @@
         <form method="POST" action="" novalidate>
             <!-- Calificación con estrellas -->
             <div class="mb-4">
-                <label class="form-label d-block">Calificación</label>
+                <label class="form-label d-block">Valoración</label>
                 <div id="rating-stars" class="d-flex gap-2">
                     <?php for ($i = 1; $i <= 5; $i++): ?>
                         <i class="bi <?= ($datos['calificacion'] >= $i) ? 'bi-star-fill' : 'bi-star' ?> text-warning"
