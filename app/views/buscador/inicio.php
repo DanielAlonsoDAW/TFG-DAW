@@ -7,9 +7,7 @@ $tamanoArray = $datos['tamano'] ?? [];
 ?>
 <!-- Hoja de estilos y scripts para Leaflet (mapa interactivo) -->
 <link rel="stylesheet" href="js/leaflet/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 <script src="js/leaflet/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 <div id="cabecera-buscador">
     <div class="container my-4">
@@ -21,10 +19,17 @@ $tamanoArray = $datos['tamano'] ?? [];
                 <div class="col-12 col-md-6">
                     <input id="input-ciudad" name="ciudad" type="text" class="form-control" placeholder="Ubicación" value="<?= htmlspecialchars($datos['ciudad']) ?>" />
                 </div>
-                <!-- Campo de fecha -->
+
+                <!-- Selección de servicio -->
                 <div class="col-12 col-md-6">
-                    <input type="date" name="fecha" class="form-control" value="<?= htmlspecialchars($datos['fecha']) ?>" />
+                    <select name="servicio" class="form-select">
+                        <option disabled value="">Servicio</option>
+                        <?php foreach (["Alojamiento", "Paseos", "Guardería de día", "Visitas a domicilio", "Cuidado a domicilio", "Taxi"] as $s): ?>
+                            <option value="<?= $s ?>" <?= $datos['servicio'] === $s ? 'selected' : '' ?>><?= $s ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
+
                 <!-- Selección de tipo de mascota -->
                 <div class="col-12 col-md-6 text-center">
                     <label class="form-label mb-3">Tipo de mascota</label>
@@ -37,15 +42,7 @@ $tamanoArray = $datos['tamano'] ?? [];
                         <label class="btn btn-gato" for="mascota-gato"><i class="fa-solid fa-cat"></i> Gato</label>
                     </div>
                 </div>
-                <!-- Selección de servicio -->
-                <div class="col-12 col-md-6">
-                    <select name="servicio" class="form-select">
-                        <option disabled value="">Servicio</option>
-                        <?php foreach (["Alojamiento", "Paseos", "Guardería de día", "Visitas a domicilio", "Cuidado a domicilio", "Taxi"] as $s): ?>
-                            <option value="<?= $s ?>" <?= $datos['servicio'] === $s ? 'selected' : '' ?>><?= $s ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+
                 <!-- Selección de tamaño del perro (solo si corresponde) -->
                 <div class="col-8 col-md-6 <?= empty(array_filter($tamanoArray, fn($t) => $t['tipo'] === 'perro')) ? 'd-none' : '' ?>" id="bloque-tamano-perro">
                     <label class="form-label d-block mb-2">Tamaño del perro</label>

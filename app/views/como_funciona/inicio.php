@@ -11,8 +11,8 @@ require RUTA_APP . '/views/inc/header.php';
     <div class="step">
         <h4>1. Busca un cuidador cerca de ti</h4>
         <p>
-            Introduce tu ubicación, el tipo de mascota (perro o gato), el servicio
-            que necesitas y las fechas. Verás una lista de cuidadores disponibles
+            Introduce tu ubicación, el tipo de mascota (perro o gato) y el servicio
+            que necesitas. Verás una lista de cuidadores disponibles
             en tu zona.
         </p>
     </div>

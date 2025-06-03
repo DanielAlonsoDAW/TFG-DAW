@@ -42,18 +42,18 @@ require RUTA_APP . '/views/inc/header.php';
 
         <div class="info-section">
             <h4>🔹 Crea tu perfil</h4>
-            <p>Completa tu perfil con tus experiencias, tipos de mascotas que aceptas, disponibilidad, ubicación, servicios, tarifas y fotos.</p>
+            <p>Completa tu perfil con tus experiencias, tipos de mascotas que aceptas, información sobre tus queridas mascotas, disponibilidad, ubicación, servicios y tarifas</p>
         </div>
 
         <div class="info-section">
             <h4>🔹 Recibe solicitudes</h4>
-            <p>Los dueños te encontrarán por ubicación y servicios. Puedes aceptar o rechazar solicitudes según tu disponibilidad.
+            <p>Los dueños te encontrarán por ubicación y servicios. Puedes rechazar solicitudes si te surge un imprevisto y no estas disponible.
             <p>
         </div>
 
         <div class="info-section">
             <h4>🔹 Brinda el servicio</h4>
-            <p>Recibe a las mascotas, comunícate con los dueños desde la plataforma, y cuida con cariño a cada peludo que confíen en ti.
+            <p>Recibe a las mascotas y cuida con cariño a cada peludo para que confíen en ti.
             <p>
         </div>
 

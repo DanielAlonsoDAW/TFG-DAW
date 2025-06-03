@@ -24,9 +24,17 @@ require RUTA_APP . "/librerias/Funciones.php";
                         <input id="input-ciudad" name="ciudad" type="text" class="form-control" placeholder="Ubicación" />
                     </div>
 
-                    <!-- Fecha -->
+                    <!-- Servicio -->
                     <div class="col-12 col-md-6">
-                        <input type="date" name="fecha" class="form-control" />
+                        <select name="servicio" class="form-select">
+                            <option selected disabled value="">Servicio</option>
+                            <option value="Alojamiento">Alojamiento</option>
+                            <option value="Paseos">Paseo de perros</option>
+                            <option value="Guardería de día">Guardería de día</option>
+                            <option value="Visitas a domicilio">Visitas a domicilio</option>
+                            <option value="Cuidado a domicilio">Cuidado a domicilio</option>
+                            <option value="Taxi">Taxi</option>
+                        </select>
                     </div>
 
                     <!-- Tipo de mascota -->
@@ -45,18 +53,6 @@ require RUTA_APP . "/librerias/Funciones.php";
                         </div>
                     </div>
 
-                    <!-- Servicio -->
-                    <div class="col-12 col-md-6">
-                        <select name="servicio" class="form-select">
-                            <option selected disabled value="">Servicio</option>
-                            <option value="Alojamiento">Alojamiento</option>
-                            <option value="Paseos">Paseo de perros</option>
-                            <option value="Guardería de día">Guardería de día</option>
-                            <option value="Visitas a domicilio">Visitas a domicilio</option>
-                            <option value="Cuidado a domicilio">Cuidado a domicilio</option>
-                            <option value="Taxi">Taxi</option>
-                        </select>
-                    </div>
                     <!-- Tamaño del animal para Perro -->
                     <div class="col-8 col-md-6 d-none" id="bloque-tamano-perro">
                         <label class="form-label d-block mb-2">Tamaño del perro</label>

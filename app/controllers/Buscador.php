@@ -12,7 +12,6 @@ class Buscador extends Controlador
     public function index()
     {
         $ciudad   = $_POST['ciudad']        ?? $_GET['ciudad']        ?? '';
-        $fecha    = $_POST['fecha']         ?? $_GET['fecha']         ?? '';
         $servicio = $_POST['servicio']      ?? $_GET['servicio']      ?? '';
 
         if (isset($_POST['tipo_mascota'])) {
@@ -31,7 +30,6 @@ class Buscador extends Controlador
 
         $datos = [
             'ciudad'        => $ciudad,
-            'fecha'         => $fecha,
             'servicio'      => $servicio,
             'tipo_mascota'  => $tipos,
             'tamano'        => $tamano,
