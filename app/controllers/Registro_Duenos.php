@@ -51,7 +51,7 @@ class Registro_Duenos extends Controlador
                     'contrasena' => $contrasena,
                 ];
 
-                if ($this->registroModelo->agregarDueno($datos, 'patitas_duenos')) {
+                if ($this->registroModelo->agregarUsuario($datos, 'patitas_duenos')) {
                     redireccionar('/home');
                 } else {
                     die("No se pudo realizar el alta");
