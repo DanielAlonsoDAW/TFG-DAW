@@ -398,9 +398,10 @@ class Mascotas extends Controlador
 
                 foreach ($imagenes as $imagen) {
                     $rutaImagen = $imagen->imagen;
+                    $rutaAbsoluta = RUTA_APP . '/../public/' . $rutaImagen;
 
-                    if (file_exists($rutaImagen)) {
-                        unlink($rutaImagen);
+                    if (file_exists($rutaAbsoluta)) {
+                        unlink($rutaAbsoluta);
                     }
                 }
                 redireccionar('/mascotas/inicio');

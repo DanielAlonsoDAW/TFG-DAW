@@ -19,8 +19,21 @@ class Duenos_Model
     public function actualizarDatos($datos)
     {
         $this->db->query("UPDATE patitas_duenos 
-                      SET nombre = :nombre, telefono = :telefono, imagen = :imagen 
+                      SET nombre = :nombre, imagen = :imagen 
                       WHERE id = :id");
+
+        foreach ($datos as $campo => $valor) {
+            $this->db->bind(":$campo", $valor);
+        }
+
+        return $this->db->execute();
+    }
+
+    public function actualizarAccesos($datos)
+    {
+        $this->db->query("UPDATE patitas_duenos 
+        SET email = :email, contrasena = :contrasena
+        WHERE id = :id");
 
         foreach ($datos as $campo => $valor) {
             $this->db->bind(":$campo", $valor);

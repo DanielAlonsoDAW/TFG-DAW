@@ -1,7 +1,4 @@
-<?php require RUTA_APP . '/views/inc/header.php';
-$entrada = $datos['entrada'] ?? [];
-$errores = $datos['errores'] ?? [];
-?>
+<?php require RUTA_APP . '/views/inc/header.php'; ?>
 
 <div class="container mt-5 mb-5">
   <h2 class="section-title">Editar Datos</h2>
@@ -10,26 +7,26 @@ $errores = $datos['errores'] ?? [];
 
       <div class="mb-3">
         <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" class="form-control" value="<?= $entrada['nombre'] ?? $datos['datos']->nombre ?>">
-        <div class="text-danger" id="error-nombre"><?= $errores['nombre'] ?? '' ?></div>
+        <input type="text" id="nombre" name="nombre" class="form-control" value="<?= $datos['entrada']['nombre'] ?? $datos['datos']->nombre ?>">
+        <div class="text-danger" id="error-nombre"><?= $datos['errores']['nombre'] ?? '' ?></div>
       </div>
 
       <div class="mb-3">
         <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" class="form-control" value="<?= $entrada['direccion'] ?? $datos['datos']->direccion ?>">
-        <div class="text-danger" id="error-direccion"><?= $errores['direccion'] ?? '' ?></div>
+        <input type="text" id="direccion" name="direccion" class="form-control" value="<?= $datos['entrada']['direccion'] ?? $datos['datos']->direccion ?>">
+        <div class="text-danger" id="error-direccion"><?= $datos['errores']['direccion'] ?? '' ?></div>
       </div>
 
       <div class="mb-3">
         <label for="ciudad">Ciudad:</label>
-        <input type="text" id="ciudad" name="ciudad" class="form-control" value="<?= $entrada['ciudad'] ?? $datos['datos']->ciudad ?>">
-        <div class="text-danger" id="error-ciudad"><?= $errores['ciudad'] ?? '' ?></div>
+        <input type="text" id="ciudad" name="ciudad" class="form-control" value="<?= $datos['entrada']['ciudad'] ?? $datos['datos']->ciudad ?>">
+        <div class="text-danger" id="error-ciudad"><?= $datos['errores']['ciudad'] ?? '' ?></div>
       </div>
 
       <div class="mb-3">
         <label for="pais">País:</label>
-        <input type="text" id="pais" name="pais" class="form-control" value="<?= $entrada['pais'] ?? $datos['datos']->pais ?>">
-        <div class="text-danger" id="error-pais"><?= $errores['pais'] ?? '' ?></div>
+        <input type="text" id="pais" name="pais" class="form-control" value="<?= $datos['entrada']['pais'] ?? $datos['datos']->pais ?>">
+        <div class="text-danger" id="error-pais"><?= $datos['errores']['pais'] ?? '' ?></div>
       </div>
 
       <div class="mb-3">
@@ -40,7 +37,7 @@ $errores = $datos['errores'] ?? [];
       <div class="mb-3">
         <label for="imagen">Subir nueva imagen:</label>
         <input type="file" id="imagen" name="imagen" class="form-control">
-        <div class="text-danger" id="error-imagen"><?= $errores['imagen'] ?? '' ?></div>
+        <div class="text-danger" id="error-imagen"><?= $datos['errores']['imagen'] ?? '' ?></div>
       </div>
 
       <div class="text-center mt-5">

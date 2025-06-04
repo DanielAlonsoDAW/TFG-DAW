@@ -1,7 +1,4 @@
-<?php require RUTA_APP . '/views/inc/header.php';
-$entrada = $datos['entrada'] ?? [];
-$errores = $datos['errores'] ?? [];
-?>
+<?php require RUTA_APP . '/views/inc/header.php'; ?>
 
 <div class="container mt-5 mb-5">
     <h2 class="section-title">Editar Datos</h2>
@@ -10,8 +7,8 @@ $errores = $datos['errores'] ?? [];
 
             <div class="mb-3">
                 <label for="nombre">Nombre: </label>
-                <input type="text" id="nombre" name="nombre" class="form-control" value="<?= $entrada['nombre'] ?? $datos['dueno']->nombre ?>" placeholder="Nombre*">
-                <div class="text-danger" id="error-nombre"><?= $errores['nombre'] ?? '' ?></div>
+                <input type="text" id="nombre" name="nombre" class="form-control" value="<?= $datos['entrada']['nombre'] ?? $datos['dueno']->nombre ?>" placeholder="Nombre*">
+                <div class="text-danger" id="error-nombre"><?= $datos['errores']['nombre'] ?? '' ?></div>
             </div>
 
             <div class="mb-3">
@@ -22,7 +19,7 @@ $errores = $datos['errores'] ?? [];
             <div class="mb-3">
                 <label for="imagen">Subir nueva imagen:</label>
                 <input type="file" id="imagen" name="imagen" class="form-control">
-                <div class="text-danger" id="error-imagen"><?= $errores['imagen'] ?? '' ?></div>
+                <div class="text-danger" id="error-imagen"><?= $datos['errores']['imagen'] ?? '' ?></div>
             </div>
 
             <div class="text-center mt-5">

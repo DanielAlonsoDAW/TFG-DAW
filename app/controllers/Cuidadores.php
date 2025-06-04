@@ -224,8 +224,8 @@ class Cuidadores extends Controlador
                 $errores['pais'] = "País obligatorio.";
             }
 
-            if (empty($_FILES['imagenes']['name'][0])) {
-                $errores['imagenes'] = 'Sube al menos una imagen.';
+            if (empty($_FILES['imagen']['name'][0])) {
+                $errores['imagen'] = 'Sube al menos una imagen.';
             }
 
             $imagenFinal = $datos->imagen;
@@ -234,9 +234,8 @@ class Cuidadores extends Controlador
                 $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
                 // Construimos la ruta 
                 $nuevaRuta = "img/cuidadores/{$id}.webp";
-
                 if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
-                    $rutaCompleta = RUTA_APP . '/../' . $nuevaRuta;
+                    $rutaCompleta = RUTA_APP . '/../public/' . $nuevaRuta;
 
                     // 1) Carga la imagen original en GD
                     switch ($ext) {
@@ -294,9 +293,9 @@ class Cuidadores extends Controlador
 
             if (formularioErrores(...array_values($errores))) {
 
-                $direccionNueva = trim($_POST['direccion']);
-                $ciudadNueva = trim($_POST['ciudad']);
-                $paisNuevo = trim($_POST['pais']);
+                $direccionNueva = test_input($_POST['direccion']);
+                $ciudadNueva = test_input($_POST['ciudad']);
+                $paisNuevo = test_input($_POST['pais']);
 
                 $lat = $datos->lat;
                 $lng = $datos->lng;

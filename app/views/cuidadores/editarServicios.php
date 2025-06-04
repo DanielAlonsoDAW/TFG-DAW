@@ -11,7 +11,7 @@ $tamanosGato = array_column($gatoActivo, 'tamano');
 
 <div class="container mt-5 mb-5">
   <h2 class="section-title">Editar Servicios Ofrecidos</h2>
-  <div class="formulario-container col-12 col-md-8 col-lg-6">
+  <div class="formulario-container col-12 col-md-8 col-lg-7">
     <!-- Formulario para editar los servicios ofrecidos por el cuidador -->
     <form method="POST">
       <!-- Campo para el número máximo de mascotas al día -->

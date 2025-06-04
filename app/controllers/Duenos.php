@@ -61,13 +61,9 @@ class Duenos extends Controlador
         $dueno = $this->duenoModelo->obtenerPerfilDueno($dueno_id);
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Recoge y limpia los datos enviados por el formulario
-            $entrada = [
-                'nombre' => trim($_POST['nombre']),
-            ];
 
             // Validación del campo nombre
-            if (empty($entrada['nombre'])) {
+            if (!comprobarDatos($_POST['nombre'])) {
                 $errores['nombre'] = 'El nombre es obligatorio.';
             }
 
@@ -77,10 +73,10 @@ class Duenos extends Controlador
                 $temp = $_FILES['imagen']['tmp_name'];
                 $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
                 $nuevaRuta = "img/duenos/{$dueno_id}.webp";
-                $rutaCompleta = RUTA_APP . '/../' . $nuevaRuta;
 
                 // Verifica que el formato de imagen sea válido
                 if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
+                    $rutaCompleta = RUTA_APP . '/../public/' . $nuevaRuta;
                     // Crea el recurso de imagen según el tipo
                     switch ($ext) {
                         case 'jpg':
@@ -93,8 +89,6 @@ class Duenos extends Controlador
                         case 'webp':
                             $imagen = imagecreatefromwebp($temp);
                             break;
-                        default:
-                            $imagen = false;
                     }
 
                     if ($imagen) {
@@ -138,7 +132,7 @@ class Duenos extends Controlador
             if (empty($errores)) {
                 $entrada = [
                     'id' => $dueno_id,
-                    'nombre' => trim($_POST['nombre']),
+                    'nombre' => test_input($_POST['nombre']),
                     'imagen' => $imagenFinal
                 ];
 

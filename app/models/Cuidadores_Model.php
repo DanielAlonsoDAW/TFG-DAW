@@ -134,14 +134,32 @@ class Cuidadores_Model
     }
 
     /**
-     * Actualiza los datos de acceso (nombre, email, contraseña) de un cuidador.
+     * Actualiza los datos de acceso (email, contraseña) de un cuidador.
      * @param array $datos
      * @return bool
      */
     public function actualizarAccesos($datos)
     {
         $this->db->query("UPDATE patitas_cuidadores 
-        SET nombre = :nombre, email = :email, contrasena = :contrasena
+        SET email = :email, contrasena = :contrasena
+        WHERE id = :id");
+
+        foreach ($datos as $campo => $valor) {
+            $this->db->bind(":$campo", $valor);
+        }
+
+        return $this->db->execute();
+    }
+
+    /**
+     * Actualiza los datos de acceso (email, contraseña) de un cuidador.
+     * @param array $datos
+     * @return bool
+     */
+    public function actualizarEmail($datos)
+    {
+        $this->db->query("UPDATE patitas_cuidadores 
+        SET email = :email
         WHERE id = :id");
 
         foreach ($datos as $campo => $valor) {
@@ -159,7 +177,7 @@ class Cuidadores_Model
     public function actualizarDatosCuidador($datos)
     {
         $this->db->query("UPDATE patitas_cuidadores 
-        SET direccion = :direccion, ciudad = :ciudad, 
+        SET nombre = :nombre, direccion = :direccion, ciudad = :ciudad, 
             pais = :pais, imagen = :imagen, lat = :lat, lng = :lng
         WHERE id = :id");
 

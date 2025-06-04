@@ -7,21 +7,21 @@
 
             <div class=" mb-3">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" value="<?= $entrada['email'] ?? $datos['datos']->email ?>">
-                <div class="text-danger" id="error-email"><?= $errores['email'] ?? '' ?></div>
+                <input type="email" id="email" name="email" class="form-control" value="<?= $datos['entrada']['email'] ?? $datos['datos']->email ?>">
+                <div class="text-danger" id="error-email"><?= $datos['errores']['email'] ?? '' ?></div>
             </div>
 
             <div class="mb-3">
                 <label for="contrasena_actual">Contraseña actual:</label>
                 <input type="password" id="contrasena_actual" name="contrasena_actual" class="form-control">
-                <div class="text-danger" id="error-contrasena_actual"><?= $errores['contrasena_actual'] ?? '' ?></div>
+                <div class="text-danger" id="error-contrasena_actual"><?= $datos['errores']['contrasena_actual']  ?? '' ?></div>
             </div>
 
 
             <div class="mb-3">
                 <label for="contrasena">Contraseña:</label>
                 <input type="password" id="contrasena" name="contrasena" class="form-control">
-                <div class="text-danger" id="error-contrasena"><?= $errores['contrasena'] ?? '' ?></div>
+                <div class="text-danger" id="error-contrasena"></div>
             </div>
 
             <div class="text-center mt-4">
