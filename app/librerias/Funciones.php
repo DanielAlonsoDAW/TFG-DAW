@@ -155,9 +155,9 @@ function comprobarFecha($fecha)
     return true;
 }
 
-function comprobarFecha_Inicio($fecha_recogida)
+function comprobarFecha_Inicio($fecha_inicio)
 {
-    $fecha = date('Y-m-d', strtotime($fecha_recogida));
+    $fecha = date('Y-m-d', strtotime($fecha_inicio));
 
     if (!comprobarFecha($fecha)) {
         return false;
@@ -172,10 +172,10 @@ function comprobarFecha_Inicio($fecha_recogida)
     return true;
 }
 
-function comprobarFecha_Fin($fecha_recogida, $fecha_devolucion)
+function comprobarFecha_Fin($fecha_inicio, $fecha_fin)
 {
-    $fecha_inicial = date('Y-m-d', strtotime($fecha_recogida));
-    $fecha_final = date('Y-m-d', strtotime($fecha_devolucion));
+    $fecha_inicial = date('Y-m-d', strtotime($fecha_inicio));
+    $fecha_final = date('Y-m-d', strtotime($fecha_fin));
     if (!comprobarFecha($fecha_inicial)) return false;
     if (!comprobarFecha($fecha_final)) return false;
     $fecha_actual = date('Y-m-d');

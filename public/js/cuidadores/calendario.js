@@ -82,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const fechaCelda = new Date(info.date);
       fechaCelda.setHours(0, 0, 0, 0);
 
-      // Si es un día anterior a hoy, gris
-      if (fechaCelda < hoy) {
+      // Si es hoy o un día anterior marcar como no disponible
+      if (fechaCelda <= hoy) {
         info.el.style.backgroundColor = "#f0f0f0"; // gris claro
         info.el.style.color = "#999"; // texto gris atenuado
       }

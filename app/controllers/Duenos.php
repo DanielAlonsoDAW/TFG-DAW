@@ -269,7 +269,6 @@ class Duenos extends Controlador
         $rutaFisica = RUTA_PUBLIC . $factura->archivo_pdf_url;
 
         if (!file_exists($rutaFisica)) {
-            var_dump($rutaFisica);
             die("El archivo PDF no existe.");
         }
 
