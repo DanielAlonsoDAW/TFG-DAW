@@ -23,11 +23,16 @@
                 <tbody>
                     <?php foreach ($datos['reservas'] as $reserva): ?>
                         <tr>
+                            <!-- Nombre del cuidador -->
                             <td><?= htmlspecialchars($reserva->cuidador_nombre) ?></td>
+                            <!-- Tipo de servicio -->
                             <td><?= htmlspecialchars($reserva->servicio) ?></td>
+                            <!-- Fechas de la reserva -->
                             <td><?= date('d/m/Y', strtotime($reserva->fecha_inicio)) ?> - <?= date('d/m/Y', strtotime($reserva->fecha_fin)) ?></td>
+                            <!-- Número de mascotas -->
                             <td class="text-center"><?= isset($reserva->numero_mascotas) ? (int)$reserva->numero_mascotas : 0 ?></td>
                             <td class="text-center">
+                                <!-- Botón para ver mascotas asociadas a la reserva -->
                                 <button
                                     type="button"
                                     class="btn btn-secondary-custom btn-sm"
@@ -35,7 +40,7 @@
                                     data-bs-target="#mascotasModal<?= $reserva->id ?>">
                                     Ver Mascotas
                                 </button>
-                                <!-- Modal ver mascotas -->
+                                <!-- Modal para mostrar las mascotas de la reserva -->
                                 <div class="modal fade" id="mascotasModal<?= $reserva->id ?>" tabindex="-1" aria-labelledby="mascotasModalLabel<?= $reserva->id ?>" aria-hidden="true">
                                     <div class="modal-dialog modal-xl modal-dialog-centered">
                                         <div class="modal-content">
@@ -48,7 +53,7 @@
                                                     <div class="row">
                                                         <?php foreach ($reserva->mascotas as $idx => $mascota): ?>
                                                             <?php
-                                                            // Armar rutas completas de las imágenes
+                                                            // Construir rutas completas de las imágenes de la mascota
                                                             $imagenesMascota = array_map(function ($img) {
                                                                 return (str_starts_with($img->imagen, 'http') || str_starts_with($img->imagen, '//'))
                                                                     ? $img->imagen
@@ -59,14 +64,15 @@
                                                             <div class="col-8 col-md-6 col-lg-4 mb-4">
                                                                 <div class="card shadow-sm custom-card">
                                                                     <?php if ($thumb): ?>
+                                                                        <!-- Imagen principal de la mascota -->
                                                                         <img
                                                                             src="<?= htmlspecialchars($thumb) ?>"
                                                                             class="card-img-top mascota-thumb imagen-miniatura"
                                                                             data-id-mascota="<?= $mascota->id ?>"
                                                                             alt="Foto de <?= htmlspecialchars($mascota->nombre) ?>">
                                                                         <?php foreach ($imagenesMascota as $i => $src): ?>
-                                                                            <?php if ($i === 0) continue; // Oculta el resto, solo los usará el visor 
-                                                                            ?>
+                                                                            <?php if ($i === 0) continue; // Oculta el resto, solo los usará el visor ?>
+                                                                            <!-- Imágenes adicionales ocultas para el visor -->
                                                                             <img
                                                                                 src="<?= htmlspecialchars($src) ?>"
                                                                                 class="imagen-miniatura d-none"
@@ -74,6 +80,7 @@
                                                                                 alt="Imagen de <?= htmlspecialchars($mascota->nombre) ?>">
                                                                         <?php endforeach; ?>
                                                                     <?php else: ?>
+                                                                        <!-- Si no hay foto, mostrar mensaje -->
                                                                         <div class="bg-secondary text-white rounded-top d-flex align-items-center justify-content-center" style="height:150px;">
                                                                             Sin foto
                                                                         </div>
@@ -96,6 +103,7 @@
                                                         <?php endforeach; ?>
                                                     </div>
                                                 <?php else: ?>
+                                                    <!-- Si no hay mascotas asociadas -->
                                                     <div class="alert alert-warning">No hay mascotas asociadas a esta reserva.</div>
                                                 <?php endif; ?>
                                             </div>
@@ -103,10 +111,13 @@
                                     </div>
                                 </div>
                             </td>
+                            <!-- Estado de la reserva -->
                             <td><?= ucfirst($reserva->estado) ?></td>
+                            <!-- Total de la reserva -->
                             <td><?= number_format($reserva->total, 2) ?>€</td>
                             <td class="text-center">
                                 <?php
+                                // Calcular diferencia de fechas para mostrar acciones
                                 $hoy = date('Y-m-d');
                                 $fechaInicio = $reserva->fecha_inicio;
                                 $fechaFin = $reserva->fecha_fin;
@@ -114,14 +125,14 @@
                                 ?>
                                 <?php if ($reserva->estado === 'confirmada'): ?>
                                     <?php if ($diffFechas >= 2): ?>
-                                        <!-- Botón para cancelar la reserva -->
+                                        <!-- Botón para cancelar la reserva si faltan al menos 2 días -->
                                         <button type="button" class="btn btn-danger reserva-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $reserva->id ?>">
                                             Rechazar Reserva
                                         </button>
                                     <?php elseif ($diffFechas == 0 || $diffFechas == -1 && $hoy < $fechaFin): ?>
-                                        <!-- Celda vacía: no mostrar nada -->
+                                        <!-- No mostrar nada si la reserva está en curso -->
                                     <?php elseif ($hoy >= $fechaFin): ?>
-                                        <!-- Botón para completar la reserva -->
+                                        <!-- Botón para completar la reserva si ya ha finalizado -->
                                         <form action="<?= RUTA_URL ?>/reservas/completar/<?= $reserva->id ?>" method="post">
                                             <button type="submit" class="btn btn-primary reserva-primary btn-sm">Completar Reserva</button>
                                         </form>
@@ -138,11 +149,11 @@
                                     }
                                     ?>
                                     <?php if ($resena_existente): ?>
-                                        <!-- Botón para mostrar reseña -->
+                                        <!-- Botón para mostrar la reseña del dueño -->
                                         <button type="button" class="btn btn-resena-modal btn-sm" data-bs-toggle="modal" data-bs-target="#resenaModal<?= $resena_existente->id ?>">
                                             Mostrar Reseña
                                         </button>
-                                        <!-- Modal mostrar reseña -->
+                                        <!-- Modal para mostrar la reseña -->
                                         <div class="modal fade" id="resenaModal<?= $resena_existente->id ?>" tabindex="-1" aria-labelledby="resenaModalLabel<?= $resena_existente->id ?>" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
@@ -187,7 +198,7 @@
     <button class="visor-nav visor-next" onclick="imagenSiguiente()">&#10095;</button>
 </div>
 
-<!-- Modal confirmación rechazo -->
+<!-- Modal de confirmación para rechazar reserva -->
 <div class="modal fade" id="confirmarEliminacionModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">

@@ -1,5 +1,4 @@
 <?php
-// Incluye el header común de la aplicación
 require RUTA_APP . '/views/inc/header.php';
 ?>
 
