@@ -2,6 +2,7 @@
 
 require RUTA_APP . "/librerias/Funciones.php";
 require_once RUTA_APP . "/librerias/tfpdf/tfpdf.php";
+require_once RUTA_APP . "/librerias/email.php";
 
 // Definición del controlador Reservas
 class Reservas extends Controlador
@@ -125,7 +126,7 @@ class Reservas extends Controlador
                     }
 
                     // Obtener datos del dueño y cuidador
-                    $duenio = $this->duenoModelo->obtenerPerfilDueno($datos['duenio_id']);
+                    $dueno = $this->duenoModelo->obtenerPerfilDueno($datos['duenio_id']);
                     $cuidador = $this->cuidadorModelo->obtenerPerfilCuidador($cuidador_id);
 
                     // Calcular subtotal, IVA y total
@@ -176,7 +177,7 @@ class Reservas extends Controlador
                     $pdf->SetFont('DejaVu-Bold', '', 10);
                     $pdf->Cell(20, 5, 'Dueño:', 0, 0);
                     $pdf->SetFont('DejaVu', '', 10);
-                    $pdf->Cell(100, 5, $duenio->nombre, 0, 1);
+                    $pdf->Cell(100, 5, $dueno->nombre, 0, 1);
                     $pdf->SetFont('DejaVu-Bold', '', 10);
                     $pdf->Cell(20, 5, 'Cuidador:', 0, 0);
                     $pdf->SetFont('DejaVu', '', 10);
@@ -256,6 +257,30 @@ class Reservas extends Controlador
 
                     // Guardar factura en la base de datos
                     $this->duenoModelo->guardarFactura($reserva_id, $archivoPublicUrl);
+
+                    //Enviar correo con la factura
+                    $email = $dueno->email;
+                    $asunto = "Factura INV{$reserva_id} Guardería Patitas";
+                    // Listado de mascotas en un string separado por comas
+                    $nombresMascotas = implode(', ', array_map(function ($m) {
+                        return htmlspecialchars($m->nombre);
+                    }, $datos['mascotas']));
+
+                    $cuerpo = "
+                    <p>Estimado/a <strong>{$dueno->nombre}</strong>,</p>
+                    <p>Nos complace informarle que su reserva con el cuidador <strong>{$cuidador->nombre}</strong> ha sido confirmada con éxito.</p>
+                    <p><strong>Servicio contratado:</strong> {$datos['servicio']}</p>
+                    <p><strong>Fecha:</strong> {$fechas}</p>
+                    <p><strong>Mascotas:</strong> {$nombresMascotas}</p>
+                    <p><strong>Coste total:</strong> {$numText}</p>
+                    <p>Adjunto a este correo encontrará la factura correspondiente a su reserva.</p>
+                    <p>Le agradecemos la confianza depositada en <strong>Guardería Patitas</strong>. Si tiene cualquier consulta, no dude en responder a este mensaje.</p>
+                    <br>
+                    <p>Un cordial saludo,<br>
+                    El equipo de Guardería Patitas</p>";
+                    $adjunto = $nombreArchivo;
+
+                    mandarCorreo($email, $asunto, $cuerpo, $adjunto);
 
                     redireccionar('/duenos/misReservas');
                 }

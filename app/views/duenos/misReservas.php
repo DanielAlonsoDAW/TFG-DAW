@@ -1,4 +1,10 @@
-<?php require RUTA_APP . '/views/inc/header.php'; ?>
+<?php require RUTA_APP . '/views/inc/header.php';
+if (isset($_SESSION['mensaje_error'])) {
+    $error = addslashes($_SESSION['mensaje_error']);
+    echo "<script>console.error('$error');</script>";
+    unset($_SESSION['mensaje_error']);
+}
+?>
 
 <div class="container mt-5">
     <h2 class="section-title">Mis Reservas</h2>
@@ -40,11 +46,21 @@
                             <td><?= number_format($reserva->total, 2) ?>€</td>
                             <td class="text-center"><a href="<?= RUTA_URL ?>/duenos/factura/<?= $reserva->id ?>" class="btn btn-secondary-custom btn-sm" target="_blank">Ver Factura</a></td>
                             <td class="text-center">
+                                <?php
+                                $hoy = date('Y-m-d');
+                                $fechaInicio = $reserva->fecha_inicio;
+                                $fechaFin = $reserva->fecha_fin;
+                                $diffFechas = calcularDiferenciaFechas($hoy, $fechaInicio);
+                                ?>
                                 <?php if ($reserva->estado === 'confirmada'): ?>
-                                    <!-- Botón para cancelar la reserva -->
-                                    <button type="button" class="btn btn-danger reserva-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $reserva->id ?>">
-                                        Cancelar Reserva
-                                    </button>
+                                    <?php if ($diffFechas >= 2): ?>
+                                        <!-- Botón para cancelar la reserva -->
+                                        <button type="button" class="btn btn-danger reserva-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $reserva->id ?>">
+                                            Cancelar Reserva
+                                        </button>
+                                    <?php else: ?>
+                                        <!-- Celda vacía: no mostrar nada -->
+                                    <?php endif; ?>
                                 <?php endif; ?>
                                 <!-- Botón de añadir/editar reseña cuando el estado sea Finalizada -->
                                 <?php if ($reserva->estado === 'completada'): ?>

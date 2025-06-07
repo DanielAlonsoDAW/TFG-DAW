@@ -23,33 +23,6 @@ function comprobarDatos($datos)
     return true;
 }
 
-function comprobarDatosNoRequeridos($datos)
-{
-    if (!isset($datos)) return false;
-    return true;
-}
-
-function comprobarNumero($num)
-{
-    if (!isset($num)) return false;
-    if (empty($num)) return false;
-    if (is_numeric($num)) return true;
-}
-
-function comprobarNumeroNoRequerido($num)
-{
-    if (!isset($num)) return false;
-    if (!empty($num)) {
-        if (is_numeric($num)) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return true;
-    }
-}
-
 function formularioErrores(...$error)
 {
 
