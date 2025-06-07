@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const resumenDistancia = document.getElementById("resumen-distancia");
   const direccionOrigen = document.getElementById("direccion_origen");
   const direccionDestino = document.getElementById("direccion_destino");
+  const grupoFechaFin = document.getElementById("grupo_fecha_fin");
+  const fechaFinInput = document.getElementById("fecha_fin");
   let distanciaTaxiKm = 0; // Distancia calculada para el servicio de taxi
   let precioTaxiTotal = 0; // Precio total del taxi
 
@@ -142,6 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".ocultosTaxi").forEach((el) => {
       el.classList.toggle("visiblesTaxi", isTaxi);
     });
+
+    // Mostrar u ocultar el campo fecha_fin y manejar required
+    grupoFechaFin.style.display = isTaxi ? "none" : "block";
+    fechaFinInput.required = !isTaxi;
 
     // Añade o quita los atributos requeridos a las direcciones de origen y destino
     direccionOrigen.required = isTaxi;

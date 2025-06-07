@@ -50,6 +50,9 @@ class Reservas extends Controlador
                 ];
 
                 $esTaxi = $datos['servicio'] === 'Taxi';
+                if ($esTaxi) {
+                    $datos['fecha_fin'] = $datos['fecha_inicio'];
+                }
 
                 // Validaciones base de los campos obligatorios
                 if (

@@ -1,6 +1,5 @@
 <?php
 require RUTA_APP . '/views/inc/header.php';
-
 $cuidador = $datos['cuidador'] ?? [];
 $mascotas = $datos['mascotas'] ?? [];
 $precios = $datos['precios'] ?? [];
@@ -51,7 +50,7 @@ $precios = $datos['precios'] ?? [];
                         <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" required>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3" id="grupo_fecha_fin">
                         <label for="fecha_fin" class="form-label">Fecha fin:</label>
                         <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" required>
                     </div>

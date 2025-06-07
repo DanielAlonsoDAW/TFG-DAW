@@ -1,13 +1,17 @@
+// Espera a que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", function () {
+  // Obtiene referencias a los elementos del formulario y sus campos
   const form = document.getElementById("registroForm");
   const nombre = document.getElementById("nombre");
   const correo = document.getElementById("correo");
   const contrasena = document.getElementById("contrasena");
 
+  // Obtiene referencias a los spans de error
   const errorNombre = document.getElementById("error-nombre");
   const errorCorreo = document.getElementById("error-correo");
   const errorContraseña = document.getElementById("error-contrasena");
 
+  // Función para validar el campo nombre
   function validarNombre(campo, errorSpan) {
     if (campo.value.trim() === "") {
       campo.classList.add("is-invalid");
@@ -20,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Función para validar el campo correo
   function validarCorreo(campo, errorSpan) {
     const correoValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (campo.value.trim() === "") {
@@ -37,7 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // Función para validar el campo contraseña
   function validarContraseña(campo, errorSpan) {
+    // Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial
     const contraseñaValida =
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{8,}$/;
     if (campo.value.trim() === "") {
@@ -55,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Activar tooltips de Bootstrap
+  // Activa los tooltips de Bootstrap para los elementos que lo requieran
   const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]'
   );
@@ -63,36 +70,39 @@ document.addEventListener("DOMContentLoaded", function () {
     (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
   );
 
-  // Validar al cambiar el foco (blur)
+  // Valida el campo nombre al perder el foco
   nombre.addEventListener("blur", function () {
     validarNombre(nombre, errorNombre);
   });
 
+  // Valida el campo correo al perder el foco
   correo.addEventListener("blur", function () {
     validarCorreo(correo, errorCorreo);
   });
 
+  // Valida el campo contraseña al perder el foco
   contrasena.addEventListener("blur", function () {
     validarContraseña(contrasena, errorContraseña);
   });
 
-  // Validar dinámicamente al escribir en el campo de correo
+  // Valida dinámicamente el campo nombre al escribir en el campo correo
   correo.addEventListener("input", function () {
     validarNombre(nombre, errorNombre);
   });
 
-  // Validar dinámicamente al escribir en el campo de contrasena
+  // Valida dinámicamente los campos nombre y correo al escribir en el campo contraseña
   contrasena.addEventListener("input", function () {
     validarNombre(nombre, errorNombre);
     validarCorreo(correo, errorCorreo);
   });
 
-  // Validar campos al pulsar en submit
+  // Valida todos los campos al enviar el formulario
   form.addEventListener("submit", function (e) {
     const nombreValido = validarNombre(nombre, errorNombre);
     const correoValido = validarCorreo(correo, errorCorreo);
     const contraseñaValida = validarContraseña(contrasena, errorContraseña);
 
+    // Si algún campo no es válido, evita el envío del formulario
     if (!nombreValido || !correoValido || !contraseñaValida) {
       e.preventDefault();
     }

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1) Inicializar mapa y layerGroup
+  // Inicializa el mapa y el grupo de marcadores
   const map = L.map("map").setView([40.416775, -3.70379], 6);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }).addTo(map);
   const markerGroup = L.layerGroup().addTo(map);
 
-  // 2) Función para crear una tarjeta de cuidador
+  // Crea una tarjeta visual para mostrar la información de un cuidador
   function crearTarjeta(c) {
     const card = document.createElement("div");
     card.className = "card custom-card mb-3";
@@ -48,14 +48,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return card;
   }
 
-  // 3) Función para renderizar marcadores y sidebar
+  // Muestra los cuidadores en el sidebar y en el mapa
   function mostrarCuidadores(cuidadores) {
     const sidebar = document.querySelector(".sidebar-custom");
     sidebar.innerHTML =
       '<h5 class="text-primary-custom mb-4">Cuidadores disponibles</h5>';
     const frag = document.createDocumentFragment();
 
-    // Limpiar marcadores anteriores
+    // Limpia los marcadores anteriores del mapa
     markerGroup.clearLayers();
     const bounds = L.latLngBounds();
 
@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     sidebar.appendChild(frag);
 
+    // Ajusta el mapa para mostrar todos los marcadores
     if (bounds.isValid()) {
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
     } else {
@@ -81,9 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 4) Función para enviar el form por POST y procesar la respuesta
+  // Envía el formulario por POST y procesa la respuesta
   async function buscarConFiltros(form) {
-    // 4.1) Serializar JSON de tamaños
+    // Serializa los tamaños seleccionados en formato JSON
     const tamPerro = Array.from(
       form.querySelectorAll('input[name="tamano_perro[]"]:checked')
     ).map((cb) => ({ tipo: "perro", tamano: cb.value }));
@@ -95,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ...tamGato,
     ]);
 
-    // 4.2) Preparar FormData y hacer fetch
+    // Prepara el FormData y realiza la petición fetch
     const fd = new FormData(form);
     try {
       const res = await fetch(form.action, {
@@ -110,17 +111,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // 5) Listener único de submit
+  // Añade el listener al formulario para manejar el submit
   const form = document.querySelector("#form-filtros");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     buscarConFiltros(form);
   });
 
-  // 6) Ejecutar búsqueda inicial (sin filtros)
+  // Realiza la búsqueda inicial al cargar la página
   buscarConFiltros(form);
 
-  // 7) Lógica de toggle de tamaños y filtro de servicio
+  // Opciones de servicios disponibles según el tipo de mascota seleccionado
   const opcionesServicio = {
     todos: [
       "Alojamiento",
@@ -146,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const bloquePerro = document.getElementById("bloque-tamano-perro");
   const bloqueGato = document.getElementById("bloque-tamano-gato");
 
+  // Actualiza las opciones del select de servicios según la mascota seleccionada
   function actualizarOpcionesServicio() {
     const perro = chkPerro.checked;
     const gato = chkGato.checked;
@@ -153,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (perro && !gato) lista = opcionesServicio.perro;
     if (gato && !perro) lista = opcionesServicio.gato;
 
-    // Reconstruir el <select>
+    // Reconstruye el select de servicios
     const seleccionado = selectServicio.value;
     selectServicio.innerHTML =
       '<option disabled selected value="">Servicio</option>';
@@ -166,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (lista.includes(seleccionado)) selectServicio.value = seleccionado;
   }
 
+  // Muestra u oculta los bloques de tamaños según la mascota seleccionada
   function actualizarFormulario() {
     bloquePerro.classList.toggle("d-none", !chkPerro.checked);
     bloqueGato.classList.toggle("d-none", !chkGato.checked);
