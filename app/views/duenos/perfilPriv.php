@@ -1,6 +1,6 @@
-<?php 
+<?php
 // Incluimos el header común a todas las vistas
-require RUTA_APP . '/views/inc/header.php'; 
+require RUTA_APP . '/views/inc/header.php';
 ?>
 
 <div class="container mt-5 mb-5 perfil-contenedor">
@@ -55,7 +55,4 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 </div>
 
-<?php 
-// Incluimos el footer común a todas las vistas
-require RUTA_APP . '/views/inc/footer.php'; 
-?>
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>

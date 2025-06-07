@@ -1,42 +1,47 @@
-<?php
-// Cargamos el header previamente
-require RUTA_APP . '/views/inc/header.php';
-?>
+<?php require RUTA_APP . '/views/inc/header.php'; ?>
 
 <!-- Formulario de registro -->
 <div class="container my-5">
     <h1 class="section-title">¡Únete como cuidador!</h1>
     <p class="text-center">Completa el formulario para comenzar a ofrecer tus servicios como cuidador de mascotas.</p>
     <div class="formulario-container col-12 col-md-8 col-lg-6">
+        <!-- Formulario de registro de cuidadores -->
         <form action="<?php echo RUTA_URL; ?>/registro_cuidadores" method="POST" id="registroForm">
             <div class="mb-3">
+                <!-- Campo para el nombre completo -->
                 <label for="nombre" class="form-label">Nombre completo</label>
                 <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Tu nombre"
                     value="<?php if (isset($datos['correct']['nombre'])) echo $datos['correct']['nombre']; ?>" required />
+                <!-- Mensaje de error para el nombre -->
                 <span class="text-danger" id="error-nombre"><?php if (isset($datos['errors']['nombre'])) echo $datos['errors']['nombre']; ?></span>
             </div>
             <div class="mb-3">
+                <!-- Campo para el correo electrónico -->
                 <label for="correo" class="form-label">Correo electrónico</label>
                 <input type="email" name="email" class="form-control" id="correo" placeholder="tucorreo@ejemplo.com"
                     value="<?php if (isset($datos['correct']['email'])) echo $datos['correct']['email']; ?>" required />
+                <!-- Mensaje de error para el correo -->
                 <span class="text-danger" id="error-correo"><?php if (isset($datos['errors']['email'])) echo $datos['errors']['email']; ?></span>
             </div>
             <div class="mb-5">
+                <!-- Campo para la contraseña con tooltip de ayuda -->
                 <label for="contrasena" class="form-label">
                     Contraseña
                     <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
                         data-bs-title="La contrasena debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo."></i>
                 </label>
                 <input type="password" name="contrasena" class="form-control" id="contrasena" placeholder="Contraseña" required />
+                <!-- Mensaje de error para la contraseña -->
                 <span class="text-danger" id="error-contrasena"><?php if (isset($datos['errors']['contrasena'])) echo $datos['errors']['contrasena']; ?></span>
             </div>
             <div class="form group text-center">
+                <!-- Botón para enviar el formulario -->
                 <input type="submit" class="btn btn-primary px-5" value="Registrarme" />
             </div>
         </form>
     </div>
 
-    <!-- Explicación -->
+    <!-- Explicación del funcionamiento para cuidadores -->
     <div class="container mt-5 mb-5">
         <h2 class="section-title">¿Cómo funciona ser cuidador en Guardería Patitas?</h2>
 
@@ -65,6 +70,7 @@ require RUTA_APP . '/views/inc/header.php';
 
         <h2 class="section-title mt-5">Servicios que puedes ofrecer</h2>
 
+        <!-- Descripción de los servicios disponibles para cuidadores -->
         <div class="info-section">
             <h4>🏡 Alojamiento</h4>
             <p>
@@ -116,9 +122,7 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 </div>
 
+<!-- Script para validaciones o funcionalidades del formulario -->
 <script src="<?php echo RUTA_URL; ?>/public/js/registro.js"></script>
 
-<?php
-// Cargamos el footer al final de la página
-require RUTA_APP . '/views/inc/footer.php';
-?>
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>

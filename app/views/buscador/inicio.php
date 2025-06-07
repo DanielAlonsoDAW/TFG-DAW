@@ -1,5 +1,4 @@
 <?php
-// Incluye el header común de la aplicación
 require RUTA_APP . '/views/inc/header.php';
 
 // Obtiene el array de tamaños de mascota si existe
@@ -106,7 +105,4 @@ $tamanoArray = $datos['tamano'] ?? [];
 <!-- Script principal del buscador -->
 <script src="<?= RUTA_URL ?>/js/buscador.js"></script>
 
-<?php
-// Incluye el footer común de la aplicación
-require RUTA_APP . '/views/inc/footer.php';
-?>
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>

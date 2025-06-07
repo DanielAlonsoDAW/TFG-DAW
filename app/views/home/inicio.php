@@ -1,5 +1,4 @@
 <?php
-// Cargamos el header previamente
 require RUTA_APP . '/views/inc/header.php';
 require RUTA_APP . "/librerias/Funciones.php";
 ?>
@@ -169,7 +168,5 @@ require RUTA_APP . "/librerias/Funciones.php";
     </div>
 </div>
 <script src="<?php echo RUTA_URL; ?>\js\home.js"></script>
-<?php
-// Cargamos el footer al final de la página
-require RUTA_APP . '/views/inc/footer.php';
-?>
+
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>

@@ -1,5 +1,6 @@
 <?php
 require RUTA_APP . '/views/inc/header.php';
+// Obtener datos del cuidador, mascotas y precios desde el array $datos
 $cuidador = $datos['cuidador'] ?? [];
 $mascotas = $datos['mascotas'] ?? [];
 $precios = $datos['precios'] ?? [];
@@ -10,17 +11,23 @@ $precios = $datos['precios'] ?? [];
         <!-- Columna izquierda: Info del cuidador -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
+                <!-- Imagen del cuidador -->
                 <img src="<?= RUTA_URL . '/' . $cuidador->imagen ?>" class="img-fluid rounded shadow-sm cuidador-img-responsive mb-3" alt="Imagen cuidador">
                 <div class="card-body">
+                    <!-- Nombre del cuidador -->
                     <h4 class="text-primary-custom"><?= htmlspecialchars($cuidador->nombre) ?></h4>
+                    <!-- Ciudad y país -->
                     <p><strong><?= getIcono("location") ?> Ciudad:</strong> <?= htmlspecialchars($cuidador->ciudad) ?> (<?= htmlspecialchars($cuidador->pais) ?>)</p>
+                    <!-- Valoración del cuidador -->
                     <p><strong><?= getIcono("star") ?> Valoración:</strong>
                         <?= estrellasBootstrap($cuidador->promedio_calificacion ?? 0) ?>
                         (<?= number_format($cuidador->promedio_calificacion ?? 0, 1) ?>/5)
                     </p>
+                    <!-- Calendario de disponibilidad -->
                     <h4 class="text-primary-custom text-center mt-4">Disponibilidad</h4>
                     <div id="calendarioDisponibilidad" class="my-2" data-reservas='<?= json_encode($datos["reservas"]) ?>'
                         data-max-mascotas='<?= $datos["cuidador"]->max_mascotas_dia ?>'></div>
+                    <!-- Leyenda de disponibilidad -->
                     <div class="m-3 d-flex gap-3 align-items-center flex-wrap">
                         <span class="badge disponible">Disponible</span>
                         <span class="badge no-disponible">No disponible</span>
@@ -31,10 +38,11 @@ $precios = $datos['precios'] ?? [];
             </div>
         </div>
 
-        <!-- Columna central: Formulario -->
+        <!-- Columna central: Formulario de reserva -->
         <div class="col-md-4 mb-4">
             <div class="formulario-container">
                 <form id="formReserva" action="<?= RUTA_URL ?>/reservas/crear/<?= $cuidador->id ?>" method="POST">
+                    <!-- Selección de servicio -->
                     <div class="mb-3">
                         <label for="servicio" class="form-label">Servicio:</label>
                         <select name="servicio" id="servicio" class="form-select" required>
@@ -45,16 +53,19 @@ $precios = $datos['precios'] ?? [];
                         </select>
                     </div>
 
+                    <!-- Fecha de inicio -->
                     <div class="mb-3">
                         <label for="fecha_inicio" class="form-label">Fecha inicio:</label>
                         <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" required>
                     </div>
 
+                    <!-- Fecha de fin -->
                     <div class="mb-3" id="grupo_fecha_fin">
                         <label for="fecha_fin" class="form-label">Fecha fin:</label>
                         <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" required>
                     </div>
 
+                    <!-- Selección de mascotas -->
                     <div class="mb-3">
                         <label class="form-label">Mascotas:</label>
                         <div class="row">
@@ -71,6 +82,7 @@ $precios = $datos['precios'] ?? [];
                         </div>
                     </div>
 
+                    <!-- Campos adicionales para servicio de taxi -->
                     <div id="camposTaxi" class="ocultosTaxi">
                         <div class="mb-3">
                             <label for="direccion_origen" class="form-label">Dirección de recogida:</label>
@@ -95,6 +107,7 @@ $precios = $datos['precios'] ?? [];
                     <li class="list-group-item"><strong>Precio base por mascota: </strong><span id="resumen-precio-base">0.00€</span></li>
                     <li id="grupos-noches" class="list-group-item resumen-oculto"><strong>Noches de servicio:</strong> <span id="resumen-noches">0</span></li>
                     <li id="grupos-dias" class="list-group-item resumen-oculto"><strong>Días de servicio:</strong> <span id="resumen-dias">0</span></li>
+                    <!-- Resumen para servicio de taxi -->
                     <div id="resumenTaxiWrapper" class="ocultosTaxi">
                         <li id="grupo-distancia" class="list-group-item"><strong>Distancia estimada: </strong><span id="resumen-distancia">0.00 km</span></li>
                         <li id="grupo-taxi" class="list-group-item"><strong>Precio Taxi: </strong><span id="resumen-taxi">0.00€</span></li>
@@ -102,8 +115,10 @@ $precios = $datos['precios'] ?? [];
                     </div>
                     <li class="list-group-item"><strong>Total estimado:</strong> <span id="resumen-total">0.00€</span></li>
                 </ul>
+                <!-- Botón para enviar el formulario -->
                 <button type="submit" form="formReserva" class="btn btn-primary w-100">Reservar y Pagar</button>
             </div>
+            <!-- Mostrar errores si existen -->
             <?php if (!empty($datos['errores'])): ?>
                 <div class="alert alert-danger mt-5">
                     <ul class="mb-0">
@@ -117,7 +132,9 @@ $precios = $datos['precios'] ?? [];
     </div>
 </div>
 
+<!-- Variables y scripts para el formulario y calendario -->
 <script>
+    // Precios por servicio en formato JSON
     const preciosPorServicio = <?= json_encode($precios, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>;
     const RUTA_URL = "<?= RUTA_URL ?>";
 </script>

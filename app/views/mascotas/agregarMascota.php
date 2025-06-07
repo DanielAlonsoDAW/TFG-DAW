@@ -1,7 +1,4 @@
-<?php
-// Incluye el header común de la aplicación
-require RUTA_APP . '/views/inc/header.php';
-?>
+<?php require RUTA_APP . '/views/inc/header.php'; ?>
 
 <div class="container mt-5 mb-5">
     <h2 class="section-title">Añadir Nueva Mascota</h2>
@@ -92,7 +89,4 @@ require RUTA_APP . '/views/inc/header.php';
 <!-- Script personalizado para la lógica del formulario -->
 <script src="<?= RUTA_URL ?>/js/mascotas/agregar.js"></script>
 
-<?php
-// Incluye el footer común de la aplicación
-require RUTA_APP . '/views/inc/footer.php';
-?>
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>

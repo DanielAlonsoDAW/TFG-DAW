@@ -121,7 +121,4 @@ require RUTA_APP . '/views/inc/header.php';
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
 <script src="<?= RUTA_URL ?>/js/cuidadores/calendario.js"></script>
 
-<?php
-// Incluye el footer común de la aplicación
-require RUTA_APP . '/views/inc/footer.php';
-?>
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>

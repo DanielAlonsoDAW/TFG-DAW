@@ -1,5 +1,4 @@
-<?php 
-// Incluye el header común de la aplicación
+<?php
 require RUTA_APP . '/views/inc/header.php';
 
 // Variables recibidas desde el controlador
@@ -122,7 +121,4 @@ $imagenes = $datos['imagenes'];
 <!-- Script específico para la edición de mascotas -->
 <script src="<?= RUTA_URL ?>/js/mascotas/editar.js"></script>
 
-<?php 
-// Incluye el footer común de la aplicación
-require RUTA_APP . '/views/inc/footer.php'; 
-?>
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>

@@ -1,7 +1,4 @@
-<?php
-// Cargamos el header previamente
-require RUTA_APP . '/views/inc/header.php';
-?>
+<?php require RUTA_APP . '/views/inc/header.php'; ?>
 
 <!-- Título principal -->
 <div class="container my-5">
@@ -63,7 +60,4 @@ require RUTA_APP . '/views/inc/header.php';
     </div>
 </div>
 
-<?php
-// Cargamos el footer al final de la página
-require RUTA_APP . '/views/inc/footer.php';
-?>
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>

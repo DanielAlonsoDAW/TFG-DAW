@@ -93,7 +93,4 @@ require RUTA_APP . '/views/inc/header.php';
     <?php endif; ?>
 </div>
 
-<?php
-// Incluye el footer común de la aplicación
-require RUTA_APP . '/views/inc/footer.php';
-?>
+<?php require RUTA_APP . '/views/inc/footer.php'; ?>
