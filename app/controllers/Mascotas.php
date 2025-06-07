@@ -1,36 +1,47 @@
 <?php
 require_once RUTA_APP . '/librerias/Funciones.php';
+
+// Controlador para la gestión de mascotas
 class Mascotas extends Controlador
 {
     private $mascotaModelo;
+
+    // Constructor: inicia sesión, carga modelo y verifica autenticación
     public function __construct()
     {
         session_start();
         $this->mascotaModelo = $this->modelo('Mascotas_Model');
 
+        // Redirige si el usuario no está autenticado
         if (!isset($_SESSION['usuario'])) {
             redireccionar('/autenticacion');
         }
     }
 
+    // Muestra la lista de mascotas del usuario autenticado
     public function index()
     {
         $tipo  = $_SESSION['grupo'];
         $id    = $_SESSION['usuario_id'];
         $mascotas = $this->mascotaModelo->obtenerMascotas($tipo, $id);
+
+        // Añade las imágenes de cada mascota
         foreach ($mascotas as $m) {
             $m->imagenes = $this->mascotaModelo->obtenerImagenes($m->id);
         }
+
+        // Carga la vista con los datos
         $this->vista('mascotas/inicio', ['mascotas' => $mascotas]);
     }
 
+    // Agrega una nueva mascota al sistema
     public function agregarMascota()
     {
-        // Cargar razas desde los CSV
+        // Cargar razas desde los archivos CSV
         $razasPerro = array_map('str_getcsv', file(RUTA_APP . '/models/api-dog.csv'));
         $razasGato  = array_map('str_getcsv', file(RUTA_APP . '/models/api-cat.csv'));
 
-        // Quitar encabezado y reestructurar
+        // Quitar encabezado y reestructurar arrays
         array_shift($razasPerro);
         array_shift($razasGato);
 
@@ -45,8 +56,9 @@ class Mascotas extends Controlador
             $gatos[$r[1]] = $r[2];
         }
 
+        // Si el formulario fue enviado
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // 1) Sanear entrada con test_input()
+            // Sanear entrada del usuario
             $entrada = [
                 'nombre'        => test_input($_POST['nombre']        ?? ''),
                 'tipo'          => $_POST['tipo']                     ?? '',
@@ -56,7 +68,7 @@ class Mascotas extends Controlador
                 'observaciones' => test_input($_POST['observaciones'] ?? ''),
             ];
 
-            // 2) Inicializar array de errores
+            // Inicializar array de errores
             $errores = [
                 'nombre'   => '',
                 'tipo'     => '',
@@ -66,7 +78,7 @@ class Mascotas extends Controlador
                 'imagenes' => '',
             ];
 
-            // 3) Validaciones usando mis funciones
+            // Validaciones de los campos
             if (!comprobarDatos($entrada['nombre'])) {
                 $errores['nombre'] = 'El nombre es obligatorio.';
             }
@@ -89,7 +101,7 @@ class Mascotas extends Controlador
                 $errores['imagenes'] = 'Solo se permiten JPG, PNG o WEBP.';
             }
 
-            // Comprobar si la raza indicada coinciede con el tamaño en el csv
+            // Comprobar si la raza coincide con el tamaño según CSV
             $raza = $entrada['raza'];
             $tamanoIngresado = $entrada['tamano'];
 
@@ -103,7 +115,7 @@ class Mascotas extends Controlador
                 }
             }
 
-            // 4) Si no hay errores, procesar alta
+            // Si no hay errores, procesar el alta de la mascota
             if (formularioErrores(...array_values($errores))) {
                 $entrada['propietario_tipo'] = $_SESSION['grupo'];
                 $entrada['propietario_id']   = $_SESSION['usuario_id'];
@@ -111,13 +123,13 @@ class Mascotas extends Controlador
                 // Insertar mascota y obtener su ID
                 $idMascota = $this->mascotaModelo->insertarMascota($entrada);
 
-                // Directorio de subida
+                // Directorio de subida de imágenes
                 $uploadsDir = __DIR__ . '/../../public/img/mascotas/';
                 if (!is_dir($uploadsDir)) {
                     mkdir($uploadsDir, 0755, true);
                 }
 
-                // Procesar cada imagen
+                // Procesar cada imagen subida
                 $index = 1;
                 foreach ($_FILES['imagenes']['tmp_name'] as $i => $tmpName) {
                     if ($_FILES['imagenes']['error'][$i] !== UPLOAD_ERR_OK) {
@@ -129,7 +141,7 @@ class Mascotas extends Controlador
                     $fileName     = "{$idMascota}_{$index}.webp";
                     $rutaCompleta = $uploadsDir . $fileName;
 
-                    // 1) Carga GD según extensión
+                    // Cargar imagen según extensión usando GD
                     switch ($ext) {
                         case 'jpg':
                         case 'jpeg':
@@ -150,11 +162,11 @@ class Mascotas extends Controlador
                         break;
                     }
 
-                    // 2) Exporta a WebP calidad 80
+                    // Exportar a WebP calidad 80
                     imagewebp($img, $rutaCompleta, 80);
                     imagedestroy($img);
 
-                    // 3) Si >1MB, redimensiona al 50%
+                    // Si la imagen es mayor a 1MB, redimensionar al 50%
                     if (filesize($rutaCompleta) > 1024 * 1024) {
                         list($w, $h) = getimagesize($rutaCompleta);
                         $nw = (int)($w / 2);
@@ -167,23 +179,22 @@ class Mascotas extends Controlador
                         imagedestroy($tmp2);
                         imagedestroy($res);
 
-                        // 4) Si sigue >1MB, error definitivo
+                        // Si sigue siendo mayor a 1MB, mostrar error
                         if (filesize($rutaCompleta) > 1024 * 1024) {
                             $errores['imagenes'] = 'Imagen demasiado pesada (>1MB tras redimensionar).';
                             break;
                         }
                     }
 
-                    // 5) Insertar URL en BD
+                    // Insertar URL de la imagen en la base de datos
                     $url = "img/mascotas/{$fileName}";
                     $this->mascotaModelo->insertarImagen($idMascota, $url);
                     $index++;
                 }
 
-                // Si hubo error de imágenes, mostraremos formulario de nuevo
+                // Si hubo error de imágenes, mostrar formulario de nuevo
                 if ($errores['imagenes'] !== '') {
-
-                    // borrar registro de BD y archivos parciales, opcional
+                    // Opcional: borrar registro de BD y archivos parciales
                     $this->vista('mascotas/agregarMascota', [
                         'entrada' => $entrada,
                         'errores' => $errores,
@@ -193,10 +204,11 @@ class Mascotas extends Controlador
                     return;
                 }
 
+                // Redirigir a la lista de mascotas tras el alta
                 redireccionar('/mascotas');
             }
 
-            // 5) Si hay errores de validación, volvemos al formulario
+            // Si hay errores de validación, volver al formulario
             $this->vista('mascotas/agregarMascota', [
                 'entrada' => $entrada,
                 'errores' => $errores,
@@ -204,6 +216,7 @@ class Mascotas extends Controlador
                 'razasGato'  => $gatos
             ]);
         } else {
+            // Vista inicial del formulario de alta
             $this->vista('mascotas/agregarMascota', [
                 'entrada' => [],
                 'errores' => [],
@@ -213,13 +226,14 @@ class Mascotas extends Controlador
         }
     }
 
+    // Edita los datos de una mascota existente
     public function editarMascotas($id_mascota)
     {
-        // Cargar razas desde los CSV
+        // Cargar razas desde los archivos CSV
         $razasPerro = array_map('str_getcsv', file(RUTA_APP . '/models/api-dog.csv'));
         $razasGato  = array_map('str_getcsv', file(RUTA_APP . '/models/api-cat.csv'));
 
-        // Quitar encabezado y reestructurar
+        // Quitar encabezado y reestructurar arrays
         array_shift($razasPerro);
         array_shift($razasGato);
 
@@ -234,8 +248,9 @@ class Mascotas extends Controlador
             $gatos[$r[1]] = $r[2];
         }
 
-        // Obtener la mascota a editar
+        // Si el formulario fue enviado (POST)
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Recoger y sanear la entrada del usuario
             $entrada = [
                 'id'             => $_POST['id'],
                 'nombre'         => test_input($_POST['nombre'] ?? ''),
@@ -248,6 +263,7 @@ class Mascotas extends Controlador
                 'propietario_id'   => $_POST['propietario_id'] ?? ''
             ];
 
+            // Inicializar array de errores
             $errores = [
                 'nombre' => '',
                 'tipo' => '',
@@ -257,6 +273,7 @@ class Mascotas extends Controlador
                 'imagenes' => ''
             ];
 
+            // Validaciones de los campos
             if (!comprobarDatos($entrada['nombre'])) {
                 $errores['nombre'] = 'El nombre es obligatorio.';
             }
@@ -272,11 +289,12 @@ class Mascotas extends Controlador
             if (!in_array($entrada['tamano'], ['pequeño', 'mediano', 'grande'], true)) {
                 $errores['tamano'] = 'Selecciona un tamaño.';
             }
+            // Validar imágenes solo si se suben nuevas
             if (!empty($_FILES['nuevas_imagenes']['name'][0]) && !comprobarImagenesSubidas($_FILES['nuevas_imagenes'])) {
                 $errores['imagenes'] = 'Solo se permiten imágenes JPG, PNG o WEBP.';
             }
 
-            // Comprobar si la raza indicada coinciede con el tamaño en el csv
+            // Comprobar si la raza coincide con el tamaño según CSV
             $raza = $entrada['raza'];
             $tamanoIngresado = $entrada['tamano'];
 
@@ -290,17 +308,19 @@ class Mascotas extends Controlador
                 }
             }
 
-            // Si no hay errores
+            // Si no hay errores, actualizar mascota y procesar imágenes
             if (formularioErrores(...array_values($errores))) {
+                // Actualizar datos de la mascota en la base de datos
                 $this->mascotaModelo->actualizarMascota($entrada);
 
-                // Procesar nuevas imágenes si las hay
+                // Procesar nuevas imágenes si se han subido
                 if (!empty($_FILES['nuevas_imagenes']['name'][0])) {
                     $uploadsDir = __DIR__ . '/../../public/img/mascotas/';
                     if (!is_dir($uploadsDir)) {
                         mkdir($uploadsDir, 0755, true);
                     }
 
+                    // Calcular el índice para el nombre de la imagen
                     $index = count($this->mascotaModelo->obtenerImagenes($entrada['id'])) + 1;
                     foreach ($_FILES['nuevas_imagenes']['tmp_name'] as $i => $tmpName) {
                         if ($_FILES['nuevas_imagenes']['error'][$i] !== UPLOAD_ERR_OK) continue;
@@ -309,6 +329,7 @@ class Mascotas extends Controlador
                         $fileName = "{$entrada['id']}_{$index}.webp";
                         $rutaCompleta = $uploadsDir . $fileName;
 
+                        // Cargar imagen según extensión usando GD
                         switch ($ext) {
                             case 'jpg':
                             case 'jpeg':
@@ -326,9 +347,11 @@ class Mascotas extends Controlador
 
                         if (!$img) continue;
 
+                        // Exportar a WebP calidad 80
                         imagewebp($img, $rutaCompleta, 80);
                         imagedestroy($img);
 
+                        // Si la imagen es mayor a 1MB, redimensionar al 50%
                         if (filesize($rutaCompleta) > 1024 * 1024) {
                             list($w, $h) = getimagesize($rutaCompleta);
                             $nw = (int)($w / 2);
@@ -341,22 +364,25 @@ class Mascotas extends Controlador
                             imagedestroy($tmp2);
                             imagedestroy($res);
 
+                            // Si sigue siendo mayor a 1MB, eliminar la imagen
                             if (filesize($rutaCompleta) > 1024 * 1024) {
                                 unlink($rutaCompleta);
                                 continue;
                             }
                         }
 
+                        // Insertar URL de la imagen en la base de datos
                         $url = "public/img/mascotas/{$fileName}";
                         $this->mascotaModelo->insertarImagen($entrada['id'], $url);
                         $index++;
                     }
                 }
 
+                // Redirigir a la lista de mascotas tras la edición
                 redireccionar('/mascotas');
             }
 
-            // Si hay errores, recargar con los datos actuales + errores
+            // Si hay errores, recargar la vista con los datos actuales y errores
             $mascota = (object) $entrada;
             $imagenes = $this->mascotaModelo->obtenerImagenes($mascota->id);
             $this->vista('mascotas/editarMascotas', [
@@ -367,7 +393,7 @@ class Mascotas extends Controlador
                 'errores' => $errores
             ]);
         } else {
-            // Vista inicial
+            // Vista inicial: cargar datos actuales de la mascota
             $mascota = $this->mascotaModelo->obtenerMascotaPorId($id_mascota);
             $imagenes = $this->mascotaModelo->obtenerImagenes($id_mascota);
 
@@ -381,21 +407,26 @@ class Mascotas extends Controlador
         }
     }
 
+    // Elimina una mascota y sus imágenes asociadas
     public function eliminarMascota($id_mascota)
     {
+        // Obtener la mascota por su ID
         $mascota = $this->mascotaModelo->obtenerMascotaPorId($id_mascota);
 
+        // Si no existe, redirigir a la lista
         if (!$mascota) {
             redireccionar('/mascotas');
         }
 
         if ($mascota) {
+            // Obtener imágenes asociadas a la mascota
             $imagenes = $this->mascotaModelo->obtenerImagenes($id_mascota);
-            // Eliminar mascota de la base de datos
+
+            // Eliminar la mascota de la base de datos
             $resultado = $this->mascotaModelo->eliminarMascota($id_mascota);
 
             if ($resultado) {
-
+                // Eliminar archivos de imagen del sistema de archivos
                 foreach ($imagenes as $imagen) {
                     $rutaImagen = $imagen->imagen;
                     $rutaAbsoluta = RUTA_APP . '/../public/' . $rutaImagen;
@@ -404,6 +435,7 @@ class Mascotas extends Controlador
                         unlink($rutaAbsoluta);
                     }
                 }
+                // Redirigir tras eliminar correctamente
                 redireccionar('/mascotas/inicio');
             } else {
                 // Manejar error de eliminación
@@ -412,6 +444,7 @@ class Mascotas extends Controlador
             }
         }
 
+        // Redirigir en caso de cualquier otro escenario
         redireccionar('/mascotas');
     }
 }

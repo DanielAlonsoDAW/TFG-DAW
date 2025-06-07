@@ -3,11 +3,13 @@ class Reservas_Model
 {
     private $db;
 
+    // Constructor: Inicializa la conexión a la base de datos
     public function __construct()
     {
         $this->db = new DataBase;
     }
 
+    // Cuenta el número total de mascotas confirmadas para un cuidador en un rango de fechas
     public function contarMascotasConfirmadas($cuidador_id, $inicio, $fin)
     {
         $this->db->query("SELECT SUM(numero_mascotas) as total FROM patitas_reservas 
@@ -19,6 +21,7 @@ class Reservas_Model
         return $this->db->registro()->total ?? 0;
     }
 
+    // Obtiene el máximo de mascotas que puede cuidar un cuidador por día
     public function obtenerMaxMascotasCuidador($cuidador_id)
     {
         $this->db->query("SELECT max_mascotas_dia FROM patitas_cuidadores WHERE id = :id");
@@ -26,6 +29,7 @@ class Reservas_Model
         return $this->db->registro()->max_mascotas_dia;
     }
 
+    // Crea una nueva reserva y retorna el ID insertado
     public function crearReserva($datos, $total)
     {
         $this->db->query("INSERT INTO patitas_reservas 
@@ -44,6 +48,7 @@ class Reservas_Model
         return $this->db->lastInsertId();
     }
 
+    // Asocia una mascota a una reserva
     public function asociarMascota($reserva_id, $mascota_id)
     {
         $this->db->query("INSERT INTO patitas_reserva_mascotas (reserva_id, mascota_id) VALUES (:res, :mas)");
@@ -52,6 +57,7 @@ class Reservas_Model
         $this->db->execute();
     }
 
+    // Obtiene todas las mascotas de un dueño
     public function obtenerMascotas($duenio_id)
     {
         $this->db->query("SELECT * FROM patitas_mascotas WHERE propietario_id = :id and propietario_tipo = 'dueno'");
@@ -59,6 +65,7 @@ class Reservas_Model
         return $this->db->registros();
     }
 
+    // Obtiene las reservas confirmadas de un cuidador agrupadas por fecha
     public function obtenerReservasConfirmadas($cuidador_id)
     {
         $this->db->query("
@@ -71,6 +78,7 @@ class Reservas_Model
         return $this->db->registros();
     }
 
+    // Verifica si el cuidador está ocupado por un servicio de cuidado a domicilio en un rango de fechas
     public function cuidadorOcupadoPorDomicilio($cuidador_id, $inicio, $fin)
     {
         $this->db->query("SELECT COUNT(*) as total FROM patitas_reservas 
@@ -84,6 +92,7 @@ class Reservas_Model
         return $this->db->registro()->total > 0;
     }
 
+    // Obtiene todas las reservas de un dueño
     public function obtenerReservasPorDueno($dueno_id)
     {
         $this->db->query("
@@ -97,6 +106,7 @@ class Reservas_Model
         return $this->db->registros();
     }
 
+    // Obtiene todas las reservas de un cuidador
     public function obtenerReservasPorCuidador($cuidador_id)
     {
         $this->db->query("
@@ -110,6 +120,7 @@ class Reservas_Model
         return $this->db->registros();
     }
 
+    // Obtiene las mascotas asociadas a una reserva
     public function obtenerMascotasDeReserva($reserva_id)
     {
         $this->db->query("SELECT reserva_id, mascota_id FROM patitas_reserva_mascotas WHERE reserva_id = :reserva_id");
@@ -117,6 +128,7 @@ class Reservas_Model
         return $this->db->registros();
     }
 
+    // Obtiene el precio de un servicio específico para un cuidador
     public function obtenerPrecioPorServicio($cuidador_id, $servicio)
     {
         $this->db->query("SELECT precio FROM patitas_cuidador_servicios 
@@ -126,6 +138,7 @@ class Reservas_Model
         return $this->db->registro()->precio ?? 0;
     }
 
+    // Obtiene una reserva por su ID
     public function obtenerReservaPorId($id_reserva)
     {
         $this->db->query("SELECT * FROM patitas_reservas WHERE id = :id");
@@ -133,6 +146,7 @@ class Reservas_Model
         return $this->db->registro();
     }
 
+    // Cancela una reserva (cambia su estado a 'cancelada')
     public function cancelarReserva($reserva_id)
     {
         $this->db->query("UPDATE patitas_reservas SET estado = 'cancelada' WHERE id = :id");
@@ -140,6 +154,7 @@ class Reservas_Model
         return $this->db->execute();
     }
 
+    // Rechaza una reserva (cambia su estado a 'rechazada')
     public function rechazarReserva($reserva_id)
     {
         $this->db->query("UPDATE patitas_reservas SET estado = 'rechazada' WHERE id = :id");
@@ -147,6 +162,7 @@ class Reservas_Model
         return $this->db->execute();
     }
 
+    // Completa una reserva (cambia su estado a 'completada')
     public function completarReserva($reserva_id)
     {
         $this->db->query("UPDATE patitas_reservas SET estado = 'completada' WHERE id = :id");

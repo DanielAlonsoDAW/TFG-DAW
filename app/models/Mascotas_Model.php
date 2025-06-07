@@ -1,12 +1,16 @@
 <?php
+// Modelo para gestionar las mascotas en la base de datos
 class Mascotas_Model
 {
     private $db;
+
+    // Constructor: inicializa la conexión a la base de datos
     public function __construct()
     {
         $this->db = new DataBase();
     }
 
+    // Obtiene todas las mascotas de un propietario según su tipo e id
     public function obtenerMascotas($propietario_tipo, $propietario_id)
     {
         $sql = "SELECT id, nombre, tipo, raza, edad, tamano, observaciones
@@ -19,6 +23,7 @@ class Mascotas_Model
         return $this->db->registros();
     }
 
+    // Obtiene los datos de una mascota por su id
     public function obtenerMascotaPorId($id)
     {
         $this->db->query("SELECT id, nombre, tipo, raza, edad, tamano, observaciones FROM patitas_mascotas WHERE id = :id");
@@ -26,6 +31,7 @@ class Mascotas_Model
         return $this->db->registro();
     }
 
+    // Obtiene las imágenes asociadas a una mascota
     public function obtenerImagenes($mascota_id)
     {
         $sql = "SELECT id, imagen 
@@ -36,6 +42,7 @@ class Mascotas_Model
         return $this->db->registros();
     }
 
+    // Inserta una nueva mascota en la base de datos y devuelve su id
     public function insertarMascota($datos)
     {
         $this->db->query("
@@ -56,6 +63,7 @@ class Mascotas_Model
         return $this->db->lastInsertId();
     }
 
+    // Inserta una imagen asociada a una mascota
     public function insertarImagen($mascota_id, $ruta)
     {
         $this->db->query("
@@ -67,6 +75,7 @@ class Mascotas_Model
         return $this->db->execute();
     }
 
+    // Actualiza los datos de una mascota existente
     public function actualizarMascota($datos)
     {
         $this->db->query("UPDATE patitas_mascotas 
@@ -85,6 +94,7 @@ class Mascotas_Model
         return $this->db->execute();
     }
 
+    // Elimina una mascota por su id
     public function eliminarMascota($id)
     {
         $this->db->query("DELETE FROM patitas_mascotas WHERE id = :id");
@@ -92,6 +102,7 @@ class Mascotas_Model
         return $this->db->execute();
     }
 
+    // Verifica si las mascotas pertenecen al propietario indicado
     public function mascotasValidas($mascotas, $propietario_id)
     {
         if (empty($mascotas)) {

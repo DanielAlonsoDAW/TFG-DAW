@@ -4,16 +4,20 @@ class Buscador_Model
 {
     private $db;
 
+    // Constructor: inicializa la conexión a la base de datos
     public function __construct()
     {
         $this->db = new DataBase();
     }
+
+    // Obtiene el nombre y la ciudad de todos los cuidadores
     public function obtenerCuidadores()
     {
         $this->db->query("SELECT nombre, ciudad FROM patitas_cuidadores");
         return $this->db->registros();
     }
 
+    // Obtiene información de los cuidadores junto con la media de sus valoraciones
     public function obtenerCuidadoresConMedia()
     {
         $sql = "SELECT c.id, c.nombre, c.ciudad, c.imagen, c.lat, c.lng,
@@ -26,6 +30,7 @@ class Buscador_Model
         return $this->db->registros();
     }
 
+    // Obtiene los servicios y precios que ofrece un cuidador específico
     public function obtenerServicios($id)
     {
         $sql = "SELECT servicio, precio
@@ -36,6 +41,7 @@ class Buscador_Model
         return $this->db->registros();
     }
 
+    // Obtiene los tipos y tamaños de mascotas que admite un cuidador específico
     public function obtenerTiposMascotas($id)
     {
         $sql = "SELECT tipo_mascota, tamano
@@ -46,6 +52,7 @@ class Buscador_Model
         return $this->db->registros();
     }
 
+    // Obtiene las reseñas de un cuidador específico, incluyendo el nombre del dueño
     public function obtenerResenas($id)
     {
         $sql = "SELECT r.comentario, r.calificacion, r.fecha_resena, d.nombre as duenio

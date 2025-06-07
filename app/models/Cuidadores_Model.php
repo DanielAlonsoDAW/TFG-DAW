@@ -264,6 +264,11 @@ class Cuidadores_Model
         return $this->db->execute();
     }
 
+    /**
+     * Obtiene los datos de un cuidador a partir del ID de una reserva.
+     * @param int $reserva_id
+     * @return mixed
+     */
     public function obtenerCuidadorPorReservaId($reserva_id)
     {
         $sql = "SELECT c.id, c.nombre, c.email, c.direccion, c.ciudad, c.pais, 

@@ -1,11 +1,16 @@
 <?php
 require RUTA_APP . "/librerias/Funciones.php";
+
+/**
+ * Controlador para la gestión de cuidadores.
+ */
 class Cuidadores extends Controlador
 {
     private $cuidadorModelo;
     private $reservaModelo;
     private $mascotaModelo;
     private $resenaModelo;
+
     /**
      * Constructor del controlador.
      * Inicia la sesión y carga los modelos necesarios.
@@ -19,46 +24,59 @@ class Cuidadores extends Controlador
         $this->resenaModelo = $this->modelo('Resenas_Model');
     }
 
+    /**
+     * Muestra el perfil público de un cuidador.
+     * @param int $id ID del cuidador a mostrar.
+     */
     public function perfil($id)
     {
+        // Obtiene los datos del cuidador por su ID
         $datosCuidador = $this->cuidadorModelo->obtenerPerfilCuidador($id);
-        $servicios = $this->cuidadorModelo->obtenerServicios($id);
-        $admite = $this->cuidadorModelo->obtenerTiposMascotas($id);
-        $resenas = $this->resenaModelo->obtenerResenasCuidador($id);
-        $mascotas = $this->cuidadorModelo->obtenerMascotasCuidador($id);
-        $reservas = $this->reservaModelo->obtenerReservasConfirmadas($id);
+        if ($datosCuidador) {
+            // Obtiene los servicios, tipos de mascotas admitidas, reseñas, mascotas y reservas confirmadas
+            $servicios = $this->cuidadorModelo->obtenerServicios($id);
+            $admite = $this->cuidadorModelo->obtenerTiposMascotas($id);
+            $resenas = $this->resenaModelo->obtenerResenasCuidador($id);
+            $mascotas = $this->cuidadorModelo->obtenerMascotasCuidador($id);
+            $reservas = $this->reservaModelo->obtenerReservasConfirmadas($id);
 
-        foreach ($servicios as $s) {
-            $precio = number_format($s->precio, 2);
+            // Formatea los precios de los servicios según el tipo
+            foreach ($servicios as $s) {
+                $precio = number_format($s->precio, 2);
 
-            switch (strtolower($s->servicio)) {
-                case 'taxi':
-                    $s->precio = "10€ + {$precio}€/km";
-                    break;
-                case 'alojamiento':
-                case 'cuidado a domicilio':
-                    $s->precio = "{$precio}€/noche";
-                    break;
-                case 'guardería de día':
-                    $s->precio = "{$precio}€/día";
-                    break;
-                case 'paseos':
-                    $s->precio = "{$precio}€/paseo";
-                    break;
-                case 'visitas a domicilio':
-                    $s->precio = "{$precio}€/visita";
-                    break;
+                switch (strtolower($s->servicio)) {
+                    case 'taxi':
+                        $s->precio = "10€ + {$precio}€/km";
+                        break;
+                    case 'alojamiento':
+                    case 'cuidado a domicilio':
+                        $s->precio = "{$precio}€/noche";
+                        break;
+                    case 'guardería de día':
+                        $s->precio = "{$precio}€/día";
+                        break;
+                    case 'paseos':
+                        $s->precio = "{$precio}€/paseo";
+                        break;
+                    case 'visitas a domicilio':
+                        $s->precio = "{$precio}€/visita";
+                        break;
+                }
             }
-        }
 
-        $this->vista('cuidadores/perfil', [
-            'cuidador' => $datosCuidador,
-            'servicios' => $servicios,
-            'admite' => $admite,
-            'resenas' => $resenas,
-            'mascotas' => $mascotas,
-            'reservas' => $reservas
-        ]);
+            // Renderiza la vista del perfil del cuidador con todos los datos obtenidos
+            $this->vista('cuidadores/perfil', [
+                'cuidador' => $datosCuidador,
+                'servicios' => $servicios,
+                'admite' => $admite,
+                'resenas' => $resenas,
+                'mascotas' => $mascotas,
+                'reservas' => $reservas
+            ]);
+        } else {
+            // Si no existe el cuidador, redirige al home
+            redireccionar('/home');
+        }
     }
 
     public function perfilPriv()
@@ -72,6 +90,7 @@ class Cuidadores extends Controlador
         $servicios = $this->cuidadorModelo->obtenerServicios($id);
         $admite = $this->cuidadorModelo->obtenerTiposMascotas($id);
 
+        // Switch para mejorar como se muestra el precio de los servicios
         foreach ($servicios as $s) {
             $precio = number_format($s->precio, 2);
 
@@ -136,8 +155,12 @@ class Cuidadores extends Controlador
         ]);
     }
 
+    /**
+     * Permite al cuidador editar sus datos de acceso (email y contraseña).
+     */
     public function editarAccesos()
     {
+        // Verifica que el usuario esté autenticado y sea cuidador
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'cuidador') {
             redireccionar('/autenticacion');
         }
@@ -153,21 +176,25 @@ class Cuidadores extends Controlador
                 'contrasena' => ''
             ];
 
+            // Valida el email
             if (!comprobarEmail($_POST['email'])) {
                 $errores['email'] = "El email no es válido.";
             }
 
             $cuidadorContrasena = $obj->contrasena;
 
+            // Verifica la contraseña actual
             if (!password_verify($_POST['contrasena_actual'], $cuidadorContrasena)) {
                 $errores['contrasena_actual'] = "La contraseña actual no es correcta.";
             }
 
+            // Valida la nueva contraseña
             $contrasenaOK = comprobarContrasena($_POST['contrasena']);
             if ($contrasenaOK !== true) {
                 $errores['contrasena'] = $contrasenaOK;
             }
 
+            // Si no hay errores, actualiza los accesos
             if (formularioErrores(...array_values($errores))) {
                 $contrasenaHash = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
 
@@ -180,18 +207,24 @@ class Cuidadores extends Controlador
                 redireccionar('/cuidadores/perfilPriv');
             }
 
+            // Si hay errores, vuelve a mostrar el formulario con los errores
             $this->vista('cuidadores/editarAccesos', [
                 'datos' => $datos,
                 'errores' => $errores,
                 'entrada' => $_POST
             ]);
         } else {
+            // Muestra el formulario por primera vez
             $this->vista('cuidadores/editarAccesos', ['datos' => $datos]);
         }
     }
 
+    /**
+     * Permite al cuidador editar sus datos personales (nombre, dirección, ciudad, país e imagen).
+     */
     public function editarDatos()
     {
+        // Verifica que el usuario esté autenticado y sea cuidador
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'cuidador') {
             redireccionar('/autenticacion');
         }
@@ -208,6 +241,7 @@ class Cuidadores extends Controlador
                 'imagen' => ''
             ];
 
+            // Validación de campos obligatorios
             if (!comprobarDatos($_POST['nombre'])) {
                 $errores['nombre'] = "El nombre no puede estar vacío.";
             }
@@ -224,20 +258,22 @@ class Cuidadores extends Controlador
                 $errores['pais'] = "País obligatorio.";
             }
 
+            // Validación de imagen (debe subirse al menos una)
             if (empty($_FILES['imagen']['name'][0])) {
                 $errores['imagen'] = 'Sube al menos una imagen.';
             }
 
             $imagenFinal = $datos->imagen;
+            // Procesamiento de la imagen si se ha subido correctamente
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $temp = $_FILES['imagen']['tmp_name'];
                 $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
-                // Construimos la ruta 
+                // Construimos la ruta de destino
                 $nuevaRuta = "img/cuidadores/{$id}.webp";
                 if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
                     $rutaCompleta = RUTA_APP . '/../public/' . $nuevaRuta;
 
-                    // 1) Carga la imagen original en GD
+                    // Carga la imagen original en GD según el tipo
                     switch ($ext) {
                         case 'jpg':
                         case 'jpeg':
@@ -252,18 +288,16 @@ class Cuidadores extends Controlador
                     }
 
                     if ($imagen) {
-                        // 2) Primera exportación a WebP calidad 80
+                        // Exporta a WebP calidad 80
                         imagewebp($imagen, $rutaCompleta, 80);
                         imagedestroy($imagen);
 
-                        // 3) Si sigue pesando > 1 MB, redimensionamos al 50%
+                        // Si la imagen pesa más de 1MB, redimensiona al 50%
                         if (filesize($rutaCompleta) > 1024 * 1024) {
-                            // Obtenemos dimensiones actuales
                             list($ancho, $alto) = getimagesize($rutaCompleta);
                             $nuevoAncho = intval($ancho / 2);
                             $nuevoAlto  = intval($alto  / 2);
 
-                            // Cargamos de nuevo como WebP
                             $tmp = imagecreatefromwebp($rutaCompleta);
                             $rec = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
                             imagecopyresampled($rec, $tmp, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
@@ -271,7 +305,7 @@ class Cuidadores extends Controlador
                             imagedestroy($tmp);
                             imagedestroy($rec);
 
-                            // 4) Si después de redimensionar sigue > 1 MB, error
+                            // Si sigue pesando > 1MB, error
                             if (filesize($rutaCompleta) > 1024 * 1024) {
                                 $errores['imagen'] = 'La imagen pesa demasiado.';
                             } else {
@@ -279,7 +313,7 @@ class Cuidadores extends Controlador
                                 $_SESSION['imagen_usuario'] = $imagenFinal;
                             }
                         } else {
-                            // ok a la primera
+                            // Imagen válida a la primera
                             $imagenFinal = $nuevaRuta;
                             $_SESSION['imagen_usuario'] = $imagenFinal;
                         }
@@ -291,6 +325,7 @@ class Cuidadores extends Controlador
                 }
             }
 
+            // Si no hay errores, actualiza los datos del cuidador
             if (formularioErrores(...array_values($errores))) {
 
                 $direccionNueva = test_input($_POST['direccion']);
@@ -300,6 +335,7 @@ class Cuidadores extends Controlador
                 $lat = $datos->lat;
                 $lng = $datos->lng;
 
+                // Si la dirección ha cambiado, actualiza coordenadas
                 if (
                     $direccionNueva !== $datos->direccion ||
                     $ciudadNueva !== $datos->ciudad ||
@@ -313,6 +349,7 @@ class Cuidadores extends Controlador
                     }
                 }
 
+                // Actualiza los datos en la base de datos
                 $this->cuidadorModelo->actualizarDatosCuidador([
                     'id' => $id,
                     'nombre' => test_input($_POST['nombre']),
@@ -327,18 +364,24 @@ class Cuidadores extends Controlador
                 redireccionar('/cuidadores/perfilPriv');
             }
 
+            // Si hay errores, vuelve a mostrar el formulario con los errores
             $this->vista('cuidadores/editarDatos', [
                 'datos' => $datos,
                 'errores' => $errores,
                 'entrada' => $_POST
             ]);
         } else {
+            // Muestra el formulario por primera vez
             $this->vista('cuidadores/editarDatos', ['datos' => $datos]);
         }
     }
 
+    /**
+     * Permite al cuidador editar los servicios que ofrece y los tipos de mascotas que admite.
+     */
     public function editarServicios()
     {
+        // Verifica que el usuario esté autenticado y sea cuidador
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'cuidador') {
             redireccionar('/autenticacion');
         }
@@ -353,39 +396,43 @@ class Cuidadores extends Controlador
                 'max_mascotas_dia' => ''
             ];
 
+            // Valida el número máximo de mascotas por día
             if (!comprobarNumero($_POST['max_mascotas_dia']) || $_POST['max_mascotas_dia'] < 1) {
                 $errores['max_mascotas_dia'] = "Número inválido.";
             } else {
                 $maxMascotas = test_input((int)$_POST['max_mascotas_dia']);
             }
 
+            // Si no hay errores, actualiza los servicios y tipos de mascotas admitidas
             if (formularioErrores(...array_values($errores))) {
 
-                // Guardar máximo de mascotas
+                // Guarda el máximo de mascotas por día
                 $this->cuidadorModelo->actualizarMaxMascotas($id, $maxMascotas);
 
-                // Reemplazar admisiones
+                // Elimina los tipos de mascotas admitidas anteriores
                 $this->cuidadorModelo->eliminarAdmiteMascotas($id);
 
+                // Inserta los nuevos tipos de perros admitidos
                 if (isset($_POST['acepta_perro']) && isset($_POST['tamanos_perro'])) {
                     foreach ($_POST['tamanos_perro'] as $tam) {
                         $this->cuidadorModelo->insertarTipoMascota($id, 'perro', $tam);
                     }
                 }
 
+                // Inserta los nuevos tipos de gatos admitidos
                 if (isset($_POST['acepta_gato']) && isset($_POST['tamanos_gato'])) {
                     foreach ($_POST['tamanos_gato'] as $tam) {
                         $this->cuidadorModelo->insertarTipoMascota($id, 'gato', $tam);
                     }
                 }
 
-                // Eliminar servicios anteriores
+                // Elimina los servicios anteriores
                 $this->cuidadorModelo->eliminarServicios($id);
 
-                // Insertar los servicios seleccionados con sus precios
+                // Inserta los servicios seleccionados con sus precios
                 if (!empty($_POST['servicios'])) {
                     foreach ($_POST['servicios'] as $servicio) {
-                        // Consolida la misma transformación que en la vista:
+                        // Obtiene el nombre del campo de precio correspondiente
                         $clave = str_replace(' ', '_', $servicio);
                         if (
                             isset($_POST['precio'][$clave]) &&
@@ -400,14 +447,15 @@ class Cuidadores extends Controlador
                         }
                     }
                 }
-                // Redirigir al perfil privado del cuidador
+                // Redirige al perfil privado del cuidador tras guardar los cambios
                 redireccionar('/cuidadores/perfilPriv');
             }
 
-            // 💡 Volvemos a cargar lo que se va a mostrar con los datos enviados (en caso de error)
+            // Si hay errores, vuelve a mostrar el formulario con los datos enviados
             $servicios = $this->cuidadorModelo->obtenerServicios($id);
             $admite = [];
 
+            // Reconstruye la selección de tipos de mascotas admitidas para mostrar en el formulario
             if (isset($_POST['acepta_perro']) && isset($_POST['tamanos_perro'])) {
                 foreach ($_POST['tamanos_perro'] as $tam) {
                     $admite[] = (object)['tipo_mascota' => 'perro', 'tamano' => $tam];
@@ -428,6 +476,7 @@ class Cuidadores extends Controlador
                 'admite' => $admite
             ]);
         } else {
+            // Muestra el formulario por primera vez con los datos actuales
             $this->vista('cuidadores/editarServicios', [
                 'datos' => $datos,
                 'servicios' => $servicios,
@@ -436,23 +485,35 @@ class Cuidadores extends Controlador
         }
     }
 
+    /**
+     * Obtiene las coordenadas (latitud y longitud) de una dirección usando Nominatim (OpenStreetMap).
+     * @param string $direccionCompleta Dirección completa a buscar.
+     * @return array|null Array asociativo con 'lat' y 'lng' si se encuentra, o null si no.
+     */
     function obtenerCoordenadasConNominatim($direccionCompleta)
     {
+        // Construye la URL de la petición a Nominatim
         $url = 'https://nominatim.openstreetmap.org/search?' . http_build_query([
             'q' => $direccionCompleta,
             'format' => 'json',
             'limit' => 1,
         ]);
 
+        // Define el User-Agent requerido por Nominatim
         $opts = [
             "http" => [
                 "header" => "User-Agent: PatitasApp/1.0\r\n"
             ]
         ];
         $context = stream_context_create($opts);
+
+        // Realiza la petición HTTP
         $respuesta = file_get_contents($url, false, $context);
+
+        // Decodifica la respuesta JSON
         $datos = json_decode($respuesta, true);
 
+        // Si se encuentra al menos un resultado, devuelve latitud y longitud
         if (!empty($datos[0])) {
             return [
                 'lat' => $datos[0]['lat'],
@@ -460,6 +521,7 @@ class Cuidadores extends Controlador
             ];
         }
 
+        // Si no se encuentra, devuelve null
         return null;
     }
 

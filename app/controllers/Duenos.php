@@ -155,40 +155,48 @@ class Duenos extends Controlador
 
     /**
      * Muestra y procesa el formulario para editar los accesos del dueño.
+     * Permite al dueño cambiar su email y contraseña, validando los datos introducidos.
      */
     public function editarAccesos()
     {
+        // Verifica que exista una sesión activa y que el usuario pertenezca al grupo 'dueno'
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'dueno') {
             redireccionar('/autenticacion');
         }
         $errores = [];
 
         $id = $_SESSION['usuario_id'];
+        // Obtiene los datos del dueño y su contraseña actual
         $dueno = $this->duenoModelo->obtenerPerfilDueno($id);
         $obj = $this->duenoModelo->obtenerContrasenaPorId($id);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Inicializa los errores de validación
             $errores = [
                 'email' => '',
                 'contrasena_actual' => '',
                 'contrasena' => ''
             ];
 
+            // Valida el email
             if (!comprobarEmail($_POST['email'])) {
                 $errores['email'] = "El email no es válido.";
             }
 
             $duenoContrasena = $obj->contrasena;
 
+            // Verifica la contraseña actual
             if (!password_verify($_POST['contrasena_actual'], $duenoContrasena)) {
                 $errores['contrasena_actual'] = "La contraseña actual no es correcta.";
             }
 
+            // Valida la nueva contraseña
             $contrasenaOK = comprobarContrasena($_POST['contrasena']);
             if ($contrasenaOK !== true) {
                 $errores['contrasena'] = $contrasenaOK;
             }
 
+            // Si no hay errores, actualiza los accesos en la base de datos
             if (formularioErrores(...array_values($errores))) {
                 $contrasenaHash = password_hash($_POST['contrasena'], PASSWORD_DEFAULT);
 
@@ -201,6 +209,7 @@ class Duenos extends Controlador
                 redireccionar('/duenos/perfilPriv');
             }
 
+            // Si hay errores, muestra la vista con los errores
             $datos = [
                 'datos' => $dueno,
                 'errores' => $errores
@@ -208,6 +217,7 @@ class Duenos extends Controlador
 
             $this->vista('duenos/editarAccesos', $datos);
         } else {
+            // Si no es POST, muestra la vista de edición de accesos
             $datos = [
                 'datos' => $dueno,
             ];
@@ -245,34 +255,43 @@ class Duenos extends Controlador
         $this->vista('duenos/misReservas', ['reservas' => $reservas, 'resenas' => $resenas]);
     }
 
+    /**
+     * Muestra la factura PDF asociada a una reserva del dueño autenticado.
+     * 
+     * @param int $reserva_id ID de la reserva cuya factura se desea ver.
+     */
     public function factura($reserva_id)
     {
+        // Verifica que exista una sesión activa y que el usuario pertenezca al grupo 'dueno'
         if (!isset($_SESSION['usuario']) || $_SESSION['grupo'] !== 'dueno') {
             redireccionar('/autenticacion');
         }
 
         $dueno_id = $_SESSION['usuario_id'];
 
-        // Obtener la factura desde la BD
+        // Obtiene la factura desde la base de datos
         $factura = $this->duenoModelo->obtenerFactura($reserva_id);
         if (!$factura) {
+            // Si no existe la factura, redirige a la lista de reservas
             redireccionar('/duenos/misReservas');
         }
 
-        // Verificar que la reserva pertenece al dueño autenticado
+        // Verifica que la reserva pertenezca al dueño autenticado
         $reserva = $this->reservaModelo->obtenerReservaPorId($reserva_id);
         if (!$reserva || $reserva->duenio_id != $dueno_id) {
+            // Si la reserva no existe o no pertenece al dueño, redirige
             redireccionar('/duenos/misReservas');
         }
 
-        // Ruta física al archivo
+        // Ruta física al archivo PDF de la factura
         $rutaFisica = RUTA_PUBLIC . $factura->archivo_pdf_url;
 
+        // Verifica que el archivo PDF exista en el sistema de archivos
         if (!file_exists($rutaFisica)) {
             die("El archivo PDF no existe.");
         }
 
-        // Mostrar el PDF en el navegador
+        // Envía las cabeceras para mostrar el PDF en el navegador
         header('Content-Type: application/pdf');
         header('Content-Disposition: inline; filename="' . basename($factura->archivo_pdf_url) . '"');
         header('Content-Length: ' . filesize($rutaFisica));
