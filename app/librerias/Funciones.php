@@ -23,6 +23,13 @@ function comprobarDatos($datos)
     return true;
 }
 
+function comprobarNumero($num)
+{
+    if (!isset($num)) return false;
+    if (empty($num)) return false;
+    if (is_numeric($num)) return true;
+}
+
 function formularioErrores(...$error)
 {
 
@@ -32,15 +39,6 @@ function formularioErrores(...$error)
         }
     }
     return true;
-}
-
-// Función para registrar errores en el archivo log/error.log 
-function registrarError($criticidad, $mensaje)
-{
-    $fechaHora = new DateTime("now", new DateTimeZone("Europe/Madrid"));
-    $fechaHoraStr = $fechaHora->format("d-m-Y H:i:s");
-    $logMensaje = $fechaHoraStr . " - " . $criticidad . " - " . $mensaje . "\n";
-    error_log($logMensaje, 3, "log/error.log");
 }
 
 function comprobarEmail($email)
@@ -90,24 +88,6 @@ function comprobarImagenesSubidas(array $files): bool
         if (!in_array($tipo, $tiposPermitidos, true)) {
             return false;
         }
-    }
-    return true;
-}
-
-function comprobarDNI($dni)
-{
-    $pattern = '/^[0-9]{8}[A-Z]$/i';
-    if (!preg_match($pattern, $dni)) {
-        return false;
-    }
-    return true;
-}
-
-function comprobarTelefono($telefono)
-{
-    $pattern = '/^(6|7|9)[0-9]{8}$/';
-    if (!preg_match($pattern, $telefono)) {
-        return false;
     }
     return true;
 }
@@ -175,23 +155,6 @@ function calcularDiferenciaFechas($fecha1, $fecha2)
     $diffFecha = compararFechas($fecha1, $fecha2);
 
     return  $diffFecha / 86400;
-}
-
-//Comprobar idioma
-function comprobarIdioma($idioma)
-{
-    switch ($idioma) {
-        case 'espanol':
-            return true;
-        case 'ingles':
-            return true;
-        case 'catalan':
-            return true;
-        case 'euskera':
-            return true;
-        default:
-            return false;
-    }
 }
 
 function estrellasBootstrap($valoracion)

@@ -261,10 +261,13 @@ class Reservas extends Controlador
                     //Enviar correo con la factura
                     $email = $dueno->email;
                     $asunto = "Factura INV{$reserva_id} Guardería Patitas";
-                    // Listado de mascotas en un string separado por comas
+
+                    // Obtener nombres de mascotas
+                    $nombresMascotasArray = $this->mascotaModelo->nombresMascotas($datos['mascotas']);
+                    // Extraer nombres y preparar un string
                     $nombresMascotas = implode(', ', array_map(function ($m) {
                         return htmlspecialchars($m->nombre);
-                    }, $datos['mascotas']));
+                    }, $nombresMascotasArray));
 
                     $cuerpo = "
                     <p>Estimado/a <strong>{$dueno->nombre}</strong>,</p>
