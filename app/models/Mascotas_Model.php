@@ -121,12 +121,8 @@ class Mascotas_Model
 
         return count($this->db->registros()) === count($mascotas);
     }
-    /**
-     * Obtiene los nombres de las mascotas a partir de un array de IDs.
-     * 
-     * @param array $ids Array de IDs de mascotas.
-     * @return array Lista de nombres de mascotas (cada elemento es un array asociativo con 'nombre').
-     */
+
+    // Obtiene los nombres de las mascotas a partir de un array de IDs.
     public function nombresMascotas($ids)
     {
         // Verifica que $ids sea un array no vacío
@@ -146,6 +142,29 @@ class Mascotas_Model
         }
 
         // Devuelve un array de arrays asociativos con 'id' y 'nombre'
+        return $this->db->registros();
+    }
+
+    // Obtiene los tipos y tamaños de un conjunto de mascotas a partir de sus IDs.
+    public function obtenerTiposYTamanosMascotas($mascotas_ids)
+    {
+        // Verifica que el array no esté vacío y sea un array válido
+        if (!is_array($mascotas_ids) || empty($mascotas_ids)) {
+            return [];
+        }
+
+        // Prepara los marcadores de posición para la consulta SQL
+        $placeholders = implode(',', array_fill(0, count($mascotas_ids), '?'));
+
+        // Consulta los campos id, tipo y tamano de las mascotas cuyos IDs están en $mascotas_ids
+        $this->db->query("SELECT id, tipo, tamano FROM patitas_mascotas WHERE id IN ($placeholders)");
+
+        // Asocia cada id en el orden de los placeholders
+        foreach (array_values($mascotas_ids) as $k => $id) {
+            $this->db->bind($k + 1, $id);
+        }
+
+        // Devuelve un array de arrays asociativos con 'id', 'tipo' y 'tamano'
         return $this->db->registros();
     }
 }

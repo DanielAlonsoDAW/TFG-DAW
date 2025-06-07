@@ -72,9 +72,33 @@ class Reservas extends Controlador
                     $errores[] = "La fecha de fin debe ser posterior a la de inicio.";
                 }
 
-                // Validación de mascotas seleccionadas
+                //  Validar que las mascotas seleccionadas pertenecen al dueño autenticado
                 if (!$this->mascotaModelo->mascotasValidas($datos['mascotas'], $_SESSION['usuario_id'])) {
                     $errores[] = "Una o más mascotas seleccionadas no son válidas.";
+                } else {
+                    // Validar que el cuidador admite el tipo y tamaño de cada mascota seleccionada
+
+                    // Obtener tipos y tamaños de las mascotas seleccionadas
+                    $mascotas = $this->mascotaModelo->obtenerTiposYTamanosMascotas($datos['mascotas']);
+
+                    // Obtener lista de tipos y tamaños admitidos por el cuidador
+                    $admite = $this->cuidadorModelo->obtenerTiposMascotas($cuidador_id);
+
+                    // Convertir la lista de admitidos a un array asociativo para búsqueda rápida
+                    $admitidos = [];
+                    foreach ($admite as $adm) {
+                        $admitidos[$adm->tipo_mascota . '-' . $adm->tamano] = true;
+                    }
+
+                    // Verificar cada mascota seleccionada, evitando mensajes repetidos por tipo-tamaño
+                    $yaAvisado = [];
+                    foreach ($mascotas as $mascota) {
+                        $clave = $mascota->tipo . '-' . $mascota->tamano;
+                        if (empty($admitidos[$clave]) && empty($yaAvisado[$clave])) {
+                            $errores[] = "El cuidador no admite mascotas tipo '{$mascota->tipo}' y tamaño '{$mascota->tamano}'.";
+                            $yaAvisado[$clave] = true;
+                        }
+                    }
                 }
 
                 // Validación de plazas disponibles del cuidador
