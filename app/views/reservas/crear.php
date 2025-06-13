@@ -136,7 +136,6 @@ $precios = $datos['precios'] ?? [];
 <script>
     // Precios por servicio en formato JSON
     const preciosPorServicio = <?= json_encode($precios, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>;
-    const RUTA_URL = "<?= RUTA_URL ?>";
 </script>
 <script src="<?= RUTA_URL ?>/js/reservas/formulario.js"></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>

@@ -33,7 +33,7 @@
           <!-- Menú principal centrado -->
           <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <a class="nav-link" href="<?php echo RUTA_URL; ?>\buscador">Buscador</a>
+              <a class="nav-link btn btn-outline-primary ms-2" href="<?php echo RUTA_URL; ?>\buscador">Buscador</a>
             </li>
             <li class="nav-item">
               <a class="nav-link btn btn-outline-primary ms-2" href="<?php echo RUTA_URL; ?>/como_funciona">Cómo funciona</a>
@@ -50,7 +50,7 @@
                 <li class="nav-item">
                   <a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '\registro_duenos">Registrarse</a>
                 </li>';
-            // Si el usuario es dueño
+              // Si el usuario es dueño
             } elseif ($_SESSION['grupo'] === "dueno") {
               echo '<a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '\registro_cuidadores">Convertirse en cuidador</a>';
             }
@@ -63,11 +63,11 @@
             // Si el usuario NO ha iniciado sesión
             if (!isset($_SESSION['usuario'])) {
               echo '<a class="nav-link btn btn-outline-primary ms-2" href="' . RUTA_URL . '\autenticacion">Iniciar sesión</a>';
-            // Si el usuario es dueño
+              // Si el usuario es dueño
             } elseif ($_SESSION['grupo'] === "dueno") {
               $nombreUsuario = explode(' ', $_SESSION['usuario'])[0];
 
-              // Menú desplegable con nombre y foto de usuario
+              // Menú desplegable con nombre y foto de usuario de dueño
               echo '
                     <div class="dropdown me-2">
                       <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2" type="button" id="dropdownUsuario" data-bs-toggle="dropdown" aria-expanded="false">
@@ -82,11 +82,11 @@
                     </div>';
               // Botón para cerrar sesión
               echo '<a class="nav-link btn btn-outline-danger ms-2" href="' . RUTA_URL . '/autenticacion/logout">Cerrar Sesión</a>';
-            // Si el usuario es cuidador
+              // Si el usuario es cuidador
             } elseif ($_SESSION['grupo'] === "cuidador") {
               $nombreUsuario = explode(' ', $_SESSION['usuario'])[0];
 
-              // Menú desplegable con nombre y foto de usuario
+              // Menú desplegable con nombre y foto de usuario de cuidador
               echo '
                     <div class="dropdown me-2">
                       <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center gap-2" type="button" id="dropdownUsuario" data-bs-toggle="dropdown" aria-expanded="false">

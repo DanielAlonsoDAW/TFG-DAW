@@ -103,8 +103,9 @@ document.addEventListener("DOMContentLoaded", () => {
           "Guardería de día",
           "Visitas a domicilio",
         ];
-        if (serviciosPorDia.includes(servicio) && dias > 0) {
+        if (serviciosPorDia.includes(servicio) && dias >= 0) {
           dias += 1;
+          console.log("Hola: " + dias);
         }
       }
 

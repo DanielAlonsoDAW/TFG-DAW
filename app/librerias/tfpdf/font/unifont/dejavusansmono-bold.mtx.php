@@ -13,7 +13,7 @@ $desc=array (
 );
 $up=-63;
 $ut=44;
-$ttffile='C:\Program Files\Ampps\www\TFG-DAW\app\librerias\tfpdf/font/unifont/DejaVuSansMono-Bold.ttf';
+$ttffile='/Applications/AMPPS/www/TFG-DAW/app/librerias/tfpdf/font/unifont/DejaVuSansMono-Bold.ttf';
 $originalsize=331992;
 $fontkey='dejavu-bold';
 ?>

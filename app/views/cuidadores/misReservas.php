@@ -71,7 +71,8 @@
                                                                             data-id-mascota="<?= $mascota->id ?>"
                                                                             alt="Foto de <?= htmlspecialchars($mascota->nombre) ?>">
                                                                         <?php foreach ($imagenesMascota as $i => $src): ?>
-                                                                            <?php if ($i === 0) continue; // Oculta el resto, solo los usará el visor ?>
+                                                                            <?php if ($i === 0) continue; // Oculta el resto, solo los usará el visor 
+                                                                            ?>
                                                                             <!-- Imágenes adicionales ocultas para el visor -->
                                                                             <img
                                                                                 src="<?= htmlspecialchars($src) ?>"
@@ -129,13 +130,14 @@
                                         <button type="button" class="btn btn-danger reserva-danger" data-bs-toggle="modal" data-bs-target="#confirmarEliminacionModal" data-id="<?= $reserva->id ?>">
                                             Rechazar Reserva
                                         </button>
-                                    <?php elseif ($diffFechas == 0 || $diffFechas == -1 && $hoy < $fechaFin): ?>
-                                        <!-- No mostrar nada si la reserva está en curso -->
+
                                     <?php elseif ($hoy >= $fechaFin): ?>
                                         <!-- Botón para completar la reserva si ya ha finalizado -->
                                         <form action="<?= RUTA_URL ?>/reservas/completar/<?= $reserva->id ?>" method="post">
                                             <button type="submit" class="btn btn-primary reserva-primary btn-sm">Completar Reserva</button>
                                         </form>
+                                    <?php else: ?>
+                                        <!-- No mostrar nada si la reserva está en curso -->
                                     <?php endif; ?>
                                 <?php elseif ($reserva->estado === 'completada' && !empty($datos['resenas'])): ?>
                                     <?php
@@ -174,7 +176,6 @@
                                                         <br>
                                                         <strong>Comentario:</strong>
                                                         <p><?= nl2br(htmlspecialchars($resena_existente->comentario)) ?></p>
-
                                                     </div>
                                                 </div>
                                             </div>

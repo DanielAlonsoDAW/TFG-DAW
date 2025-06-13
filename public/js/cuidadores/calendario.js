@@ -13,43 +13,47 @@ document.addEventListener("DOMContentLoaded", function () {
   // Array para almacenar los eventos que se mostrarán en el calendario
   const eventos = [];
 
-  // Procesa cada reserva para generar los eventos correspondientes
+  // Mapa para acumular el número de mascotas por día
+  const mascotasPorDia = {};
+
+  // Primero, sumar el total de mascotas por día
   reservas.forEach((r) => {
     let fechaInicio = new Date(r.fecha_inicio);
     let fechaFin = new Date(r.fecha_fin);
-    // Se suma un día para incluir la fecha de fin en el rango
     fechaFin.setDate(fechaFin.getDate() + 1);
 
     let current = new Date(fechaInicio);
-    // Itera por cada día dentro del rango de la reserva
     while (current < fechaFin) {
       const dateStr = current.toISOString().split("T")[0];
-      // Determina la clase CSS para el día según el tipo de servicio y número de mascotas
-      let className = "";
-      // Verifica si la reserva es a domicilio o tiene un número de mascotas que supera el máximo permitido
-      const esDomicilio = r.servicio === "Cuidado a domicilio";
       const mascotas = parseInt(r.total_mascotas);
 
-      // Asigna una clase CSS según el estado del día
-      // Si es un servicio a domicilio, se marca como ocupado completamente
-      if (esDomicilio) {
-        className = "red"; // Día completamente ocupado por servicio de "Cuidado a domicilio"
-      } else if (mascotas >= maxMascotas) {
-        className = "red"; // Día completamente ocupado por límite de mascotas
-      } else {
-        className = "orange"; // Día parcialmente ocupado
+      // Si es a domicilio, marcar como -1 para indicar ocupado completamente
+      if (r.servicio === "Cuidado a domicilio") {
+        mascotasPorDia[dateStr] = -1;
+      } else if (mascotasPorDia[dateStr] !== -1) {
+        mascotasPorDia[dateStr] = (mascotasPorDia[dateStr] || 0) + mascotas;
       }
+      current.setDate(current.getDate() + 1);
+    }
+  });
 
-      // Agrega el evento al array de eventos
+  // Ahora, crear los eventos según el total de mascotas por día
+  Object.entries(mascotasPorDia).forEach(([dateStr, totalMascotas]) => {
+    let className = "";
+    if (totalMascotas === -1) {
+      className = "red"; // Ocupado completamente por servicio a domicilio
+    } else if (totalMascotas >= maxMascotas) {
+      className = "red"; // Ocupado completamente por límite de mascotas
+    } else if (totalMascotas > 0) {
+      className = "orange"; // Parcialmente ocupado
+    }
+    if (className) {
       eventos.push({
         start: dateStr,
         allDay: true,
         display: "background",
         classNames: [className],
       });
-
-      // Avanza al siguiente día
-      current.setDate(current.getDate() + 1);
     }
   });
 

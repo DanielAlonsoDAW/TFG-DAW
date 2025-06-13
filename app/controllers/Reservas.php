@@ -50,6 +50,7 @@ class Reservas extends Controlador
                 ];
 
                 $esTaxi = $datos['servicio'] === 'Taxi';
+                $sonNoches = $datos['servicio'] === 'Alojamiento' || $datos['servicio'] === 'Cuidado a domicilio';
                 if ($esTaxi) {
                     $datos['fecha_fin'] = $datos['fecha_inicio'];
                 }
@@ -71,7 +72,7 @@ class Reservas extends Controlador
                 }
 
                 // Validación de fecha de fin (si no es Taxi)
-                if (!$esTaxi && !comprobarFecha_Fin($datos['fecha_inicio'], $datos['fecha_fin'])) {
+                if (!$esTaxi && $sonNoches && !comprobarFecha_Fin($datos['fecha_inicio'], $datos['fecha_fin'])) {
                     $errores[] = "La fecha de fin debe ser posterior a la de inicio.";
                 }
 
@@ -138,6 +139,8 @@ class Reservas extends Controlador
                         // Calcula el número de días de la reserva
                         $dias = calcularDiferenciaFechas($datos['fecha_inicio'], $datos['fecha_fin']);
                         if (!in_array($datos['servicio'], ['Alojamiento', 'Cuidado a domicilio']) && $dias > 0) {
+                            $dias++;
+                        } elseif ($dias === 0) {
                             $dias++;
                         }
                         $total = $precioBase * $mascotasExtra * $dias;
